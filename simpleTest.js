@@ -81,7 +81,7 @@ telnet.createServer((client) => {
 
                     case "exit":
                         sendAll(`[${username}] has left the server. ${clients.length - 1} users remaining`);
-                        client.close();
+                        client.end();
                         break;
                 };
             } else {
