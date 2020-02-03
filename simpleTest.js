@@ -154,14 +154,22 @@ telnet.createServer((client) => {
 }).listen(4922)
 
 function send(client, data) {
-    client.write(data + "\n");
+    try{
+        client.write(data + "\n");
+    } catch(err) {
+
+    }
 }
 
 function sendAll(data, options) {
     if (!options) {
         clients.forEach((client) => {
             client = client.client;
+            try{
             client.write(data + "\n");
+            } catch(err) {
+
+            }
         })
 
         logNetwork(data + "\n");
@@ -170,7 +178,11 @@ function sendAll(data, options) {
             case "world":
                 clients.forEach(client => {
                     if (client.world == options.world) {
+                        try{
                         client.client.write(data + "\n");
+                        } catch (err) {
+                            
+                        }
                     }
 
                     logNetwork(data + "\n");
