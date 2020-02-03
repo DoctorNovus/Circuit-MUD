@@ -29,6 +29,10 @@ telnet.createServer((client) => {
         }
     }
 
+    client.on("error", (err) => {
+        console.log(err);
+    });
+
     client.on("data", (data) => {
         // make unicode characters work properly
         // client.do.transmit_binary();
