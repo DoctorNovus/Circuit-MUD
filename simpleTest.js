@@ -17,6 +17,7 @@ telnet.createServer((client) => {
     let message = "";
     let loggedIn = false;
     let username;
+    let currentWorld = "main";
 
     send(client, main.create());
 
@@ -53,7 +54,7 @@ telnet.createServer((client) => {
                             loggedInStory.editTitle("Logged In");
                             loggedInStory.editBody(["Username: " + args[0]]);
                             send(client, loggedInStory.create());
-                            clients.push({ "username": args[0], "client": client });
+                            clients.push({ "username": args[0], "client": client, "world": "main" });
                             sendAll(`User [${username}] has connected to the server! \n${clients.length} users are online | ${getDate()}`);
                         } else {
                             send(client, "Sorry. Your credentials are incorrect. Please try again")
@@ -74,6 +75,7 @@ telnet.createServer((client) => {
                             send(client, createdUser.create());
                             loggedIn = true;
                             username = args[0];
+                            clients.push({ "username": args[0], "client": client, "world": "main" });
                             sendAll(`[${username}] has connected to the server for the first time! Please welcome them! \n${clients.length} users are online | ${getDate()}`);
                         }
 
@@ -89,11 +91,31 @@ telnet.createServer((client) => {
                 switch (command) {
                     case "exit":
                         sendAll(`[${username}] has left the server. ${clients.length - 1} users remaining`);
-                        client.close();
+                        client.end();
                         break;
 
                     case "help":
                         send(client, help.create());
+                        break;
+
+                    case "joinWorld":
+                        for(let client of clients){
+                            if(client.world == currentWorld){
+                                send(client.client, `${username} has just left the world.`);
+                            }
+                        }
+                        currentWorld = args[0];
+                        for(let i = 0; i < clients.length; i++){
+                            if(clients[i].username == username){
+                                clients[i].world = currentWorld;
+                            }
+                        }
+                        send(client, `Joining World: ${currentWorld}`);
+                        for(let client of clients){
+                            if(client.world == currentWorld){
+                                send(client.client, `${username} has just joined the world.`);
+                            }
+                        }
                         break;
 
                     case "logout":
@@ -103,10 +125,13 @@ telnet.createServer((client) => {
                         break;
 
                     case "say":
-                        sendAll(`[${username}]: ${args.join(" ")} | ${getDate()}`);
-                        logNetwork(`Message Sent: [${username}]: ${args.join(" ")} | ${getDate()}`);
-
+                        sendAll(`{${currentWorld}} [${username}]: ${args.join(" ")} | ${getDate()}`, { "option": "world", "world": currentWorld });
+                        logNetwork(`Message Sent: {${currentWorld}} [${username}]: ${args.join(" ")} | ${getDate()}`);
                         break;
+
+                    case "announce":
+                        sendAll(`Announcement > [${username}]: ${args.join(" ")} | ${getDate()}`);
+                        logNetwork(`Message Announced: [${username}]: ${args.join(" ")} | ${getDate()}`);
 
 
                 }
@@ -128,13 +153,26 @@ function send(client, data) {
     client.write(data + "\n");
 }
 
-function sendAll(data) {
-    clients.forEach((client) => {
-        client = client.client;
-        client.write(data + "\n");
-    })
+function sendAll(data, options) {
+    if (!options) {
+        clients.forEach((client) => {
+            client = client.client;
+            client.write(data + "\n");
+        })
 
-    logNetwork(data + "\n");
+        logNetwork(data + "\n");
+    } else {
+        switch (options.option) {
+            case "world":
+                clients.forEach(client => {
+                    if (client.world == options.world) {
+                        client.client.write(data + "\n");
+                    }
+
+                    logNetwork(data + "\n");
+                });
+        }
+    }
 }
 
 function logNetwork(data) {
