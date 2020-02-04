@@ -1,15 +1,16 @@
 {
-  "name": "circuit-mud",
-  "version": "1.0.0",
-  "description": "",
-  "main": "simpleTest.js",
-  "dependencies": {
-    "telnet": "git+https://github.com/TooTallNate/node-telnet.git#780340617e1f223de384cdfcb7cecf0a1a6f1159"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+    "name": "circuit-mud",
+    "version": "1.0.0",
+    "description": "",
+    "main": "simpleTest.js",
+    "dependencies": {
+        "crypto-js": "^3.1.9-1",
+        "telnet": "git+https://github.com/TooTallNate/node-telnet.git#780340617e1f223de384cdfcb7cecf0a1a6f1159"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC"
 }

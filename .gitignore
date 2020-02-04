@@ -40,10 +40,12 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+Crypto/
 
 # Files
 database.json
 logs.txt
+cryptokey.json
 
 # TypeScript v1 declaration files
 typings/
