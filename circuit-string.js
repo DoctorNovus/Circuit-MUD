@@ -43,22 +43,53 @@ function createBody(string, body) {
     return str;
 };
 
+class Engine {
+
+    constructor() {
+        this.stories = [];
+        this.categories = [];
+        this.hobbies = [];
+        this.entities = [];
+    }
+
+    Story(title) {
+        let story = new Story(title);
+        this.stories.push(story);
+        return story;
+    }
+
+    Category(title) {
+        let category = new Category(title);
+        this.categories.push(category);
+        return category;
+    }
+
+    Hobby(title) {
+        let hobby = new Hobby(title);
+        this.hobbies.push(hobby);
+        return hobby;
+    }
+
+    Action(name, description) {
+        let action = new Action(name, description);
+        return action;
+    }
+
+    Entity(attributes) {
+        let entity = new Entity(attributes);
+        this.entities.push(entity);
+        return entity;
+    }
+
+
+}
+
 class Core {
     constructor(title) {
         this.title = title;
         this.body = "";
         this.author = "";
         this.footer = "";
-    }
-
-    create() {
-        let stri = "";
-        stri += "-".repeat(61) + "\n";
-        stri += "|" + " ".repeat((60 - this.title.length) / 2) + this.title + " ".repeat((60 - this.title.length) / 2) + "|\n"
-        stri += "-".repeat(61) + "\n";
-        stri = createBody(stri, this.body);
-        stri += "-".repeat(61) + "\n";
-        return stri;
     }
 }
 
@@ -72,6 +103,29 @@ class Story extends Core {
         if (Array.isArray(body)) {
             this.body = body.join("\n");
         }
+    }
+
+    create(engine, category) {
+        if (category) {
+            if (engine.categories.find(cat => cat.title == category) != undefined) {
+                this.body = "";
+                let cate = engine.categories.find(cat => cat.title == category);
+                for (let part of cate.parts) {
+                    if (part != undefined) {
+                        this.body += part.text + "\n";
+                    }
+                }
+            }
+        }
+
+        let stri = "";
+        stri += "-".repeat(61) + "\n";
+        stri += "|" + " ".repeat((60 - this.title.length) / 2) + this.title + " ".repeat((60 - this.title.length) / 2) + "|\n"
+        stri += "-".repeat(61) + "\n";
+        stri = createBody(stri, this.body);
+        stri += "-".repeat(61) + "\n";
+        this.body = "";
+        return stri;
     }
 }
 
@@ -114,7 +168,7 @@ class Category extends Core {
         }
     }
 
-    addCategories(category) {
+    addHobbies(category) {
         if (Array.isArray(category)) {
             for (let i = 0; i < category.length; i++) {
                 this.parts.push(category.title);
@@ -123,12 +177,39 @@ class Category extends Core {
             this.parts.push(category.title);
         }
     }
+
+    create(engine, category) {
+        if (category) {
+            if (engine.categories.find(cat => cat.title == category) != undefined) {
+                this.body = "";
+                let cate = engine.categories.find(cat => cat.title == category);
+                for (let part of cate.parts) {
+                    if (part != undefined) {
+                        this.body += part.text + "\n";
+                    }
+                }
+            }
+        }
+
+        let stri = "";
+        stri += "-".repeat(61) + "\n";
+        stri += "|" + " ".repeat((60 - this.title.length) / 2) + this.title + " ".repeat((60 - this.title.length) / 2) + "|\n"
+        stri += "-".repeat(61) + "\n";
+        stri = createBody(stri, this.body);
+        stri += "-".repeat(61) + "\n";
+        this.body = "";
+        return stri;
+    }
 }
 
 class Hobby extends Core {
     constructor(title) {
         super(title);
         this.actions = [];
+    }
+
+    addAction(action) {
+        this.actions.push(action);
     }
 
     executeAction(name) {
@@ -158,9 +239,5 @@ class Entity {
 };
 
 module.exports = {
-    Story: Story,
-    Category: Category,
-    Hobby: Hobby,
-    Action: Action,
-    Entity: Entity
+    Engine: Engine
 }

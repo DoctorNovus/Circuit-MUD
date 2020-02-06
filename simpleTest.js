@@ -1,25 +1,32 @@
-const { Story, Category, Hobby, Action, Entity } = require("./circuit-string");
+const { Engine } = require("./circuit-string");
 const telnet = require("telnet");
 let database = require("./database.json");
 const fs = require("fs");
 let CryptoJS = require("crypto-js");
 let cryptokey = require("./cryptokey.json").key;
 
-let main = new Story("Circuit MUD");
+let Circuit = new Engine();
+
+let main = Circuit.Story("Circuit MUD");
 main.editBody(["Welcome to Circuit MUD", "Please login with command: login <username> <password> | or create using: create <username> <password>", "Type \"help\" for commands"])
 
-let help = new Story("Help Menu");
-help.editBody(["Commands are as follows: ", "say - speaks to other players"]);
+let help = Circuit.Story("Help Menu");
 help.editBody(["Command Categories are as follows: ", "Pathways", "Communication", "Hobbies"]);
 
-let Pathways = new Category("Pathways");
-let Communication = new Category("Communication");
-let Hobbies = new Category("Hobbies");
+let Pathways = Circuit.Category("Pathways");
+let Communication = Circuit.Category("Communication");
+let Hobbies = Circuit.Category("Hobbies");
 
-// Hobbies
-let Mining = new Hobby("Mining");
-let Crafting = new Hobby("Crafting");
-let Fighting = new Hobby("Fighting");
+/* Hobbies */
+// Mining
+let Mining = Circuit.Hobby("Mining");
+
+// Crafting
+let Crafting = Circuit.Hobby("Crafting");
+
+// Fighting
+let Fighting = Circuit.Hobby("Fighting");
+
 
 Pathways.addParts(["exit - Exit's the connection", "logout - Logs out of the server"]);
 Communication.addParts(["say - speaks to other players", "whisper - whispers to another player privately"]);
@@ -80,8 +87,7 @@ telnet.createServer((client) => {
                                 if (args[1] == CryptoJS.AES.decrypt(database.users[i].password, cryptokey).toString(CryptoJS.enc.Utf8)) {
                                     loggedIn = true;
                                     username = args[0];
-                                    let loggedInStory = new Story();
-                                    loggedInStory.editTitle("Logged In");
+                                    let loggedInStory = Circuit.Story("Logged in");
                                     loggedInStory.editBody(["Username: " + args[0]]);
                                     send(client, loggedInStory.create());
                                     clients.push({ "username": args[0], "client": client, "world": "main", });
@@ -99,8 +105,7 @@ telnet.createServer((client) => {
                             fs.writeFile("./database.json", JSON.stringify(database), () => {
 
                             });
-                            let createdUser = new Story();
-                            createdUser.editTitle("Created User");
+                            let createdUser = Circuit.Story("Created User");
                             createdUser.editBody(["Username: " + args[0], "Password: " + args[1]]);
 
                             send(client, createdUser.create());
@@ -124,7 +129,8 @@ telnet.createServer((client) => {
                         break;
 
                     case "help":
-                        send(client, help.create());
+                        if (args) send(client, help.create(Circuit, args));
+                        else send(client, help.create());
                         break;
 
                     case "joinWorld":
