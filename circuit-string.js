@@ -124,7 +124,6 @@ class Story extends Core {
         stri += "-".repeat(61) + "\n";
         stri = createBody(stri, this.body);
         stri += "-".repeat(61) + "\n";
-        this.body = "";
         return stri;
     }
 }
@@ -197,7 +196,6 @@ class Category extends Core {
         stri += "-".repeat(61) + "\n";
         stri = createBody(stri, this.body);
         stri += "-".repeat(61) + "\n";
-        this.body = "";
         return stri;
     }
 }
