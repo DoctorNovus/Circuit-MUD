@@ -1,17 +1,31 @@
-const { Story } = require("./circuit-string");
+const { Story, Category, Hobby, Action, Entity } = require("./circuit-string");
 const telnet = require("telnet");
 let database = require("./database.json");
 const fs = require("fs");
 let CryptoJS = require("crypto-js");
 let cryptokey = require("./cryptokey.json").key;
 
-let main = new Story();
-main.editTitle("Circuit MUD");
+let main = new Story("Circuit MUD");
 main.editBody(["Welcome to Circuit MUD", "Please login with command: login <username> <password> | or create using: create <username> <password>", "Type \"help\" for commands"])
 
-let help = new Story();
-help.editTitle("Help Menu");
-help.editBody(["Commands are as follows: ", "exit - Exits the connection", "help - Displays the help menu", "logout - Logs out of the current user", "say - speaks to other players"]);
+let help = new Story("Help Menu");
+help.editBody(["Commands are as follows: ", "say - speaks to other players"]);
+help.editBody(["Command Categories are as follows: ", "Pathways", "Communication", "Hobbies"]);
+
+let Pathways = new Category("Pathways");
+let Communication = new Category("Communication");
+let Hobbies = new Category("Hobbies");
+
+// Hobbies
+let Mining = new Hobby("Mining");
+let Crafting = new Hobby("Crafting");
+let Fighting = new Hobby("Fighting");
+
+Pathways.addParts(["exit - Exit's the connection", "logout - Logs out of the server"]);
+Communication.addParts(["say - speaks to other players", "whisper - whispers to another player privately"]);
+Hobbies.addParts(["Type help <hobby> for commands on hobby"]);
+Hobbies.addHobbies([Mining, Crafting, Fighting]);
+
 
 let clients = [];
 
