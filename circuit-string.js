@@ -66,7 +66,7 @@ class Engine {
 
     Hobby(title) {
         let hobby = new Hobby(title);
-        this.hobbies.push(hobby);
+        this.categories.push(hobby);
         return hobby;
     }
 
@@ -75,13 +75,10 @@ class Engine {
         return action;
     }
 
-    Entity(attributes) {
-        let entity = new Entity(attributes);
-        this.entities.push(entity);
-        return entity;
+    Item(name) {
+        let item = new Item(name);
+        return item;
     }
-
-
 }
 
 class Core {
@@ -110,9 +107,17 @@ class Story extends Core {
             if (engine.categories.find(cat => cat.title == category) != undefined) {
                 this.body = "";
                 let cate = engine.categories.find(cat => cat.title == category);
-                for (let part of cate.parts) {
-                    if (part != undefined) {
-                        this.body += part.text + "\n";
+                try {
+                    for (let part of cate.parts) {
+                        if (part != undefined) {
+                            this.body += part.text + "\n";
+                        }
+                    }
+                } catch (err) {
+                    for (let action of cate.actions) {
+                        if (action != undefined) {
+                            this.body += action.name + "-" + action.description + "\n";
+                        }
                     }
                 }
             }
@@ -182,9 +187,17 @@ class Category extends Core {
             if (engine.categories.find(cat => cat.title == category) != undefined) {
                 this.body = "";
                 let cate = engine.categories.find(cat => cat.title == category);
-                for (let part of cate.parts) {
-                    if (part != undefined) {
-                        this.body += part.text + "\n";
+                try {
+                    for (let part of cate.parts) {
+                        if (part != undefined) {
+                            this.body += part.text + "\n";
+                        }
+                    }
+                } catch (err) {
+                    for (let action of cate.actions) {
+                        if (action != undefined) {
+                            this.body += action.name + "-" + action.description + "\n";
+                        }
                     }
                 }
             }
@@ -218,23 +231,27 @@ class Hobby extends Core {
 class Action {
     constructor(name, description) {
         this.name = name;
-        this.description = this.description;
+        this.description = description;
     }
 
     addLife(code) {
         this.code = code;
     }
 
-    execute() {
-        this.code;
+    execute(...args) {
+        if (args) {
+            this.code(args);
+        } else {
+            this.code;
+        }
     }
 }
 
-class Entity {
-    constructor(attributes) {
-        this.attributes = attributes;
+class Item {
+    constructor(name) {
+        this.name = name;
     }
-};
+}
 
 module.exports = {
     Engine: Engine

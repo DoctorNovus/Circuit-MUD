@@ -1,5 +1,6 @@
 const { Engine } = require("./circuit-string");
 const telnet = require("telnet");
+const admins = require("./admins.json").admins;
 let database = require("./database.json");
 const fs = require("fs");
 let CryptoJS = require("crypto-js");
@@ -20,6 +21,27 @@ let Hobbies = Circuit.Category("Hobbies");
 /* Hobbies */
 // Mining
 let Mining = Circuit.Hobby("Mining");
+let mine = Circuit.Action("mine", "mines things around you");
+mine.addLife((...args) => {
+    let usere = database.users.find(user => user.username == args[0][0]);
+    let picLevel = usere.tools.pickaxe.level;
+    let str = `Gained the following ore: `
+    for (let value of Object.values(usere.ores)) {
+        if (value.hardness <= picLevel) {
+            if (probability(value.rarity)) {
+                value.count++;
+                for (let i = 0; i < Object.keys(usere.ores).length; i++) {
+                    if (usere.ores[Object.keys(usere.ores)[i]] == value) {
+                        str += Object.keys(usere.ores)[i] + ", ";
+                    }
+                }
+            }
+        }
+    }
+    send(args[0][1], str);
+});
+
+Mining.addAction(mine);
 
 // Crafting
 let Crafting = Circuit.Hobby("Crafting");
@@ -77,6 +99,15 @@ telnet.createServer((client) => {
                 };
             });
 
+            if (loggedIn == true && isAdmin(username)) {
+                switch (command) {
+                    case "save":
+                        saveGame();
+                        sendAll("Game has been saved. ");
+                        break;
+                }
+            };
+
             if (loggedIn == false) {
                 switch (command) {
                     case "login":
@@ -101,12 +132,137 @@ telnet.createServer((client) => {
                         if (database.users.find((user) => user.username == args[0])) {
                             send(client, "That user exists");
                         } else {
-                            database.users.push({ "username": args[0], "password": CryptoJS.AES.encrypt(args[1], cryptokey).toString() });
+                            let user = {
+                                "username": args[0],
+                                "password": CryptoJS.AES.encrypt(args[1], cryptokey).toString(),
+                                "ores": {
+                                    "coal": {
+                                        "count": 0,
+                                        "rarity": 1 / 34,
+                                        "hardness": 1
+                                    },
+                                    "iron": {
+                                        "count": 0,
+                                        "rarity": 1 / 72,
+                                        "hardness": 3
+                                    },
+                                    "gold": {
+                                        "count": 0,
+                                        "rarity": 1 / 5465,
+                                        "hardness": 2
+                                    },
+                                    "titanium": {
+                                        "count": 0,
+                                        "rarity": 1 / 347,
+                                        "hardness": 4
+                                    },
+                                    "uranium": {
+                                        "count": 0,
+                                        "rarity": 1 / 529,
+                                        "hardness": 4
+                                    },
+                                    "copper": {
+                                        "count": 0,
+                                        "rarity": 1 / 259,
+                                        "hardness": 1
+                                    },
+                                    "aluminium": {
+                                        "count": 0,
+                                        "rarity": 1 / 77,
+                                        "hardness": 3
+                                    },
+                                    "tin": {
+                                        "count": 0,
+                                        "rarity": 1 / 741,
+                                        "hardness": 1
+                                    },
+                                    "silver": {
+                                        "count": 0,
+                                        "rarity": 1 / 17,
+                                        "hardness": 2
+                                    },
+                                    "lead": {
+                                        "count": 0,
+                                        "rarity": 1 / 84,
+                                        "hardness": 2
+                                    },
+                                    "zinc": {
+                                        "count": 0,
+                                        "rarity": 1 / 101,
+                                        "hardness": 2
+                                    },
+
+                                    "platinum": {
+                                        "count": 0,
+                                        "rarity": 1 / 962,
+                                        "hardness": 4
+                                    },
+                                    "palladium": {
+                                        "count": 0,
+                                        "rarity": 1 / 2329,
+                                        "hardness": 5
+                                    },
+                                    "nickel": {
+                                        "count": 0,
+                                        "rarity": 1 / 590,
+                                        "hardness": 2
+                                    },
+                                },
+                                "lastMined": Date.now(),
+                                "tools": {
+                                    "pickaxe": {
+                                        "level": 1,
+                                    },
+                                    "axe": {
+                                        "level": 1
+                                    },
+                                    "hoe": {
+                                        "level": 1
+                                    },
+                                    "spade": {
+                                        "level": 1
+                                    }
+                                },
+                                "weapons": {
+                                    "shotgun": 0,
+                                    "sniper": 0,
+                                    "dagger": 0,
+                                    "rifle": 0,
+                                    "spear": 0,
+                                    "bow": 0,
+                                    "pistol": 0,
+                                    "grenadeLauncher": 0,
+                                    "grenade": 0,
+                                    "crossbow": 0,
+                                    "knife": 0,
+                                    "handGun": 0,
+                                    "assaultRifle": 0,
+                                    "boomerang": 0,
+                                    "uzi": 0,
+                                    "javelin": 0,
+                                    "flameThrower": 0,
+                                    "long Bow": 0,
+                                    "dart": 0,
+                                    "throwingKnife": 0
+                                },
+                                "liquids": {
+                                    "magma": 0,
+                                    "plasma": 0,
+                                    "water": 0,
+                                    "acid": 0,
+                                    "gas": 0,
+                                    "oil": 0,
+                                    "blood": 0,
+                                    "bromine": 0
+                                },
+                            };
+
+                            database.users.push(user);
                             fs.writeFile("./database.json", JSON.stringify(database), () => {
 
                             });
                             let createdUser = Circuit.Story("Created User");
-                            createdUser.editBody(["Username: " + args[0], "Password: " + args[1]]);
+                            createdUser.editBody(["Username: " + user.username, "Password: " + user.password]);
 
                             send(client, createdUser.create());
                             loggedIn = true;
@@ -176,8 +332,22 @@ telnet.createServer((client) => {
                     case "announce":
                         sendAll(`Announcement > [${username}]: ${args.join(" ")} | ${getDate()}`);
                         logNetwork(`Message Announced: [${username}]: ${args.join(" ")} | ${getDate()}`);
+                        break;
 
+                    case "mine":
+                        if (Date.now() - getUser(username).lastMined >= 5000) {
+                            mine.execute(username, client);
+                            getUser(username).lastMined = Date.now();
+                        } else {
+                            send(client, "You can't mine right now, please wait " + Math.floor((5000 - (Date.now() - getUser(username).lastMined)) / 1000) + " seconds");
+                        }
+                        break;
 
+                    case "stats":
+                        let stats = Circuit.Story("Stats");
+                        stats.editBody([`Ore: ${getUser(username).ore}`]);
+                        send(client, stats.create());
+                        break;
                 }
             }
 
@@ -245,8 +415,32 @@ function getDate() {
     return new Date(now_utc).toISOString();
 }
 
-function updateDB() {
+function saveGame() {
     fs.writeFile("./database.json", JSON.stringify(database), () => {
 
     })
+}
+
+// Autosave
+setInterval(() => {
+    fs.writeFile("./database.json", JSON.stringify(database), () => {
+
+    });
+
+    database = require("./database.json");
+    sendAll("Game has been saved!");
+}, 1000 * 60 * 5);
+
+function getUser(username) {
+    return database.users.find(user => user.username == username);
+}
+
+function isAdmin(username) {
+    if (admins.find(admin => admin == username)) return true;
+
+    return false;
+}
+
+function probability(n) {
+    return Math.random() <= n;
 }
