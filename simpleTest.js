@@ -2,6 +2,7 @@ const { Engine } = require("./circuit-string");
 const telnet = require("telnet");
 const admins = require("./admins.json").admins;
 let database = require("./database.json");
+let worlds = require("./worlds.json");
 const fs = require("fs");
 let CryptoJS = require("crypto-js");
 let cryptokey = require("./cryptokey.json").key;
@@ -121,7 +122,7 @@ telnet.createServer((client) => {
                                     let loggedInStory = Circuit.Story("Logged in");
                                     loggedInStory.editBody(["Username: " + args[0]]);
                                     send(client, loggedInStory.create());
-                                    clients.push({ "username": args[0], "client": client, "world": "main", });
+                                    clients.push({ "username": args[0], "client": client, "world": getUser(args[0]).currentWorld });
                                     sendAll(`User [${username}] has connected to the server! \n${clients.length} users are online | ${getDate()}`);
                                 }
                             }
@@ -255,6 +256,11 @@ telnet.createServer((client) => {
                                     "blood": 0,
                                     "bromine": 0
                                 },
+                                "currentWorld": "Cyber City",
+                                "pos": {
+                                    "x": 5,
+                                    "y": 0
+                                }
                             };
 
                             database.users.push(user);
@@ -290,30 +296,19 @@ telnet.createServer((client) => {
                         break;
 
                     case "joinWorld":
-                        for (let client of clients) {
-                            if (client.world == currentWorld) {
-                                send(client.client, `${username} has just left the world.`);
-                            }
-                        }
-                        currentWorld = args[0];
-                        for (let i = 0; i < clients.length; i++) {
-                            if (clients[i].username == username) {
-                                clients[i].world = currentWorld;
-                            }
-                        };
-
-                        for (let i = 0; i < database.users.length; i++) {
-                            let user = database.users[i];
-                            if (user.username == username) {
-                                database.users[i].world = currentWorld;
-                                updateDB();
-                            }
-                        };
-
-                        send(client, `Joining World: ${currentWorld}`);
-                        for (let client of clients) {
-                            if (client.world == currentWorld) {
-                                send(client.client, `${username} has just joined the world.`);
+                        for (let key of Object.keys(worlds)) {
+                            if (key == args.join(" ")) {
+                                let world = worlds[key];
+                                world.map.forEach(part => {
+                                    part.forEach(sector => {
+                                        if ((sector.pos.x == getUser(username).pos.x) && (sector.pos.y == getUser(username).pos.y)) {
+                                            sendAll(`${getUser(username).username} has left ${getUser(username).currentWorld}`, { "option": "world", "world": getUser(username).currentWorld });
+                                            getUser(username).currentWorld = args.join(" ");
+                                            clients.find(client => client.username == username).world = args.join(" ");
+                                            sendAll(`${getUser(username).username} has joined ${getUser(username).currentWorld}`, { "option": "world", "world": getUser(username).currentWorld });
+                                        }
+                                    });
+                                });
                             }
                         }
                         break;
@@ -325,8 +320,8 @@ telnet.createServer((client) => {
                         break;
 
                     case "say":
-                        sendAll(`{${currentWorld}} [${username}]: ${args.join(" ")} | ${getDate()}`, { "option": "world", "world": currentWorld });
-                        logNetwork(`Message Sent: {${currentWorld}} [${username}]: ${args.join(" ")} | ${getDate()}`);
+                        sendAll(`{${getUser(username).currentWorld}} [${username}]: ${args.join(" ")} | ${getDate()}`, { "option": "world", "world": getUser(username).currentWorld });
+                        logNetwork(`Message Sent: {${getUser(username).currentWorld}} [${username}]: ${args.join(" ")} | ${getDate()}`);
                         break;
 
                     case "announce":
@@ -419,6 +414,8 @@ function saveGame() {
     fs.writeFile("./database.json", JSON.stringify(database), () => {
 
     })
+
+    database = require("./database.json");
 }
 
 // Autosave
