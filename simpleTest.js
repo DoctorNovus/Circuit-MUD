@@ -347,7 +347,7 @@ telnet.createServer((client) => {
 
                     case "stats":
                         let stats = Circuit.Story("Stats");
-                        stats.editBody([`Ore: ${getUser(username).ore}`]);
+                        stats.editBody(getKeyValuePair(getUser(username).ores, "count", "name"));
                         send(client, stats.create());
                         break;
 
@@ -526,4 +526,23 @@ function findSector(username) {
     });
 
     return sect;
+}
+
+function getKeyValuePair(obje, val, keyVal) {
+    let keys = [];
+    let arr = [];
+
+    Object.keys(obje).forEach(key => {
+        keys.push(key);
+    });
+
+    keys.forEach(key => {
+        if (keyVal) {
+            arr.push(`${obje[key][keyVal]} | ${val}: ${obje[key][val]}`)
+        } else {
+            arr.push(`${key} | ${val}: ${obje[key][val]}`)
+        }
+    })
+
+    return arr;
 }
