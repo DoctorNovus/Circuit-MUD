@@ -7,9 +7,12 @@
         "crypto-js": "^3.1.9-1",
         "telnet": "git+https://github.com/TooTallNate/node-telnet.git#780340617e1f223de384cdfcb7cecf0a1a6f1159"
     },
-    "devDependencies": {},
+    "devDependencies": {
+        "@outwalk/sable": "^1.2.0"
+    },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "sable -c",
+        "start": "node build/game"
     },
     "author": "",
     "license": "ISC"
