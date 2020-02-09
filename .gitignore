@@ -43,10 +43,11 @@ jspm_packages/
 Crypto/
 
 # Files
-database.json
-logs.txt
-cryptokey.json
-admins.json
+/database.json
+/logs.txt
+/cryptokey.json
+/admins.json
+/worlds.json
 
 # TypeScript v1 declaration files
 typings/

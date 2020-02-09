@@ -1,5 +1,5 @@
 function createBody(string, body) {
-    str = string;
+    let str = string;
     if (body.includes("\n")) {
         body.split("\n").forEach((part) => {
 

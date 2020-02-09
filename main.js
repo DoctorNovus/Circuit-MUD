@@ -1,4 +1,4 @@
-const { Engine } = require("./circuit-string");
+const { Engine } = require("./CircuitString");
 const telnet = require("telnet");
 const admins = require("./admins.json").admins;
 let database = require("./database.json");
