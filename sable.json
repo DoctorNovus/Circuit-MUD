@@ -1,0 +1,8 @@
+[
+    {
+        "input": "simpleTest.js",
+        "output": "build/game.js",
+        "format": "cjs",
+        "clean": true
+    }
+]

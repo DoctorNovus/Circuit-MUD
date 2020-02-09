@@ -1,4 +1,4 @@
-const net = require('net')
+import net from "net";
 const socket = new net.Socket();
 const port = 4922;
 const host = "ottegi.com";

@@ -1,4 +1,4 @@
-let fs = require("fs");
+import fs from "fs";
 
 readAndGen(process.argv[2]);
 

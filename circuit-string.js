@@ -1,5 +1,5 @@
 function createBody(string, body) {
-    str = string;
+    let str = string;
     if (body.includes("\n")) {
         body.split("\n").forEach((part) => {
 
@@ -43,7 +43,7 @@ function createBody(string, body) {
     return str;
 };
 
-class Engine {
+export class Engine {
 
     constructor() {
         this.stories = [];
@@ -251,8 +251,4 @@ class Item {
     constructor(name) {
         this.name = name;
     }
-}
-
-module.exports = {
-    Engine: Engine
 }

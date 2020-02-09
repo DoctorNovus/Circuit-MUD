@@ -1,11 +1,11 @@
-const { Engine } = require("./circuit-string");
-const telnet = require("telnet");
-const admins = require("./admins.json").admins;
-let database = require("./database.json");
-let worlds = require("./worlds.json");
-const fs = require("fs");
-let CryptoJS = require("crypto-js");
-let cryptokey = require("./cryptokey.json").key;
+import { Engine } from "./circuit-string";
+import telnet from "telnet";
+import { admins } from "./admins.json";
+import database from "./database.json";
+import worlds from "./worlds.json";
+import fs from "fs";
+import CryptoJS from "crypto-js";
+import {key as cryptokey} from "./cryptokey.json";
 
 let Circuit = new Engine();
 
@@ -144,77 +144,77 @@ telnet.createServer((client) => {
                                 "username": args[0],
                                 "password": CryptoJS.AES.encrypt(args[1], cryptokey).toString(),
                                 "ores": [{
-                                        "name": "coal",
-                                        "count": 0,
-                                        "rarity": 1 / 34,
-                                        "hardness": 1
-                                    },
-                                    {
-                                        "name": "iron",
-                                        "count": 0,
-                                        "rarity": 1 / 72,
-                                        "hardness": 3
-                                    }, {
-                                        "name": "gold",
-                                        "count": 0,
-                                        "rarity": 1 / 5465,
-                                        "hardness": 2
-                                    }, {
-                                        "name": "titanium",
-                                        "count": 0,
-                                        "rarity": 1 / 347,
-                                        "hardness": 4
-                                    }, {
-                                        "name": "uranium",
-                                        "count": 0,
-                                        "rarity": 1 / 529,
-                                        "hardness": 4
-                                    }, {
-                                        "name": "copper",
-                                        "count": 0,
-                                        "rarity": 1 / 259,
-                                        "hardness": 1
-                                    }, {
-                                        "name": "aluminium",
-                                        "count": 0,
-                                        "rarity": 1 / 77,
-                                        "hardness": 3
-                                    }, {
-                                        "name": "tin",
-                                        "count": 0,
-                                        "rarity": 1 / 741,
-                                        "hardness": 1
-                                    }, {
-                                        "name": "silver",
-                                        "count": 0,
-                                        "rarity": 1 / 17,
-                                        "hardness": 2
-                                    }, {
-                                        "name": "lead",
-                                        "count": 0,
-                                        "rarity": 1 / 84,
-                                        "hardness": 2
-                                    }, {
-                                        "name": "zinc",
-                                        "count": 0,
-                                        "rarity": 1 / 101,
-                                        "hardness": 2
-                                    }, {
-                                        "name": "platinum",
-                                        "count": 0,
-                                        "rarity": 1 / 962,
-                                        "hardness": 4
-                                    }, {
-                                        "name": "palladium",
-                                        "count": 0,
-                                        "rarity": 1 / 2329,
-                                        "hardness": 5
-                                    }, {
-                                        "name": "nickel",
-                                        "count": 0,
-                                        "rarity": 1 / 590,
-                                        "hardness": 2
-                                    }
+                                    "name": "coal",
+                                    "count": 0,
+                                    "rarity": 1 / 34,
+                                    "hardness": 1
+                                },
+                                {
+                                    "name": "iron",
+                                    "count": 0,
+                                    "rarity": 1 / 72,
+                                    "hardness": 3
+                                }, {
+                                    "name": "gold",
+                                    "count": 0,
+                                    "rarity": 1 / 5465,
+                                    "hardness": 2
+                                }, {
+                                    "name": "titanium",
+                                    "count": 0,
+                                    "rarity": 1 / 347,
+                                    "hardness": 4
+                                }, {
+                                    "name": "uranium",
+                                    "count": 0,
+                                    "rarity": 1 / 529,
+                                    "hardness": 4
+                                }, {
+                                    "name": "copper",
+                                    "count": 0,
+                                    "rarity": 1 / 259,
+                                    "hardness": 1
+                                }, {
+                                    "name": "aluminium",
+                                    "count": 0,
+                                    "rarity": 1 / 77,
+                                    "hardness": 3
+                                }, {
+                                    "name": "tin",
+                                    "count": 0,
+                                    "rarity": 1 / 741,
+                                    "hardness": 1
+                                }, {
+                                    "name": "silver",
+                                    "count": 0,
+                                    "rarity": 1 / 17,
+                                    "hardness": 2
+                                }, {
+                                    "name": "lead",
+                                    "count": 0,
+                                    "rarity": 1 / 84,
+                                    "hardness": 2
+                                }, {
+                                    "name": "zinc",
+                                    "count": 0,
+                                    "rarity": 1 / 101,
+                                    "hardness": 2
+                                }, {
+                                    "name": "platinum",
+                                    "count": 0,
+                                    "rarity": 1 / 962,
+                                    "hardness": 4
+                                }, {
+                                    "name": "palladium",
+                                    "count": 0,
+                                    "rarity": 1 / 2329,
+                                    "hardness": 5
+                                }, {
+                                    "name": "nickel",
+                                    "count": 0,
+                                    "rarity": 1 / 590,
+                                    "hardness": 2
+                                }
                                 ],
                                 "lastMined": Date.now(),
                                 "tools": {
@@ -460,9 +460,6 @@ function saveGame() {
     fs.writeFile("./worlds.json", JSON.stringify(worlds, null, 4), () => {
 
     });
-
-    database = require("./database.json");
-    worlds = require("./worlds.json");
 }
 
 // Autosave
@@ -475,8 +472,6 @@ setInterval(() => {
 
     });
 
-    database = require("./database.json");
-    worlds = require("./worlds.json");
     sendAll("Game has been saved!");
 }, 1000 * 60 * 5);
 
