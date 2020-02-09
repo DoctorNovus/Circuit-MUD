@@ -1,11 +1,11 @@
-const { Engine } = require("./CircuitString");
-const telnet = require("telnet");
-const admins = require("./admins.json").admins;
-let database = require("./database.json");
-let worlds = require("./worlds.json");
-const fs = require("fs");
-let CryptoJS = require("crypto-js");
-let cryptokey = require("./cryptokey.json").key;
+import { Engine } from "./circuit-string";
+import telnet from "telnet";
+import { admins } from "./admins.json";
+import database from "./database.json";
+import worlds from "./worlds.json";
+import fs from "fs";
+import CryptoJS from "crypto-js";
+import { key as cryptokey } from "./cryptokey.json";
 
 let Circuit = new Engine();
 
@@ -460,9 +460,6 @@ function saveGame() {
     fs.writeFile("./worlds.json", JSON.stringify(worlds, null, 4), () => {
 
     });
-
-    database = require("./database.json");
-    worlds = require("./worlds.json");
 }
 
 // Autosave
@@ -475,8 +472,6 @@ setInterval(() => {
 
     });
 
-    database = require("./database.json");
-    worlds = require("./worlds.json");
     sendAll("Game has been saved!");
 }, 1000 * 60 * 5);
 
