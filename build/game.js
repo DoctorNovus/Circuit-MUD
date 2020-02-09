@@ -1,1 +1,550 @@
-"use strict";function o(o){return o&&"object"==typeof o&&"default"in o?o.default:o}var t=o(require("telnet")),c=o(require("fs")),e=o(require("crypto-js"));function u(o,t){let c=o;if(t.includes("\n"))t.split("\n").forEach(o=>{let e=0;for(let t=0;t<Math.ceil(o.length/60);t++)e++;for(let u=0;u<Math.ceil(o.length/60)+e;u++){let e=0;Math.floor((60-t.substr(0,60).length)%2==0)||(e=1),c+="|"+" ".repeat(Math.floor((60-o.substr(0,60).length)/2-e))+o.substr(0,60)+" ".repeat(Math.floor((60-o.substr(0,60).length)/2-e))+"|\n",o=o.substr(60,o.length)}});else{console.log(t);let o=0;for(let c=0;c<Math.ceil(t.length/60);c++)o++;for(let e=0;e<Math.ceil(t.length/60)+o;e++){let o=0;Math.floor((60-t.substr(0,60).length)/2)%2!=0&&(o=1),c+="|"+" ".repeat(Math.floor((60-t.substr(0,60).length)/2))+t.substr(0,60)+" ".repeat(Math.floor((60-t.substr(0,60).length)/2-o))+"|\n",t=t.substr(60,t.length)}}return c}class n{constructor(o){this.title=o,this.body="",this.author="",this.footer=""}}class s extends n{constructor(o){super(o)}editBody(o){this.body="",Array.isArray(o)&&(this.body=o.join("\n"))}create(o,t){if(t&&null!=o.categories.find(o=>o.title==t)){this.body="";let c=o.categories.find(o=>o.title==t);try{for(let o of c.parts)null!=o&&(this.body+=o.text+"\n")}catch(o){for(let o of c.actions)null!=o&&(this.body+=o.name+"-"+o.description+"\n")}}let c="";return c+="-".repeat(61)+"\n",c+="|"+" ".repeat((60-this.title.length)/2)+this.title+" ".repeat((60-this.title.length)/2)+"|\n",c+="-".repeat(61)+"\n",c=u(c,this.body),c+="-".repeat(61)+"\n",c}}class r extends n{constructor(o){super(o),this.parts=[]}addParts(o){if(Array.isArray(o))for(let t=0;t<o.length;t++){let c={text:o[t]};this.parts.push(c)}else{let t={text:o};this.parts.push(t)}}removeParts(o){if(Array.isArray(o))for(let t=0;t<o.length;t++)for(let c=0;c<this.parts.length;c++)this.parts[c].id==o[t]&&this.parts.splice(c,1);else for(let t=0;t<this.parts.length;t++)this.parts[t].id==o&&this.parts.splice(t,1)}addHobbies(o){if(Array.isArray(o))for(let t=0;t<o.length;t++)this.parts.push(o.title);else this.parts.push(o.title)}create(o,t){if(t&&null!=o.categories.find(o=>o.title==t)){this.body="";let c=o.categories.find(o=>o.title==t);try{for(let o of c.parts)null!=o&&(this.body+=o.text+"\n")}catch(o){for(let o of c.actions)null!=o&&(this.body+=o.name+"-"+o.description+"\n")}}let c="";return c+="-".repeat(61)+"\n",c+="|"+" ".repeat((60-this.title.length)/2)+this.title+" ".repeat((60-this.title.length)/2)+"|\n",c+="-".repeat(61)+"\n",c=u(c,this.body),c+="-".repeat(61)+"\n",c}}class p extends n{constructor(o){super(o),this.actions=[]}addAction(o){this.actions.push(o)}executeAction(o){this.actions.find(t=>t.name==o).execute()}}class i{constructor(o,t){this.name=o,this.description=t}addLife(o){this.code=o}execute(...o){o?this.code(o):this.code}}class y{constructor(o){this.name=o}}var l=["admin1","admin2"],a={users:[]},m={"Cyber City":{premium:!1,trading:!1,map:[[{type:"sector",pos:{x:0,y:0},resources:{copper:{count:702},coal:{count:658}}},{type:"sector",pos:{x:1,y:0},resources:{copper:{count:703},coal:{count:630}}},{type:"sector",pos:{x:2,y:0},resources:{copper:{count:624},coal:{count:705}}},{type:"sector",pos:{x:3,y:0},resources:{copper:{count:600},coal:{count:729}}},{type:"exit",pos:{x:4,y:0},resources:{copper:{count:656},coal:{count:688}}},{type:"sector",pos:{x:5,y:0},resources:{copper:{count:668},coal:{count:657}}},{type:"sector",pos:{x:6,y:0},resources:{copper:{count:609},coal:{count:648}}},{type:"sector",pos:{x:7,y:0},resources:{copper:{count:662},coal:{count:641}}},{type:"sector",pos:{x:8,y:0},resources:{copper:{count:573},coal:{count:685}}}],[{type:"sector",pos:{x:0,y:1},resources:{copper:{count:654},coal:{count:651}}},{type:"sector",pos:{x:1,y:1},resources:{copper:{count:610},coal:{count:673}}},{type:"sector",pos:{x:2,y:1},resources:{copper:{count:680},coal:{count:693}}},{type:"sector",pos:{x:3,y:1},resources:{copper:{count:672},coal:{count:655}}},{type:"sector",pos:{x:4,y:1},resources:{copper:{count:612},coal:{count:644}}},{type:"sector",pos:{x:5,y:1},resources:{copper:{count:647},coal:{count:619}}},{type:"sector",pos:{x:6,y:1},resources:{copper:{count:626},coal:{count:642}}},{type:"sector",pos:{x:7,y:1},resources:{copper:{count:633},coal:{count:666}}},{type:"sector",pos:{x:8,y:1},resources:{copper:{count:631},coal:{count:589}}}],[{type:"sector",pos:{x:0,y:2},resources:{copper:{count:677},coal:{count:658}}},{type:"sector",pos:{x:1,y:2},resources:{copper:{count:627},coal:{count:658}}},{type:"sector",pos:{x:2,y:2},resources:{copper:{count:620},coal:{count:666}}},{type:"sector",pos:{x:3,y:2},resources:{copper:{count:691},coal:{count:636}}},{type:"sector",pos:{x:4,y:2},resources:{copper:{count:663},coal:{count:678}}},{type:"sector",pos:{x:5,y:2},resources:{copper:{count:605},coal:{count:634}}},{type:"sector",pos:{x:6,y:2},resources:{copper:{count:632},coal:{count:675}}},{type:"sector",pos:{x:7,y:2},resources:{copper:{count:696},coal:{count:630}}},{type:"sector",pos:{x:8,y:2},resources:{copper:{count:719},coal:{count:601}}}],[{type:"sector",pos:{x:0,y:3},resources:{copper:{count:675},coal:{count:621}}},{type:"sector",pos:{x:1,y:3},resources:{copper:{count:653},coal:{count:624}}},{type:"sector",pos:{x:2,y:3},resources:{copper:{count:702},coal:{count:721}}},{type:"sector",pos:{x:3,y:3},resources:{copper:{count:551},coal:{count:647}}},{type:"sector",pos:{x:4,y:3},resources:{copper:{count:690},coal:{count:583}}},{type:"sector",pos:{x:5,y:3},resources:{copper:{count:629},coal:{count:636}}},{type:"sector",pos:{x:6,y:3},resources:{copper:{count:624},coal:{count:649}}},{type:"sector",pos:{x:7,y:3},resources:{copper:{count:677},coal:{count:595}}},{type:"sector",pos:{x:8,y:3},resources:{copper:{count:613},coal:{count:685}}}],[{type:"sector",pos:{x:0,y:4},resources:{copper:{count:671},coal:{count:659}}},{type:"sector",pos:{x:1,y:4},resources:{copper:{count:586},coal:{count:628}}},{type:"sector",pos:{x:2,y:4},resources:{copper:{count:674},coal:{count:633}}},{type:"sector",pos:{x:3,y:4},resources:{copper:{count:694},coal:{count:668}}},{type:"sector",pos:{x:4,y:4},resources:{copper:{count:620},coal:{count:651}}},{type:"sector",pos:{x:5,y:4},resources:{copper:{count:602},coal:{count:615}}},{type:"sector",pos:{x:6,y:4},resources:{copper:{count:689},coal:{count:655}}},{type:"sector",pos:{x:7,y:4},resources:{copper:{count:662},coal:{count:725}}},{type:"sector",pos:{x:8,y:4},resources:{copper:{count:660},coal:{count:665}}}],[{type:"sector",pos:{x:0,y:5},resources:{copper:{count:613},coal:{count:634}}},{type:"sector",pos:{x:1,y:5},resources:{copper:{count:628},coal:{count:589}}},{type:"sector",pos:{x:2,y:5},resources:{copper:{count:618},coal:{count:569}}},{type:"sector",pos:{x:3,y:5},resources:{copper:{count:610},coal:{count:626}}},{type:"sector",pos:{x:4,y:5},resources:{copper:{count:638},coal:{count:628}}},{type:"sector",pos:{x:5,y:5},resources:{copper:{count:657},coal:{count:662}}},{type:"sector",pos:{x:6,y:5},resources:{copper:{count:651},coal:{count:605}}},{type:"sector",pos:{x:7,y:5},resources:{copper:{count:598},coal:{count:670}}},{type:"sector",pos:{x:8,y:5},resources:{copper:{count:686},coal:{count:623}}}],[{type:"sector",pos:{x:0,y:6},resources:{copper:{count:671},coal:{count:616}}},{type:"sector",pos:{x:1,y:6},resources:{copper:{count:680},coal:{count:615}}},{type:"sector",pos:{x:2,y:6},resources:{copper:{count:645},coal:{count:608}}},{type:"sector",pos:{x:3,y:6},resources:{copper:{count:686},coal:{count:695}}},{type:"sector",pos:{x:4,y:6},resources:{copper:{count:581},coal:{count:641}}},{type:"sector",pos:{x:5,y:6},resources:{copper:{count:563},coal:{count:648}}},{type:"sector",pos:{x:6,y:6},resources:{copper:{count:642},coal:{count:569}}},{type:"sector",pos:{x:7,y:6},resources:{copper:{count:696},coal:{count:567}}},{type:"sector",pos:{x:8,y:6},resources:{copper:{count:654},coal:{count:661}}}],[{type:"sector",pos:{x:0,y:7},resources:{copper:{count:653},coal:{count:591}}},{type:"sector",pos:{x:1,y:7},resources:{copper:{count:663},coal:{count:677}}},{type:"sector",pos:{x:2,y:7},resources:{copper:{count:661},coal:{count:611}}},{type:"sector",pos:{x:3,y:7},resources:{copper:{count:664},coal:{count:599}}},{type:"sector",pos:{x:4,y:7},resources:{copper:{count:558},coal:{count:640}}},{type:"sector",pos:{x:5,y:7},resources:{copper:{count:619},coal:{count:573}}},{type:"sector",pos:{x:6,y:7},resources:{copper:{count:665},coal:{count:684}}},{type:"sector",pos:{x:7,y:7},resources:{copper:{count:676},coal:{count:624}}},{type:"sector",pos:{x:8,y:7},resources:{copper:{count:630},coal:{count:597}}}],[{type:"sector",pos:{x:0,y:8},resources:{copper:{count:608},coal:{count:629}}},{type:"sector",pos:{x:1,y:8},resources:{copper:{count:720},coal:{count:626}}},{type:"sector",pos:{x:2,y:8},resources:{copper:{count:593},coal:{count:670}}},{type:"sector",pos:{x:3,y:8},resources:{copper:{count:689},coal:{count:626}}},{type:"sector",pos:{x:4,y:8},resources:{copper:{count:622},coal:{count:599}}},{type:"sector",pos:{x:5,y:8},resources:{copper:{count:642},coal:{count:637}}},{type:"sector",pos:{x:6,y:8},resources:{copper:{count:700},coal:{count:659}}},{type:"sector",pos:{x:7,y:8},resources:{copper:{count:635},coal:{count:713}}},{type:"sector",pos:{x:8,y:8},resources:{copper:{count:591},coal:{count:626}}}]]},"Techno Topia":{premium:!1,trading:!1,map:[[{type:"sector",pos:{x:0,y:0},resources:{tin:{count:690}}},{type:"sector",pos:{x:1,y:0},resources:{tin:{count:688}}},{type:"sector",pos:{x:2,y:0},resources:{tin:{count:662}}},{type:"sector",pos:{x:3,y:0},resources:{tin:{count:610}}},{type:"exit",pos:{x:4,y:0},resources:{tin:{count:636}}},{type:"sector",pos:{x:5,y:0},resources:{tin:{count:609}}},{type:"sector",pos:{x:6,y:0},resources:{tin:{count:665}}},{type:"sector",pos:{x:7,y:0},resources:{tin:{count:701}}},{type:"sector",pos:{x:8,y:0},resources:{tin:{count:634}}}],[{type:"sector",pos:{x:0,y:1},resources:{tin:{count:623}}},{type:"sector",pos:{x:1,y:1},resources:{tin:{count:665}}},{type:"sector",pos:{x:2,y:1},resources:{tin:{count:641}}},{type:"sector",pos:{x:3,y:1},resources:{tin:{count:637}}},{type:"sector",pos:{x:4,y:1},resources:{tin:{count:667}}},{type:"sector",pos:{x:5,y:1},resources:{tin:{count:604}}},{type:"sector",pos:{x:6,y:1},resources:{tin:{count:616}}},{type:"sector",pos:{x:7,y:1},resources:{tin:{count:670}}},{type:"sector",pos:{x:8,y:1},resources:{tin:{count:679}}}],[{type:"sector",pos:{x:0,y:2},resources:{tin:{count:659}}},{type:"sector",pos:{x:1,y:2},resources:{tin:{count:615}}},{type:"sector",pos:{x:2,y:2},resources:{tin:{count:676}}},{type:"sector",pos:{x:3,y:2},resources:{tin:{count:661}}},{type:"sector",pos:{x:4,y:2},resources:{tin:{count:677}}},{type:"sector",pos:{x:5,y:2},resources:{tin:{count:682}}},{type:"sector",pos:{x:6,y:2},resources:{tin:{count:643}}},{type:"sector",pos:{x:7,y:2},resources:{tin:{count:656}}},{type:"sector",pos:{x:8,y:2},resources:{tin:{count:645}}}],[{type:"sector",pos:{x:0,y:3},resources:{tin:{count:586}}},{type:"sector",pos:{x:1,y:3},resources:{tin:{count:643}}},{type:"sector",pos:{x:2,y:3},resources:{tin:{count:633}}},{type:"sector",pos:{x:3,y:3},resources:{tin:{count:690}}},{type:"sector",pos:{x:4,y:3},resources:{tin:{count:661}}},{type:"sector",pos:{x:5,y:3},resources:{tin:{count:629}}},{type:"sector",pos:{x:6,y:3},resources:{tin:{count:644}}},{type:"sector",pos:{x:7,y:3},resources:{tin:{count:659}}},{type:"sector",pos:{x:8,y:3},resources:{tin:{count:651}}}],[{type:"sector",pos:{x:0,y:4},resources:{tin:{count:625}}},{type:"sector",pos:{x:1,y:4},resources:{tin:{count:636}}},{type:"sector",pos:{x:2,y:4},resources:{tin:{count:630}}},{type:"sector",pos:{x:3,y:4},resources:{tin:{count:705}}},{type:"sector",pos:{x:4,y:4},resources:{tin:{count:664}}},{type:"sector",pos:{x:5,y:4},resources:{tin:{count:605}}},{type:"sector",pos:{x:6,y:4},resources:{tin:{count:660}}},{type:"sector",pos:{x:7,y:4},resources:{tin:{count:598}}},{type:"sector",pos:{x:8,y:4},resources:{tin:{count:604}}}],[{type:"sector",pos:{x:0,y:5},resources:{tin:{count:625}}},{type:"sector",pos:{x:1,y:5},resources:{tin:{count:648}}},{type:"sector",pos:{x:2,y:5},resources:{tin:{count:687}}},{type:"sector",pos:{x:3,y:5},resources:{tin:{count:657}}},{type:"sector",pos:{x:4,y:5},resources:{tin:{count:630}}},{type:"sector",pos:{x:5,y:5},resources:{tin:{count:649}}},{type:"sector",pos:{x:6,y:5},resources:{tin:{count:687}}},{type:"sector",pos:{x:7,y:5},resources:{tin:{count:623}}},{type:"sector",pos:{x:8,y:5},resources:{tin:{count:663}}}],[{type:"sector",pos:{x:0,y:6},resources:{tin:{count:717}}},{type:"sector",pos:{x:1,y:6},resources:{tin:{count:612}}},{type:"sector",pos:{x:2,y:6},resources:{tin:{count:636}}},{type:"sector",pos:{x:3,y:6},resources:{tin:{count:652}}},{type:"sector",pos:{x:4,y:6},resources:{tin:{count:641}}},{type:"sector",pos:{x:5,y:6},resources:{tin:{count:591}}},{type:"sector",pos:{x:6,y:6},resources:{tin:{count:711}}},{type:"sector",pos:{x:7,y:6},resources:{tin:{count:631}}},{type:"sector",pos:{x:8,y:6},resources:{tin:{count:625}}}],[{type:"sector",pos:{x:0,y:7},resources:{tin:{count:630}}},{type:"sector",pos:{x:1,y:7},resources:{tin:{count:664}}},{type:"sector",pos:{x:2,y:7},resources:{tin:{count:650}}},{type:"sector",pos:{x:3,y:7},resources:{tin:{count:644}}},{type:"sector",pos:{x:4,y:7},resources:{tin:{count:653}}},{type:"sector",pos:{x:5,y:7},resources:{tin:{count:631}}},{type:"sector",pos:{x:6,y:7},resources:{tin:{count:658}}},{type:"sector",pos:{x:7,y:7},resources:{tin:{count:661}}},{type:"sector",pos:{x:8,y:7},resources:{tin:{count:653}}}],[{type:"sector",pos:{x:0,y:8},resources:{tin:{count:620}}},{type:"sector",pos:{x:1,y:8},resources:{tin:{count:654}}},{type:"sector",pos:{x:2,y:8},resources:{tin:{count:591}}},{type:"sector",pos:{x:3,y:8},resources:{tin:{count:622}}},{type:"sector",pos:{x:4,y:8},resources:{tin:{count:664}}},{type:"sector",pos:{x:5,y:8},resources:{tin:{count:720}}},{type:"sector",pos:{x:6,y:8},resources:{tin:{count:618}}},{type:"sector",pos:{x:7,y:8},resources:{tin:{count:654}}},{type:"sector",pos:{x:8,y:8},resources:{tin:{count:554}}}]]},"Wire World":{premium:!1,trading:!1,map:[[{type:"sector",pos:{x:0,y:0},resources:{nickel:{count:616},zinc:{count:662},lead:{count:637}}},{type:"sector",pos:{x:1,y:0},resources:{nickel:{count:659},zinc:{count:625},lead:{count:646}}},{type:"sector",pos:{x:2,y:0},resources:{nickel:{count:561},zinc:{count:599},lead:{count:706}}},{type:"sector",pos:{x:3,y:0},resources:{nickel:{count:669},zinc:{count:623},lead:{count:639}}},{type:"exit",pos:{x:4,y:0},resources:{nickel:{count:645},zinc:{count:622},lead:{count:581}}},{type:"sector",pos:{x:5,y:0},resources:{nickel:{count:626},zinc:{count:651},lead:{count:632}}},{type:"sector",pos:{x:6,y:0},resources:{nickel:{count:648},zinc:{count:633},lead:{count:673}}},{type:"sector",pos:{x:7,y:0},resources:{nickel:{count:630},zinc:{count:592},lead:{count:550}}},{type:"sector",pos:{x:8,y:0},resources:{nickel:{count:647},zinc:{count:650},lead:{count:647}}}],[{type:"sector",pos:{x:0,y:1},resources:{nickel:{count:562},zinc:{count:617},lead:{count:665}}},{type:"sector",pos:{x:1,y:1},resources:{nickel:{count:594},zinc:{count:645},lead:{count:626}}},{type:"sector",pos:{x:2,y:1},resources:{nickel:{count:676},zinc:{count:668},lead:{count:634}}},{type:"sector",pos:{x:3,y:1},resources:{nickel:{count:634},zinc:{count:695},lead:{count:666}}},{type:"sector",pos:{x:4,y:1},resources:{nickel:{count:622},zinc:{count:644},lead:{count:630}}},{type:"sector",pos:{x:5,y:1},resources:{nickel:{count:677},zinc:{count:595},lead:{count:686}}},{type:"sector",pos:{x:6,y:1},resources:{nickel:{count:651},zinc:{count:637},lead:{count:605}}},{type:"sector",pos:{x:7,y:1},resources:{nickel:{count:694},zinc:{count:636},lead:{count:624}}},{type:"sector",pos:{x:8,y:1},resources:{nickel:{count:718},zinc:{count:632},lead:{count:620}}}],[{type:"sector",pos:{x:0,y:2},resources:{nickel:{count:660},zinc:{count:649},lead:{count:585}}},{type:"sector",pos:{x:1,y:2},resources:{nickel:{count:654},zinc:{count:577},lead:{count:587}}},{type:"sector",pos:{x:2,y:2},resources:{nickel:{count:618},zinc:{count:609},lead:{count:606}}},{type:"sector",pos:{x:3,y:2},resources:{nickel:{count:591},zinc:{count:656},lead:{count:641}}},{type:"sector",pos:{x:4,y:2},resources:{nickel:{count:650},zinc:{count:625},lead:{count:639}}},{type:"sector",pos:{x:5,y:2},resources:{nickel:{count:678},zinc:{count:680},lead:{count:621}}},{type:"sector",pos:{x:6,y:2},resources:{nickel:{count:637},zinc:{count:608},lead:{count:642}}},{type:"sector",pos:{x:7,y:2},resources:{nickel:{count:642},zinc:{count:640},lead:{count:641}}},{type:"sector",pos:{x:8,y:2},resources:{nickel:{count:635},zinc:{count:622},lead:{count:648}}}],[{type:"sector",pos:{x:0,y:3},resources:{nickel:{count:650},zinc:{count:640},lead:{count:667}}},{type:"sector",pos:{x:1,y:3},resources:{nickel:{count:663},zinc:{count:698},lead:{count:631}}},{type:"sector",pos:{x:2,y:3},resources:{nickel:{count:643},zinc:{count:693},lead:{count:640}}},{type:"sector",pos:{x:3,y:3},resources:{nickel:{count:680},zinc:{count:664},lead:{count:699}}},{type:"sector",pos:{x:4,y:3},resources:{nickel:{count:627},zinc:{count:622},lead:{count:700}}},{type:"sector",pos:{x:5,y:3},resources:{nickel:{count:599},zinc:{count:638},lead:{count:716}}},{type:"sector",pos:{x:6,y:3},resources:{nickel:{count:622},zinc:{count:665},lead:{count:663}}},{type:"sector",pos:{x:7,y:3},resources:{nickel:{count:582},zinc:{count:597},lead:{count:698}}},{type:"sector",pos:{x:8,y:3},resources:{nickel:{count:635},zinc:{count:676},lead:{count:615}}}],[{type:"sector",pos:{x:0,y:4},resources:{nickel:{count:631},zinc:{count:652},lead:{count:694}}},{type:"sector",pos:{x:1,y:4},resources:{nickel:{count:666},zinc:{count:680},lead:{count:612}}},{type:"sector",pos:{x:2,y:4},resources:{nickel:{count:634},zinc:{count:656},lead:{count:653}}},{type:"sector",pos:{x:3,y:4},resources:{nickel:{count:749},zinc:{count:668},lead:{count:681}}},{type:"sector",pos:{x:4,y:4},resources:{nickel:{count:657},zinc:{count:718},lead:{count:621}}},{type:"sector",pos:{x:5,y:4},resources:{nickel:{count:634},zinc:{count:616},lead:{count:606}}},{type:"sector",pos:{x:6,y:4},resources:{nickel:{count:683},zinc:{count:711},lead:{count:643}}},{type:"sector",pos:{x:7,y:4},resources:{nickel:{count:660},zinc:{count:647},lead:{count:684}}},{type:"sector",pos:{x:8,y:4},resources:{nickel:{count:643},zinc:{count:574},lead:{count:666}}}],[{type:"sector",pos:{x:0,y:5},resources:{nickel:{count:662},zinc:{count:658},lead:{count:660}}},{type:"sector",pos:{x:1,y:5},resources:{nickel:{count:582},zinc:{count:547},lead:{count:683}}},{type:"sector",pos:{x:2,y:5},resources:{nickel:{count:696},zinc:{count:644},lead:{count:645}}},{type:"sector",pos:{x:3,y:5},resources:{nickel:{count:596},zinc:{count:625},lead:{count:662}}},{type:"sector",pos:{x:4,y:5},resources:{nickel:{count:602},zinc:{count:649},lead:{count:633}}},{type:"sector",pos:{x:5,y:5},resources:{nickel:{count:657},zinc:{count:630},lead:{count:625}}},{type:"sector",pos:{x:6,y:5},resources:{nickel:{count:615},zinc:{count:635},lead:{count:716}}},{type:"sector",pos:{x:7,y:5},resources:{nickel:{count:667},zinc:{count:649},lead:{count:623}}},{type:"sector",pos:{x:8,y:5},resources:{nickel:{count:645},zinc:{count:680},lead:{count:691}}}],[{type:"sector",pos:{x:0,y:6},resources:{nickel:{count:635},zinc:{count:654},lead:{count:613}}},{type:"sector",pos:{x:1,y:6},resources:{nickel:{count:621},zinc:{count:618},lead:{count:695}}},{type:"sector",pos:{x:2,y:6},resources:{nickel:{count:612},zinc:{count:618},lead:{count:599}}},{type:"sector",pos:{x:3,y:6},resources:{nickel:{count:643},zinc:{count:639},lead:{count:626}}},{type:"sector",pos:{x:4,y:6},resources:{nickel:{count:629},zinc:{count:661},lead:{count:618}}},{type:"sector",pos:{x:5,y:6},resources:{nickel:{count:612},zinc:{count:626},lead:{count:723}}},{type:"sector",pos:{x:6,y:6},resources:{nickel:{count:583},zinc:{count:685},lead:{count:668}}},{type:"sector",pos:{x:7,y:6},resources:{nickel:{count:720},zinc:{count:642},lead:{count:650}}},{type:"sector",pos:{x:8,y:6},resources:{nickel:{count:643},zinc:{count:640},lead:{count:605}}}],[{type:"sector",pos:{x:0,y:7},resources:{nickel:{count:587},zinc:{count:635},lead:{count:665}}},{type:"sector",pos:{x:1,y:7},resources:{nickel:{count:610},zinc:{count:658},lead:{count:695}}},{type:"sector",pos:{x:2,y:7},resources:{nickel:{count:646},zinc:{count:636},lead:{count:630}}},{type:"sector",pos:{x:3,y:7},resources:{nickel:{count:675},zinc:{count:602},lead:{count:680}}},{type:"sector",pos:{x:4,y:7},resources:{nickel:{count:712},zinc:{count:646},lead:{count:606}}},{type:"sector",pos:{x:5,y:7},resources:{nickel:{count:627},zinc:{count:637},lead:{count:607}}},{type:"sector",pos:{x:6,y:7},resources:{nickel:{count:654},zinc:{count:646},lead:{count:612}}},{type:"sector",pos:{x:7,y:7},resources:{nickel:{count:635},zinc:{count:637},lead:{count:655}}},{type:"sector",pos:{x:8,y:7},resources:{nickel:{count:579},zinc:{count:624},lead:{count:625}}}],[{type:"sector",pos:{x:0,y:8},resources:{nickel:{count:636},zinc:{count:670},lead:{count:628}}},{type:"sector",pos:{x:1,y:8},resources:{nickel:{count:624},zinc:{count:630},lead:{count:633}}},{type:"sector",pos:{x:2,y:8},resources:{nickel:{count:594},zinc:{count:588},lead:{count:627}}},{type:"sector",pos:{x:3,y:8},resources:{nickel:{count:628},zinc:{count:602},lead:{count:653}}},{type:"sector",pos:{x:4,y:8},resources:{nickel:{count:688},zinc:{count:706},lead:{count:627}}},{type:"sector",pos:{x:5,y:8},resources:{nickel:{count:590},zinc:{count:673},lead:{count:619}}},{type:"sector",pos:{x:6,y:8},resources:{nickel:{count:630},zinc:{count:628},lead:{count:647}}},{type:"sector",pos:{x:7,y:8},resources:{nickel:{count:668},zinc:{count:645},lead:{count:686}}},{type:"sector",pos:{x:8,y:8},resources:{nickel:{count:648},zinc:{count:693},lead:{count:647}}}]]},"Nano Nation":{premium:!1,trading:!1,map:[[{type:"sector",pos:{x:0,y:0},resources:{silver:{count:661},gold:{count:695}}},{type:"sector",pos:{x:1,y:0},resources:{silver:{count:673},gold:{count:630}}},{type:"sector",pos:{x:2,y:0},resources:{silver:{count:633},gold:{count:647}}},{type:"sector",pos:{x:3,y:0},resources:{silver:{count:662},gold:{count:656}}},{type:"exit",pos:{x:4,y:0},resources:{silver:{count:659},gold:{count:601}}},{type:"sector",pos:{x:5,y:0},resources:{silver:{count:657},gold:{count:663}}},{type:"sector",pos:{x:6,y:0},resources:{silver:{count:643},gold:{count:631}}},{type:"sector",pos:{x:7,y:0},resources:{silver:{count:642},gold:{count:628}}},{type:"sector",pos:{x:8,y:0},resources:{silver:{count:589},gold:{count:593}}}],[{type:"sector",pos:{x:0,y:1},resources:{silver:{count:596},gold:{count:649}}},{type:"sector",pos:{x:1,y:1},resources:{silver:{count:606},gold:{count:602}}},{type:"sector",pos:{x:2,y:1},resources:{silver:{count:648},gold:{count:667}}},{type:"sector",pos:{x:3,y:1},resources:{silver:{count:662},gold:{count:659}}},{type:"sector",pos:{x:4,y:1},resources:{silver:{count:675},gold:{count:635}}},{type:"sector",pos:{x:5,y:1},resources:{silver:{count:720},gold:{count:654}}},{type:"sector",pos:{x:6,y:1},resources:{silver:{count:676},gold:{count:638}}},{type:"sector",pos:{x:7,y:1},resources:{silver:{count:677},gold:{count:615}}},{type:"sector",pos:{x:8,y:1},resources:{silver:{count:673},gold:{count:605}}}],[{type:"sector",pos:{x:0,y:2},resources:{silver:{count:674},gold:{count:651}}},{type:"sector",pos:{x:1,y:2},resources:{silver:{count:651},gold:{count:664}}},{type:"sector",pos:{x:2,y:2},resources:{silver:{count:712},gold:{count:674}}},{type:"sector",pos:{x:3,y:2},resources:{silver:{count:617},gold:{count:649}}},{type:"sector",pos:{x:4,y:2},resources:{silver:{count:691},gold:{count:680}}},{type:"sector",pos:{x:5,y:2},resources:{silver:{count:617},gold:{count:663}}},{type:"sector",pos:{x:6,y:2},resources:{silver:{count:650},gold:{count:613}}},{type:"sector",pos:{x:7,y:2},resources:{silver:{count:646},gold:{count:655}}},{type:"sector",pos:{x:8,y:2},resources:{silver:{count:595},gold:{count:710}}}],[{type:"sector",pos:{x:0,y:3},resources:{silver:{count:604},gold:{count:629}}},{type:"sector",pos:{x:1,y:3},resources:{silver:{count:624},gold:{count:674}}},{type:"sector",pos:{x:2,y:3},resources:{silver:{count:625},gold:{count:678}}},{type:"sector",pos:{x:3,y:3},resources:{silver:{count:631},gold:{count:595}}},{type:"sector",pos:{x:4,y:3},resources:{silver:{count:630},gold:{count:675}}},{type:"sector",pos:{x:5,y:3},resources:{silver:{count:654},gold:{count:646}}},{type:"sector",pos:{x:6,y:3},resources:{silver:{count:624},gold:{count:580}}},{type:"sector",pos:{x:7,y:3},resources:{silver:{count:649},gold:{count:633}}},{type:"sector",pos:{x:8,y:3},resources:{silver:{count:635},gold:{count:651}}}],[{type:"sector",pos:{x:0,y:4},resources:{silver:{count:643},gold:{count:594}}},{type:"sector",pos:{x:1,y:4},resources:{silver:{count:677},gold:{count:665}}},{type:"sector",pos:{x:2,y:4},resources:{silver:{count:698},gold:{count:605}}},{type:"sector",pos:{x:3,y:4},resources:{silver:{count:665},gold:{count:672}}},{type:"sector",pos:{x:4,y:4},resources:{silver:{count:659},gold:{count:617}}},{type:"sector",pos:{x:5,y:4},resources:{silver:{count:680},gold:{count:610}}},{type:"sector",pos:{x:6,y:4},resources:{silver:{count:598},gold:{count:602}}},{type:"sector",pos:{x:7,y:4},resources:{silver:{count:580},gold:{count:615}}},{type:"sector",pos:{x:8,y:4},resources:{silver:{count:671},gold:{count:608}}}],[{type:"sector",pos:{x:0,y:5},resources:{silver:{count:573},gold:{count:590}}},{type:"sector",pos:{x:1,y:5},resources:{silver:{count:606},gold:{count:605}}},{type:"sector",pos:{x:2,y:5},resources:{silver:{count:624},gold:{count:667}}},{type:"sector",pos:{x:3,y:5},resources:{silver:{count:657},gold:{count:637}}},{type:"sector",pos:{x:4,y:5},resources:{silver:{count:608},gold:{count:672}}},{type:"sector",pos:{x:5,y:5},resources:{silver:{count:612},gold:{count:626}}},{type:"sector",pos:{x:6,y:5},resources:{silver:{count:604},gold:{count:720}}},{type:"sector",pos:{x:7,y:5},resources:{silver:{count:632},gold:{count:636}}},{type:"sector",pos:{x:8,y:5},resources:{silver:{count:672},gold:{count:622}}}],[{type:"sector",pos:{x:0,y:6},resources:{silver:{count:698},gold:{count:653}}},{type:"sector",pos:{x:1,y:6},resources:{silver:{count:647},gold:{count:594}}},{type:"sector",pos:{x:2,y:6},resources:{silver:{count:625},gold:{count:648}}},{type:"sector",pos:{x:3,y:6},resources:{silver:{count:703},gold:{count:621}}},{type:"sector",pos:{x:4,y:6},resources:{silver:{count:672},gold:{count:623}}},{type:"sector",pos:{x:5,y:6},resources:{silver:{count:652},gold:{count:661}}},{type:"sector",pos:{x:6,y:6},resources:{silver:{count:609},gold:{count:618}}},{type:"sector",pos:{x:7,y:6},resources:{silver:{count:615},gold:{count:579}}},{type:"sector",pos:{x:8,y:6},resources:{silver:{count:658},gold:{count:653}}}],[{type:"sector",pos:{x:0,y:7},resources:{silver:{count:646},gold:{count:642}}},{type:"sector",pos:{x:1,y:7},resources:{silver:{count:645},gold:{count:548}}},{type:"sector",pos:{x:2,y:7},resources:{silver:{count:663},gold:{count:705}}},{type:"sector",pos:{x:3,y:7},resources:{silver:{count:662},gold:{count:662}}},{type:"sector",pos:{x:4,y:7},resources:{silver:{count:635},gold:{count:636}}},{type:"sector",pos:{x:5,y:7},resources:{silver:{count:670},gold:{count:623}}},{type:"sector",pos:{x:6,y:7},resources:{silver:{count:629},gold:{count:643}}},{type:"sector",pos:{x:7,y:7},resources:{silver:{count:637},gold:{count:662}}},{type:"sector",pos:{x:8,y:7},resources:{silver:{count:686},gold:{count:615}}}],[{type:"sector",pos:{x:0,y:8},resources:{silver:{count:622},gold:{count:650}}},{type:"sector",pos:{x:1,y:8},resources:{silver:{count:661},gold:{count:641}}},{type:"sector",pos:{x:2,y:8},resources:{silver:{count:668},gold:{count:603}}},{type:"sector",pos:{x:3,y:8},resources:{silver:{count:591},gold:{count:579}}},{type:"sector",pos:{x:4,y:8},resources:{silver:{count:736},gold:{count:701}}},{type:"sector",pos:{x:5,y:8},resources:{silver:{count:645},gold:{count:658}}},{type:"sector",pos:{x:6,y:8},resources:{silver:{count:622},gold:{count:655}}},{type:"sector",pos:{x:7,y:8},resources:{silver:{count:622},gold:{count:590}}},{type:"sector",pos:{x:8,y:8},resources:{silver:{count:662},gold:{count:651}}}]]},"Crypto Kindom":{premium:!1,trading:!1,map:[[{type:"sector",pos:{x:0,y:0},resources:{aluminium:{count:694}}},{type:"sector",pos:{x:1,y:0},resources:{aluminium:{count:632}}},{type:"sector",pos:{x:2,y:0},resources:{aluminium:{count:685}}},{type:"sector",pos:{x:3,y:0},resources:{aluminium:{count:720}}},{type:"exit",pos:{x:4,y:0},resources:{aluminium:{count:684}}},{type:"sector",pos:{x:5,y:0},resources:{aluminium:{count:681}}},{type:"sector",pos:{x:6,y:0},resources:{aluminium:{count:642}}},{type:"sector",pos:{x:7,y:0},resources:{aluminium:{count:629}}},{type:"sector",pos:{x:8,y:0},resources:{aluminium:{count:696}}}],[{type:"sector",pos:{x:0,y:1},resources:{aluminium:{count:682}}},{type:"sector",pos:{x:1,y:1},resources:{aluminium:{count:678}}},{type:"sector",pos:{x:2,y:1},resources:{aluminium:{count:653}}},{type:"sector",pos:{x:3,y:1},resources:{aluminium:{count:618}}},{type:"sector",pos:{x:4,y:1},resources:{aluminium:{count:595}}},{type:"sector",pos:{x:5,y:1},resources:{aluminium:{count:681}}},{type:"sector",pos:{x:6,y:1},resources:{aluminium:{count:643}}},{type:"sector",pos:{x:7,y:1},resources:{aluminium:{count:648}}},{type:"sector",pos:{x:8,y:1},resources:{aluminium:{count:601}}}],[{type:"sector",pos:{x:0,y:2},resources:{aluminium:{count:681}}},{type:"sector",pos:{x:1,y:2},resources:{aluminium:{count:659}}},{type:"sector",pos:{x:2,y:2},resources:{aluminium:{count:649}}},{type:"sector",pos:{x:3,y:2},resources:{aluminium:{count:665}}},{type:"sector",pos:{x:4,y:2},resources:{aluminium:{count:605}}},{type:"sector",pos:{x:5,y:2},resources:{aluminium:{count:630}}},{type:"sector",pos:{x:6,y:2},resources:{aluminium:{count:606}}},{type:"sector",pos:{x:7,y:2},resources:{aluminium:{count:693}}},{type:"sector",pos:{x:8,y:2},resources:{aluminium:{count:618}}}],[{type:"sector",pos:{x:0,y:3},resources:{aluminium:{count:598}}},{type:"sector",pos:{x:1,y:3},resources:{aluminium:{count:629}}},{type:"sector",pos:{x:2,y:3},resources:{aluminium:{count:639}}},{type:"sector",pos:{x:3,y:3},resources:{aluminium:{count:637}}},{type:"sector",pos:{x:4,y:3},resources:{aluminium:{count:588}}},{type:"sector",pos:{x:5,y:3},resources:{aluminium:{count:571}}},{type:"sector",pos:{x:6,y:3},resources:{aluminium:{count:635}}},{type:"sector",pos:{x:7,y:3},resources:{aluminium:{count:634}}},{type:"sector",pos:{x:8,y:3},resources:{aluminium:{count:647}}}],[{type:"sector",pos:{x:0,y:4},resources:{aluminium:{count:605}}},{type:"sector",pos:{x:1,y:4},resources:{aluminium:{count:617}}},{type:"sector",pos:{x:2,y:4},resources:{aluminium:{count:636}}},{type:"sector",pos:{x:3,y:4},resources:{aluminium:{count:673}}},{type:"sector",pos:{x:4,y:4},resources:{aluminium:{count:675}}},{type:"sector",pos:{x:5,y:4},resources:{aluminium:{count:631}}},{type:"sector",pos:{x:6,y:4},resources:{aluminium:{count:635}}},{type:"sector",pos:{x:7,y:4},resources:{aluminium:{count:639}}},{type:"sector",pos:{x:8,y:4},resources:{aluminium:{count:663}}}],[{type:"sector",pos:{x:0,y:5},resources:{aluminium:{count:668}}},{type:"sector",pos:{x:1,y:5},resources:{aluminium:{count:611}}},{type:"sector",pos:{x:2,y:5},resources:{aluminium:{count:715}}},{type:"sector",pos:{x:3,y:5},resources:{aluminium:{count:680}}},{type:"sector",pos:{x:4,y:5},resources:{aluminium:{count:652}}},{type:"sector",pos:{x:5,y:5},resources:{aluminium:{count:667}}},{type:"sector",pos:{x:6,y:5},resources:{aluminium:{count:687}}},{type:"sector",pos:{x:7,y:5},resources:{aluminium:{count:595}}},{type:"sector",pos:{x:8,y:5},resources:{aluminium:{count:663}}}],[{type:"sector",pos:{x:0,y:6},resources:{aluminium:{count:676}}},{type:"sector",pos:{x:1,y:6},resources:{aluminium:{count:656}}},{type:"sector",pos:{x:2,y:6},resources:{aluminium:{count:684}}},{type:"sector",pos:{x:3,y:6},resources:{aluminium:{count:661}}},{type:"sector",pos:{x:4,y:6},resources:{aluminium:{count:631}}},{type:"sector",pos:{x:5,y:6},resources:{aluminium:{count:615}}},{type:"sector",pos:{x:6,y:6},resources:{aluminium:{count:632}}},{type:"sector",pos:{x:7,y:6},resources:{aluminium:{count:656}}},{type:"sector",pos:{x:8,y:6},resources:{aluminium:{count:659}}}],[{type:"sector",pos:{x:0,y:7},resources:{aluminium:{count:611}}},{type:"sector",pos:{x:1,y:7},resources:{aluminium:{count:639}}},{type:"sector",pos:{x:2,y:7},resources:{aluminium:{count:656}}},{type:"sector",pos:{x:3,y:7},resources:{aluminium:{count:677}}},{type:"sector",pos:{x:4,y:7},resources:{aluminium:{count:618}}},{type:"sector",pos:{x:5,y:7},resources:{aluminium:{count:636}}},{type:"sector",pos:{x:6,y:7},resources:{aluminium:{count:653}}},{type:"sector",pos:{x:7,y:7},resources:{aluminium:{count:601}}},{type:"sector",pos:{x:8,y:7},resources:{aluminium:{count:647}}}],[{type:"sector",pos:{x:0,y:8},resources:{aluminium:{count:660}}},{type:"sector",pos:{x:1,y:8},resources:{aluminium:{count:623}}},{type:"sector",pos:{x:2,y:8},resources:{aluminium:{count:636}}},{type:"sector",pos:{x:3,y:8},resources:{aluminium:{count:615}}},{type:"sector",pos:{x:4,y:8},resources:{aluminium:{count:605}}},{type:"sector",pos:{x:5,y:8},resources:{aluminium:{count:649}}},{type:"sector",pos:{x:6,y:8},resources:{aluminium:{count:661}}},{type:"sector",pos:{x:7,y:8},resources:{aluminium:{count:602}}},{type:"sector",pos:{x:8,y:8},resources:{aluminium:{count:650}}}]]},"Electric Empire":{premium:!1,trading:!1,map:[[{type:"sector",pos:{x:0,y:0},resources:{iron:{count:627}}},{type:"sector",pos:{x:1,y:0},resources:{iron:{count:629}}},{type:"sector",pos:{x:2,y:0},resources:{iron:{count:623}}},{type:"sector",pos:{x:3,y:0},resources:{iron:{count:704}}},{type:"exit",pos:{x:4,y:0},resources:{iron:{count:614}}},{type:"sector",pos:{x:5,y:0},resources:{iron:{count:641}}},{type:"sector",pos:{x:6,y:0},resources:{iron:{count:601}}},{type:"sector",pos:{x:7,y:0},resources:{iron:{count:626}}},{type:"sector",pos:{x:8,y:0},resources:{iron:{count:619}}}],[{type:"sector",pos:{x:0,y:1},resources:{iron:{count:651}}},{type:"sector",pos:{x:1,y:1},resources:{iron:{count:640}}},{type:"sector",pos:{x:2,y:1},resources:{iron:{count:622}}},{type:"sector",pos:{x:3,y:1},resources:{iron:{count:718}}},{type:"sector",pos:{x:4,y:1},resources:{iron:{count:586}}},{type:"sector",pos:{x:5,y:1},resources:{iron:{count:692}}},{type:"sector",pos:{x:6,y:1},resources:{iron:{count:588}}},{type:"sector",pos:{x:7,y:1},resources:{iron:{count:640}}},{type:"sector",pos:{x:8,y:1},resources:{iron:{count:578}}}],[{type:"sector",pos:{x:0,y:2},resources:{iron:{count:670}}},{type:"sector",pos:{x:1,y:2},resources:{iron:{count:599}}},{type:"sector",pos:{x:2,y:2},resources:{iron:{count:730}}},{type:"sector",pos:{x:3,y:2},resources:{iron:{count:670}}},{type:"sector",pos:{x:4,y:2},resources:{iron:{count:729}}},{type:"sector",pos:{x:5,y:2},resources:{iron:{count:680}}},{type:"sector",pos:{x:6,y:2},resources:{iron:{count:539}}},{type:"sector",pos:{x:7,y:2},resources:{iron:{count:668}}},{type:"sector",pos:{x:8,y:2},resources:{iron:{count:602}}}],[{type:"sector",pos:{x:0,y:3},resources:{iron:{count:684}}},{type:"sector",pos:{x:1,y:3},resources:{iron:{count:689}}},{type:"sector",pos:{x:2,y:3},resources:{iron:{count:658}}},{type:"sector",pos:{x:3,y:3},resources:{iron:{count:595}}},{type:"sector",pos:{x:4,y:3},resources:{iron:{count:606}}},{type:"sector",pos:{x:5,y:3},resources:{iron:{count:582}}},{type:"sector",pos:{x:6,y:3},resources:{iron:{count:616}}},{type:"sector",pos:{x:7,y:3},resources:{iron:{count:596}}},{type:"sector",pos:{x:8,y:3},resources:{iron:{count:670}}}],[{type:"sector",pos:{x:0,y:4},resources:{iron:{count:679}}},{type:"sector",pos:{x:1,y:4},resources:{iron:{count:648}}},{type:"sector",pos:{x:2,y:4},resources:{iron:{count:622}}},{type:"sector",pos:{x:3,y:4},resources:{iron:{count:641}}},{type:"sector",pos:{x:4,y:4},resources:{iron:{count:650}}},{type:"sector",pos:{x:5,y:4},resources:{iron:{count:630}}},{type:"sector",pos:{x:6,y:4},resources:{iron:{count:646}}},{type:"sector",pos:{x:7,y:4},resources:{iron:{count:656}}},{type:"sector",pos:{x:8,y:4},resources:{iron:{count:662}}}],[{type:"sector",pos:{x:0,y:5},resources:{iron:{count:652}}},{type:"sector",pos:{x:1,y:5},resources:{iron:{count:705}}},{type:"sector",pos:{x:2,y:5},resources:{iron:{count:613}}},{type:"sector",pos:{x:3,y:5},resources:{iron:{count:638}}},{type:"sector",pos:{x:4,y:5},resources:{iron:{count:645}}},{type:"sector",pos:{x:5,y:5},resources:{iron:{count:625}}},{type:"sector",pos:{x:6,y:5},resources:{iron:{count:713}}},{type:"sector",pos:{x:7,y:5},resources:{iron:{count:583}}},{type:"sector",pos:{x:8,y:5},resources:{iron:{count:646}}}],[{type:"sector",pos:{x:0,y:6},resources:{iron:{count:605}}},{type:"sector",pos:{x:1,y:6},resources:{iron:{count:618}}},{type:"sector",pos:{x:2,y:6},resources:{iron:{count:592}}},{type:"sector",pos:{x:3,y:6},resources:{iron:{count:671}}},{type:"sector",pos:{x:4,y:6},resources:{iron:{count:593}}},{type:"sector",pos:{x:5,y:6},resources:{iron:{count:636}}},{type:"sector",pos:{x:6,y:6},resources:{iron:{count:640}}},{type:"sector",pos:{x:7,y:6},resources:{iron:{count:659}}},{type:"sector",pos:{x:8,y:6},resources:{iron:{count:607}}}],[{type:"sector",pos:{x:0,y:7},resources:{iron:{count:676}}},{type:"sector",pos:{x:1,y:7},resources:{iron:{count:592}}},{type:"sector",pos:{x:2,y:7},resources:{iron:{count:670}}},{type:"sector",pos:{x:3,y:7},resources:{iron:{count:632}}},{type:"sector",pos:{x:4,y:7},resources:{iron:{count:642}}},{type:"sector",pos:{x:5,y:7},resources:{iron:{count:679}}},{type:"sector",pos:{x:6,y:7},resources:{iron:{count:621}}},{type:"sector",pos:{x:7,y:7},resources:{iron:{count:640}}},{type:"sector",pos:{x:8,y:7},resources:{iron:{count:665}}}],[{type:"sector",pos:{x:0,y:8},resources:{iron:{count:606}}},{type:"sector",pos:{x:1,y:8},resources:{iron:{count:571}}},{type:"sector",pos:{x:2,y:8},resources:{iron:{count:619}}},{type:"sector",pos:{x:3,y:8},resources:{iron:{count:674}}},{type:"sector",pos:{x:4,y:8},resources:{iron:{count:644}}},{type:"sector",pos:{x:5,y:8},resources:{iron:{count:644}}},{type:"sector",pos:{x:6,y:8},resources:{iron:{count:637}}},{type:"sector",pos:{x:7,y:8},resources:{iron:{count:625}}},{type:"sector",pos:{x:8,y:8},resources:{iron:{count:634}}}]]},"Production Planet":{premium:!1,trading:!0,map:[[{type:"sector",pos:{x:0,y:0},resources:{platinum:{count:623}}},{type:"sector",pos:{x:1,y:0},resources:{platinum:{count:666}}},{type:"sector",pos:{x:2,y:0},resources:{platinum:{count:624}}},{type:"sector",pos:{x:3,y:0},resources:{platinum:{count:604}}},{type:"exit",pos:{x:4,y:0},resources:{platinum:{count:668}}},{type:"sector",pos:{x:5,y:0},resources:{platinum:{count:618}}},{type:"sector",pos:{x:6,y:0},resources:{platinum:{count:640}}},{type:"sector",pos:{x:7,y:0},resources:{platinum:{count:622}}},{type:"sector",pos:{x:8,y:0},resources:{platinum:{count:620}}}],[{type:"sector",pos:{x:0,y:1},resources:{platinum:{count:659}}},{type:"sector",pos:{x:1,y:1},resources:{platinum:{count:656}}},{type:"sector",pos:{x:2,y:1},resources:{platinum:{count:634}}},{type:"sector",pos:{x:3,y:1},resources:{platinum:{count:605}}},{type:"sector",pos:{x:4,y:1},resources:{platinum:{count:659}}},{type:"sector",pos:{x:5,y:1},resources:{platinum:{count:652}}},{type:"sector",pos:{x:6,y:1},resources:{platinum:{count:702}}},{type:"sector",pos:{x:7,y:1},resources:{platinum:{count:634}}},{type:"sector",pos:{x:8,y:1},resources:{platinum:{count:684}}}],[{type:"sector",pos:{x:0,y:2},resources:{platinum:{count:581}}},{type:"sector",pos:{x:1,y:2},resources:{platinum:{count:661}}},{type:"sector",pos:{x:2,y:2},resources:{platinum:{count:651}}},{type:"sector",pos:{x:3,y:2},resources:{platinum:{count:605}}},{type:"sector",pos:{x:4,y:2},resources:{platinum:{count:628}}},{type:"sector",pos:{x:5,y:2},resources:{platinum:{count:600}}},{type:"sector",pos:{x:6,y:2},resources:{platinum:{count:645}}},{type:"sector",pos:{x:7,y:2},resources:{platinum:{count:578}}},{type:"sector",pos:{x:8,y:2},resources:{platinum:{count:656}}}],[{type:"sector",pos:{x:0,y:3},resources:{platinum:{count:665}}},{type:"sector",pos:{x:1,y:3},resources:{platinum:{count:646}}},{type:"sector",pos:{x:2,y:3},resources:{platinum:{count:530}}},{type:"sector",pos:{x:3,y:3},resources:{platinum:{count:636}}},{type:"sector",pos:{x:4,y:3},resources:{platinum:{count:709}}},{type:"sector",pos:{x:5,y:3},resources:{platinum:{count:652}}},{type:"sector",pos:{x:6,y:3},resources:{platinum:{count:688}}},{type:"sector",pos:{x:7,y:3},resources:{platinum:{count:658}}},{type:"sector",pos:{x:8,y:3},resources:{platinum:{count:658}}}],[{type:"sector",pos:{x:0,y:4},resources:{platinum:{count:599}}},{type:"sector",pos:{x:1,y:4},resources:{platinum:{count:650}}},{type:"sector",pos:{x:2,y:4},resources:{platinum:{count:612}}},{type:"sector",pos:{x:3,y:4},resources:{platinum:{count:646}}},{type:"sector",pos:{x:4,y:4},resources:{platinum:{count:632}}},{type:"sector",pos:{x:5,y:4},resources:{platinum:{count:647}}},{type:"sector",pos:{x:6,y:4},resources:{platinum:{count:673}}},{type:"sector",pos:{x:7,y:4},resources:{platinum:{count:611}}},{type:"sector",pos:{x:8,y:4},resources:{platinum:{count:651}}}],[{type:"sector",pos:{x:0,y:5},resources:{platinum:{count:619}}},{type:"sector",pos:{x:1,y:5},resources:{platinum:{count:650}}},{type:"sector",pos:{x:2,y:5},resources:{platinum:{count:633}}},{type:"sector",pos:{x:3,y:5},resources:{platinum:{count:583}}},{type:"sector",pos:{x:4,y:5},resources:{platinum:{count:614}}},{type:"sector",pos:{x:5,y:5},resources:{platinum:{count:632}}},{type:"sector",pos:{x:6,y:5},resources:{platinum:{count:677}}},{type:"sector",pos:{x:7,y:5},resources:{platinum:{count:626}}},{type:"sector",pos:{x:8,y:5},resources:{platinum:{count:656}}}],[{type:"sector",pos:{x:0,y:6},resources:{platinum:{count:615}}},{type:"sector",pos:{x:1,y:6},resources:{platinum:{count:623}}},{type:"sector",pos:{x:2,y:6},resources:{platinum:{count:592}}},{type:"sector",pos:{x:3,y:6},resources:{platinum:{count:677}}},{type:"sector",pos:{x:4,y:6},resources:{platinum:{count:675}}},{type:"sector",pos:{x:5,y:6},resources:{platinum:{count:627}}},{type:"sector",pos:{x:6,y:6},resources:{platinum:{count:565}}},{type:"sector",pos:{x:7,y:6},resources:{platinum:{count:607}}},{type:"sector",pos:{x:8,y:6},resources:{platinum:{count:646}}}],[{type:"sector",pos:{x:0,y:7},resources:{platinum:{count:609}}},{type:"sector",pos:{x:1,y:7},resources:{platinum:{count:619}}},{type:"sector",pos:{x:2,y:7},resources:{platinum:{count:636}}},{type:"sector",pos:{x:3,y:7},resources:{platinum:{count:652}}},{type:"sector",pos:{x:4,y:7},resources:{platinum:{count:634}}},{type:"sector",pos:{x:5,y:7},resources:{platinum:{count:604}}},{type:"sector",pos:{x:6,y:7},resources:{platinum:{count:642}}},{type:"sector",pos:{x:7,y:7},resources:{platinum:{count:633}}},{type:"sector",pos:{x:8,y:7},resources:{platinum:{count:712}}}],[{type:"sector",pos:{x:0,y:8},resources:{platinum:{count:625}}},{type:"sector",pos:{x:1,y:8},resources:{platinum:{count:651}}},{type:"sector",pos:{x:2,y:8},resources:{platinum:{count:709}}},{type:"sector",pos:{x:3,y:8},resources:{platinum:{count:646}}},{type:"sector",pos:{x:4,y:8},resources:{platinum:{count:667}}},{type:"sector",pos:{x:5,y:8},resources:{platinum:{count:605}}},{type:"sector",pos:{x:6,y:8},resources:{platinum:{count:664}}},{type:"sector",pos:{x:7,y:8},resources:{platinum:{count:643}}},{type:"sector",pos:{x:8,y:8},resources:{platinum:{count:695}}}]]},"Static Skyway":{premium:!1,trading:!1,map:[[{type:"sector",pos:{x:0,y:0},resources:{uranium:{count:675}}},{type:"sector",pos:{x:1,y:0},resources:{uranium:{count:646}}},{type:"sector",pos:{x:2,y:0},resources:{uranium:{count:633}}},{type:"sector",pos:{x:3,y:0},resources:{uranium:{count:676}}},{type:"exit",pos:{x:4,y:0},resources:{uranium:{count:722}}},{type:"sector",pos:{x:5,y:0},resources:{uranium:{count:615}}},{type:"sector",pos:{x:6,y:0},resources:{uranium:{count:686}}},{type:"sector",pos:{x:7,y:0},resources:{uranium:{count:662}}},{type:"sector",pos:{x:8,y:0},resources:{uranium:{count:633}}}],[{type:"sector",pos:{x:0,y:1},resources:{uranium:{count:666}}},{type:"sector",pos:{x:1,y:1},resources:{uranium:{count:646}}},{type:"sector",pos:{x:2,y:1},resources:{uranium:{count:616}}},{type:"sector",pos:{x:3,y:1},resources:{uranium:{count:596}}},{type:"sector",pos:{x:4,y:1},resources:{uranium:{count:634}}},{type:"sector",pos:{x:5,y:1},resources:{uranium:{count:623}}},{type:"sector",pos:{x:6,y:1},resources:{uranium:{count:630}}},{type:"sector",pos:{x:7,y:1},resources:{uranium:{count:641}}},{type:"sector",pos:{x:8,y:1},resources:{uranium:{count:638}}}],[{type:"sector",pos:{x:0,y:2},resources:{uranium:{count:643}}},{type:"sector",pos:{x:1,y:2},resources:{uranium:{count:664}}},{type:"sector",pos:{x:2,y:2},resources:{uranium:{count:618}}},{type:"sector",pos:{x:3,y:2},resources:{uranium:{count:632}}},{type:"sector",pos:{x:4,y:2},resources:{uranium:{count:606}}},{type:"sector",pos:{x:5,y:2},resources:{uranium:{count:653}}},{type:"sector",pos:{x:6,y:2},resources:{uranium:{count:616}}},{type:"sector",pos:{x:7,y:2},resources:{uranium:{count:681}}},{type:"sector",pos:{x:8,y:2},resources:{uranium:{count:653}}}],[{type:"sector",pos:{x:0,y:3},resources:{uranium:{count:680}}},{type:"sector",pos:{x:1,y:3},resources:{uranium:{count:638}}},{type:"sector",pos:{x:2,y:3},resources:{uranium:{count:682}}},{type:"sector",pos:{x:3,y:3},resources:{uranium:{count:629}}},{type:"sector",pos:{x:4,y:3},resources:{uranium:{count:725}}},{type:"sector",pos:{x:5,y:3},resources:{uranium:{count:617}}},{type:"sector",pos:{x:6,y:3},resources:{uranium:{count:675}}},{type:"sector",pos:{x:7,y:3},resources:{uranium:{count:617}}},{type:"sector",pos:{x:8,y:3},resources:{uranium:{count:592}}}],[{type:"sector",pos:{x:0,y:4},resources:{uranium:{count:685}}},{type:"sector",pos:{x:1,y:4},resources:{uranium:{count:599}}},{type:"sector",pos:{x:2,y:4},resources:{uranium:{count:684}}},{type:"sector",pos:{x:3,y:4},resources:{uranium:{count:697}}},{type:"sector",pos:{x:4,y:4},resources:{uranium:{count:614}}},{type:"sector",pos:{x:5,y:4},resources:{uranium:{count:665}}},{type:"sector",pos:{x:6,y:4},resources:{uranium:{count:699}}},{type:"sector",pos:{x:7,y:4},resources:{uranium:{count:598}}},{type:"sector",pos:{x:8,y:4},resources:{uranium:{count:666}}}],[{type:"sector",pos:{x:0,y:5},resources:{uranium:{count:663}}},{type:"sector",pos:{x:1,y:5},resources:{uranium:{count:626}}},{type:"sector",pos:{x:2,y:5},resources:{uranium:{count:561}}},{type:"sector",pos:{x:3,y:5},resources:{uranium:{count:631}}},{type:"sector",pos:{x:4,y:5},resources:{uranium:{count:628}}},{type:"sector",pos:{x:5,y:5},resources:{uranium:{count:660}}},{type:"sector",pos:{x:6,y:5},resources:{uranium:{count:709}}},{type:"sector",pos:{x:7,y:5},resources:{uranium:{count:667}}},{type:"sector",pos:{x:8,y:5},resources:{uranium:{count:713}}}],[{type:"sector",pos:{x:0,y:6},resources:{uranium:{count:616}}},{type:"sector",pos:{x:1,y:6},resources:{uranium:{count:660}}},{type:"sector",pos:{x:2,y:6},resources:{uranium:{count:610}}},{type:"sector",pos:{x:3,y:6},resources:{uranium:{count:609}}},{type:"sector",pos:{x:4,y:6},resources:{uranium:{count:686}}},{type:"sector",pos:{x:5,y:6},resources:{uranium:{count:675}}},{type:"sector",pos:{x:6,y:6},resources:{uranium:{count:670}}},{type:"sector",pos:{x:7,y:6},resources:{uranium:{count:707}}},{type:"sector",pos:{x:8,y:6},resources:{uranium:{count:650}}}],[{type:"sector",pos:{x:0,y:7},resources:{uranium:{count:627}}},{type:"sector",pos:{x:1,y:7},resources:{uranium:{count:606}}},{type:"sector",pos:{x:2,y:7},resources:{uranium:{count:598}}},{type:"sector",pos:{x:3,y:7},resources:{uranium:{count:660}}},{type:"sector",pos:{x:4,y:7},resources:{uranium:{count:642}}},{type:"sector",pos:{x:5,y:7},resources:{uranium:{count:665}}},{type:"sector",pos:{x:6,y:7},resources:{uranium:{count:667}}},{type:"sector",pos:{x:7,y:7},resources:{uranium:{count:620}}},{type:"sector",pos:{x:8,y:7},resources:{uranium:{count:704}}}],[{type:"sector",pos:{x:0,y:8},resources:{uranium:{count:691}}},{type:"sector",pos:{x:1,y:8},resources:{uranium:{count:649}}},{type:"sector",pos:{x:2,y:8},resources:{uranium:{count:586}}},{type:"sector",pos:{x:3,y:8},resources:{uranium:{count:590}}},{type:"sector",pos:{x:4,y:8},resources:{uranium:{count:649}}},{type:"sector",pos:{x:5,y:8},resources:{uranium:{count:617}}},{type:"sector",pos:{x:6,y:8},resources:{uranium:{count:710}}},{type:"sector",pos:{x:7,y:8},resources:{uranium:{count:636}}},{type:"sector",pos:{x:8,y:8},resources:{uranium:{count:577}}}]]},"High-Tech Haven":{premium:!0,trading:!0,map:[[{type:"sector",pos:{x:0,y:0},resources:{tin:{count:684},copper:{count:636},coal:{count:645},nickel:{count:625},zinc:{count:626},lead:{count:603},silver:{count:654},gold:{count:633},aluminium:{count:645},iron:{count:654},platinum:{count:706},uranium:{count:613},titanium:{count:675},palladium:{count:661}}},{type:"sector",pos:{x:1,y:0},resources:{tin:{count:640},copper:{count:628},coal:{count:642},nickel:{count:674},zinc:{count:632},lead:{count:562},silver:{count:679},gold:{count:692},aluminium:{count:609},iron:{count:632},platinum:{count:602},uranium:{count:660},titanium:{count:637},palladium:{count:627}}},{type:"sector",pos:{x:2,y:0},resources:{tin:{count:606},copper:{count:660},coal:{count:657},nickel:{count:652},zinc:{count:635},lead:{count:665},silver:{count:585},gold:{count:653},aluminium:{count:613},iron:{count:670},platinum:{count:683},uranium:{count:606},titanium:{count:635},palladium:{count:656}}},{type:"sector",pos:{x:3,y:0},resources:{tin:{count:609},copper:{count:690},coal:{count:626},nickel:{count:626},zinc:{count:654},lead:{count:665},silver:{count:586},gold:{count:621},aluminium:{count:643},iron:{count:618},platinum:{count:640},uranium:{count:662},titanium:{count:698},palladium:{count:617}}},{type:"exit",pos:{x:4,y:0},resources:{tin:{count:704},copper:{count:652},coal:{count:651},nickel:{count:662},zinc:{count:641},lead:{count:610},silver:{count:659},gold:{count:658},aluminium:{count:687},iron:{count:632},platinum:{count:638},uranium:{count:619},titanium:{count:671},palladium:{count:716}}},{type:"sector",pos:{x:5,y:0},resources:{tin:{count:639},copper:{count:625},coal:{count:618},nickel:{count:626},zinc:{count:664},lead:{count:638},silver:{count:637},gold:{count:620},aluminium:{count:636},iron:{count:643},platinum:{count:614},uranium:{count:548},titanium:{count:672},palladium:{count:689}}},{type:"sector",pos:{x:6,y:0},resources:{tin:{count:696},copper:{count:660},coal:{count:640},nickel:{count:603},zinc:{count:660},lead:{count:580},silver:{count:638},gold:{count:644},aluminium:{count:646},iron:{count:689},platinum:{count:697},uranium:{count:668},titanium:{count:695},palladium:{count:653}}},{type:"sector",pos:{x:7,y:0},resources:{tin:{count:634},copper:{count:727},coal:{count:643},nickel:{count:681},zinc:{count:666},lead:{count:610},silver:{count:655},gold:{count:670},aluminium:{count:665},iron:{count:672},platinum:{count:637},uranium:{count:682},titanium:{count:668},palladium:{count:631}}},{type:"sector",pos:{x:8,y:0},resources:{tin:{count:593},copper:{count:633},coal:{count:669},nickel:{count:618},zinc:{count:681},lead:{count:691},silver:{count:632},gold:{count:659},aluminium:{count:644},iron:{count:639},platinum:{count:555},uranium:{count:616},titanium:{count:662},palladium:{count:699}}}],[{type:"sector",pos:{x:0,y:1},resources:{tin:{count:613},copper:{count:659},coal:{count:635},nickel:{count:691},zinc:{count:685},lead:{count:629},silver:{count:647},gold:{count:608},aluminium:{count:647},iron:{count:625},platinum:{count:616},uranium:{count:601},titanium:{count:635},palladium:{count:711}}},{type:"sector",pos:{x:1,y:1},resources:{tin:{count:674},copper:{count:636},coal:{count:685},nickel:{count:621},zinc:{count:629},lead:{count:689},silver:{count:721},gold:{count:647},aluminium:{count:631},iron:{count:703},platinum:{count:654},uranium:{count:655},titanium:{count:681},palladium:{count:650}}},{type:"sector",pos:{x:2,y:1},resources:{tin:{count:667},copper:{count:609},coal:{count:608},nickel:{count:670},zinc:{count:649},lead:{count:631},silver:{count:620},gold:{count:704},aluminium:{count:626},iron:{count:700},platinum:{count:720},uranium:{count:633},titanium:{count:681},palladium:{count:659}}},{type:"sector",pos:{x:3,y:1},resources:{tin:{count:662},copper:{count:600},coal:{count:619},nickel:{count:715},zinc:{count:596},lead:{count:658},silver:{count:706},gold:{count:588},aluminium:{count:628},iron:{count:622},platinum:{count:678},uranium:{count:664},titanium:{count:635},palladium:{count:694}}},{type:"sector",pos:{x:4,y:1},resources:{tin:{count:652},copper:{count:632},coal:{count:596},nickel:{count:602},zinc:{count:651},lead:{count:620},silver:{count:592},gold:{count:615},aluminium:{count:678},iron:{count:677},platinum:{count:576},uranium:{count:711},titanium:{count:600},palladium:{count:662}}},{type:"sector",pos:{x:5,y:1},resources:{tin:{count:687},copper:{count:680},coal:{count:653},nickel:{count:650},zinc:{count:685},lead:{count:650},silver:{count:675},gold:{count:653},aluminium:{count:678},iron:{count:672},platinum:{count:670},uranium:{count:643},titanium:{count:647},palladium:{count:626}}},{type:"sector",pos:{x:6,y:1},resources:{tin:{count:622},copper:{count:668},coal:{count:649},nickel:{count:671},zinc:{count:614},lead:{count:651},silver:{count:681},gold:{count:705},aluminium:{count:653},iron:{count:622},platinum:{count:628},uranium:{count:619},titanium:{count:710},palladium:{count:684}}},{type:"sector",pos:{x:7,y:1},resources:{tin:{count:620},copper:{count:618},coal:{count:658},nickel:{count:663},zinc:{count:644},lead:{count:664},silver:{count:627},gold:{count:601},aluminium:{count:647},iron:{count:687},platinum:{count:701},uranium:{count:653},titanium:{count:631},palladium:{count:660}}},{type:"sector",pos:{x:8,y:1},resources:{tin:{count:648},copper:{count:684},coal:{count:651},nickel:{count:583},zinc:{count:660},lead:{count:648},silver:{count:647},gold:{count:637},aluminium:{count:615},iron:{count:627},platinum:{count:618},uranium:{count:670},titanium:{count:711},palladium:{count:632}}}],[{type:"sector",pos:{x:0,y:2},resources:{tin:{count:671},copper:{count:574},coal:{count:590},nickel:{count:668},zinc:{count:600},lead:{count:593},silver:{count:616},gold:{count:635},aluminium:{count:616},iron:{count:648},platinum:{count:707},uranium:{count:666},titanium:{count:585},palladium:{count:635}}},{type:"sector",pos:{x:1,y:2},resources:{tin:{count:615},copper:{count:612},coal:{count:674},nickel:{count:628},zinc:{count:675},lead:{count:604},silver:{count:682},gold:{count:624},aluminium:{count:595},iron:{count:668},platinum:{count:655},uranium:{count:608},titanium:{count:564},palladium:{count:602}}},{type:"sector",pos:{x:2,y:2},resources:{tin:{count:597},copper:{count:631},coal:{count:651},nickel:{count:648},zinc:{count:642},lead:{count:647},silver:{count:647},gold:{count:631},aluminium:{count:662},iron:{count:616},platinum:{count:593},uranium:{count:608},titanium:{count:670},palladium:{count:620}}},{type:"sector",pos:{x:3,y:2},resources:{tin:{count:622},copper:{count:683},coal:{count:659},nickel:{count:578},zinc:{count:654},lead:{count:627},silver:{count:670},gold:{count:637},aluminium:{count:619},iron:{count:640},platinum:{count:619},uranium:{count:636},titanium:{count:631},palladium:{count:636}}},{type:"sector",pos:{x:4,y:2},resources:{tin:{count:643},copper:{count:605},coal:{count:613},nickel:{count:617},zinc:{count:655},lead:{count:615},silver:{count:549},gold:{count:639},aluminium:{count:609},iron:{count:651},platinum:{count:642},uranium:{count:645},titanium:{count:563},palladium:{count:626}}},{type:"sector",pos:{x:5,y:2},resources:{tin:{count:603},copper:{count:663},coal:{count:679},nickel:{count:706},zinc:{count:720},lead:{count:613},silver:{count:629},gold:{count:667},aluminium:{count:666},iron:{count:605},platinum:{count:601},uranium:{count:625},titanium:{count:654},palladium:{count:629}}},{type:"sector",pos:{x:6,y:2},resources:{tin:{count:662},copper:{count:639},coal:{count:613},nickel:{count:595},zinc:{count:642},lead:{count:666},silver:{count:636},gold:{count:663},aluminium:{count:630},iron:{count:672},platinum:{count:661},uranium:{count:639},titanium:{count:656},palladium:{count:644}}},{type:"sector",pos:{x:7,y:2},resources:{tin:{count:638},copper:{count:601},coal:{count:663},nickel:{count:585},zinc:{count:663},lead:{count:619},silver:{count:651},gold:{count:666},aluminium:{count:669},iron:{count:601},platinum:{count:624},uranium:{count:599},titanium:{count:626},palladium:{count:622}}},{type:"sector",pos:{x:8,y:2},resources:{tin:{count:660},copper:{count:661},coal:{count:677},nickel:{count:692},zinc:{count:638},lead:{count:653},silver:{count:635},gold:{count:671},aluminium:{count:656},iron:{count:659},platinum:{count:666},uranium:{count:606},titanium:{count:631},palladium:{count:628}}}],[{type:"sector",pos:{x:0,y:3},resources:{tin:{count:622},copper:{count:688},coal:{count:690},nickel:{count:586},zinc:{count:660},lead:{count:677},silver:{count:628},gold:{count:631},aluminium:{count:620},iron:{count:676},platinum:{count:642},uranium:{count:662},titanium:{count:603},palladium:{count:623}}},{type:"sector",pos:{x:1,y:3},resources:{tin:{count:646},copper:{count:646},coal:{count:686},nickel:{count:638},zinc:{count:644},lead:{count:637},silver:{count:618},gold:{count:644},aluminium:{count:643},iron:{count:689},platinum:{count:591},uranium:{count:673},titanium:{count:590},palladium:{count:647}}},{type:"sector",pos:{x:2,y:3},resources:{tin:{count:637},copper:{count:642},coal:{count:681},nickel:{count:649},zinc:{count:669},lead:{count:692},silver:{count:674},gold:{count:672},aluminium:{count:644},iron:{count:647},platinum:{count:639},uranium:{count:689},titanium:{count:650},palladium:{count:664}}},{type:"sector",pos:{x:3,y:3},resources:{tin:{count:637},copper:{count:729},coal:{count:572},nickel:{count:656},zinc:{count:714},lead:{count:622},silver:{count:650},gold:{count:682},aluminium:{count:660},iron:{count:637},platinum:{count:629},uranium:{count:651},titanium:{count:674},palladium:{count:685}}},{type:"sector",pos:{x:4,y:3},resources:{tin:{count:594},copper:{count:715},coal:{count:640},nickel:{count:640},zinc:{count:679},lead:{count:675},silver:{count:630},gold:{count:645},aluminium:{count:636},iron:{count:629},platinum:{count:648},uranium:{count:668},titanium:{count:642},palladium:{count:657}}},{type:"sector",pos:{x:5,y:3},resources:{tin:{count:687},copper:{count:691},coal:{count:600},nickel:{count:649},zinc:{count:600},lead:{count:612},silver:{count:666},gold:{count:728},aluminium:{count:571},iron:{count:592},platinum:{count:639},uranium:{count:708},titanium:{count:589},palladium:{count:628}}},{type:"sector",pos:{x:6,y:3},resources:{tin:{count:662},copper:{count:597},coal:{count:681},nickel:{count:601},zinc:{count:636},lead:{count:621},silver:{count:640},gold:{count:636},aluminium:{count:603},iron:{count:659},platinum:{count:604},uranium:{count:604},titanium:{count:600},palladium:{count:648}}},{type:"sector",pos:{x:7,y:3},resources:{tin:{count:653},copper:{count:628},coal:{count:667},nickel:{count:641},zinc:{count:603},lead:{count:658},silver:{count:619},gold:{count:647},aluminium:{count:624},iron:{count:603},platinum:{count:636},uranium:{count:643},titanium:{count:646},palladium:{count:606}}},{type:"sector",pos:{x:8,y:3},resources:{tin:{count:637},copper:{count:647},coal:{count:634},nickel:{count:663},zinc:{count:703},lead:{count:705},silver:{count:634},gold:{count:621},aluminium:{count:612},iron:{count:617},platinum:{count:639},uranium:{count:649},titanium:{count:624},palladium:{count:674}}}],[{type:"sector",pos:{x:0,y:4},resources:{tin:{count:753},copper:{count:655},coal:{count:656},nickel:{count:667},zinc:{count:604},lead:{count:637},silver:{count:594},gold:{count:667},aluminium:{count:624},iron:{count:712},platinum:{count:669},uranium:{count:669},titanium:{count:635},palladium:{count:662}}},{type:"sector",pos:{x:1,y:4},resources:{tin:{count:641},copper:{count:655},coal:{count:611},nickel:{count:628},zinc:{count:608},lead:{count:613},silver:{count:577},gold:{count:648},aluminium:{count:620},iron:{count:627},platinum:{count:591},uranium:{count:639},titanium:{count:647},palladium:{count:629}}},{type:"sector",pos:{x:2,y:4},resources:{tin:{count:633},copper:{count:652},coal:{count:628},nickel:{count:697},zinc:{count:714},lead:{count:617},silver:{count:646},gold:{count:673},aluminium:{count:653},iron:{count:623},platinum:{count:694},uranium:{count:713},titanium:{count:573},palladium:{count:689}}},{type:"sector",pos:{x:3,y:4},resources:{tin:{count:669},copper:{count:678},coal:{count:645},nickel:{count:702},zinc:{count:681},lead:{count:646},silver:{count:596},gold:{count:633},aluminium:{count:657},iron:{count:604},platinum:{count:672},uranium:{count:687},titanium:{count:585},palladium:{count:623}}},{type:"sector",pos:{x:4,y:4},resources:{tin:{count:662},copper:{count:606},coal:{count:697},nickel:{count:615},zinc:{count:663},lead:{count:644},silver:{count:607},gold:{count:648},aluminium:{count:607},iron:{count:671},platinum:{count:688},uranium:{count:644},titanium:{count:667},palladium:{count:596}}},{type:"sector",pos:{x:5,y:4},resources:{tin:{count:589},copper:{count:671},coal:{count:653},nickel:{count:662},zinc:{count:627},lead:{count:646},silver:{count:664},gold:{count:648},aluminium:{count:739},iron:{count:636},platinum:{count:631},uranium:{count:615},titanium:{count:703},palladium:{count:619}}},{type:"sector",pos:{x:6,y:4},resources:{tin:{count:688},copper:{count:571},coal:{count:686},nickel:{count:619},zinc:{count:670},lead:{count:601},silver:{count:641},gold:{count:604},aluminium:{count:687},iron:{count:578},platinum:{count:592},uranium:{count:597},titanium:{count:629},palladium:{count:662}}},{type:"sector",pos:{x:7,y:4},resources:{tin:{count:609},copper:{count:643},coal:{count:682},nickel:{count:677},zinc:{count:709},lead:{count:632},silver:{count:659},gold:{count:711},aluminium:{count:606},iron:{count:634},platinum:{count:648},uranium:{count:697},titanium:{count:600},palladium:{count:675}}},{type:"sector",pos:{x:8,y:4},resources:{tin:{count:593},copper:{count:643},coal:{count:619},nickel:{count:599},zinc:{count:604},lead:{count:623},silver:{count:627},gold:{count:618},aluminium:{count:664},iron:{count:692},platinum:{count:633},uranium:{count:582},titanium:{count:625},palladium:{count:591}}}],[{type:"sector",pos:{x:0,y:5},resources:{tin:{count:664},copper:{count:658},coal:{count:615},nickel:{count:625},zinc:{count:592},lead:{count:610},silver:{count:598},gold:{count:649},aluminium:{count:641},iron:{count:615},platinum:{count:628},uranium:{count:581},titanium:{count:622},palladium:{count:609}}},{type:"sector",pos:{x:1,y:5},resources:{tin:{count:690},copper:{count:694},coal:{count:664},nickel:{count:714},zinc:{count:638},lead:{count:627},silver:{count:653},gold:{count:700},aluminium:{count:634},iron:{count:535},platinum:{count:691},uranium:{count:710},titanium:{count:634},palladium:{count:647}}},{type:"sector",pos:{x:2,y:5},resources:{tin:{count:628},copper:{count:654},coal:{count:690},nickel:{count:601},zinc:{count:586},lead:{count:639},silver:{count:640},gold:{count:678},aluminium:{count:679},iron:{count:603},platinum:{count:619},uranium:{count:671},titanium:{count:619},palladium:{count:689}}},{type:"sector",pos:{x:3,y:5},resources:{tin:{count:588},copper:{count:592},coal:{count:684},nickel:{count:640},zinc:{count:645},lead:{count:699},silver:{count:617},gold:{count:645},aluminium:{count:639},iron:{count:613},platinum:{count:693},uranium:{count:635},titanium:{count:662},palladium:{count:664}}},{type:"sector",pos:{x:4,y:5},resources:{tin:{count:637},copper:{count:662},coal:{count:669},nickel:{count:644},zinc:{count:645},lead:{count:704},silver:{count:711},gold:{count:652},aluminium:{count:624},iron:{count:664},platinum:{count:634},uranium:{count:624},titanium:{count:657},palladium:{count:671}}},{type:"sector",pos:{x:5,y:5},resources:{tin:{count:644},copper:{count:601},coal:{count:642},nickel:{count:595},zinc:{count:687},lead:{count:721},silver:{count:589},gold:{count:659},aluminium:{count:646},iron:{count:613},platinum:{count:631},uranium:{count:629},titanium:{count:677},palladium:{count:595}}},{type:"sector",pos:{x:6,y:5},resources:{tin:{count:616},copper:{count:623},coal:{count:600},nickel:{count:666},zinc:{count:646},lead:{count:707},silver:{count:675},gold:{count:583},aluminium:{count:636},iron:{count:548},platinum:{count:686},uranium:{count:660},titanium:{count:582},palladium:{count:628}}},{type:"sector",pos:{x:7,y:5},resources:{tin:{count:592},copper:{count:587},coal:{count:609},nickel:{count:617},zinc:{count:630},lead:{count:628},silver:{count:629},gold:{count:638},aluminium:{count:585},iron:{count:612},platinum:{count:646},uranium:{count:618},titanium:{count:639},palladium:{count:626}}},{type:"sector",pos:{x:8,y:5},resources:{tin:{count:592},copper:{count:558},coal:{count:585},nickel:{count:640},zinc:{count:613},lead:{count:621},silver:{count:554},gold:{count:679},aluminium:{count:660},iron:{count:626},platinum:{count:641},uranium:{count:668},titanium:{count:712},palladium:{count:602}}}],[{type:"sector",pos:{x:0,y:6},resources:{tin:{count:580},copper:{count:698},coal:{count:598},nickel:{count:602},zinc:{count:713},lead:{count:630},silver:{count:642},gold:{count:619},aluminium:{count:676},iron:{count:644},platinum:{count:685},uranium:{count:665},titanium:{count:604},palladium:{count:642}}},{type:"sector",pos:{x:1,y:6},resources:{tin:{count:588},copper:{count:599},coal:{count:631},nickel:{count:651},zinc:{count:667},lead:{count:641},silver:{count:651},gold:{count:658},aluminium:{count:631},iron:{count:642},platinum:{count:621},uranium:{count:691},titanium:{count:756},palladium:{count:653}}},{type:"sector",pos:{x:2,y:6},resources:{tin:{count:628},copper:{count:608},coal:{count:563},nickel:{count:652},zinc:{count:644},lead:{count:631},silver:{count:658},gold:{count:683},aluminium:{count:680},iron:{count:664},platinum:{count:633},uranium:{count:656},titanium:{count:674},palladium:{count:632}}},{type:"sector",pos:{x:3,y:6},resources:{tin:{count:683},copper:{count:643},coal:{count:690},nickel:{count:630},zinc:{count:597},lead:{count:637},silver:{count:634},gold:{count:667},aluminium:{count:593},iron:{count:596},platinum:{count:656},uranium:{count:612},titanium:{count:690},palladium:{count:643}}},{type:"sector",pos:{x:4,y:6},resources:{tin:{count:574},copper:{count:665},coal:{count:642},nickel:{count:595},zinc:{count:668},lead:{count:667},silver:{count:668},gold:{count:680},aluminium:{count:622},iron:{count:664},platinum:{count:663},uranium:{count:664},titanium:{count:593},palladium:{count:563}}},{type:"sector",pos:{x:5,y:6},resources:{tin:{count:658},copper:{count:594},coal:{count:670},nickel:{count:621},zinc:{count:646},lead:{count:658},silver:{count:628},gold:{count:558},aluminium:{count:629},iron:{count:598},platinum:{count:648},uranium:{count:712},titanium:{count:695},palladium:{count:574}}},{type:"sector",pos:{x:6,y:6},resources:{tin:{count:586},copper:{count:643},coal:{count:696},nickel:{count:683},zinc:{count:612},lead:{count:661},silver:{count:641},gold:{count:672},aluminium:{count:695},iron:{count:613},platinum:{count:673},uranium:{count:654},titanium:{count:630},palladium:{count:663}}},{type:"sector",pos:{x:7,y:6},resources:{tin:{count:646},copper:{count:678},coal:{count:648},nickel:{count:606},zinc:{count:666},lead:{count:620},silver:{count:667},gold:{count:695},aluminium:{count:657},iron:{count:651},platinum:{count:654},uranium:{count:600},titanium:{count:631},palladium:{count:664}}},{type:"sector",pos:{x:8,y:6},resources:{tin:{count:581},copper:{count:614},coal:{count:662},nickel:{count:656},zinc:{count:632},lead:{count:697},silver:{count:643},gold:{count:667},aluminium:{count:654},iron:{count:675},platinum:{count:653},uranium:{count:634},titanium:{count:627},palladium:{count:672}}}],[{type:"sector",pos:{x:0,y:7},resources:{tin:{count:647},copper:{count:637},coal:{count:657},nickel:{count:629},zinc:{count:679},lead:{count:648},silver:{count:661},gold:{count:665},aluminium:{count:607},iron:{count:601},platinum:{count:604},uranium:{count:673},titanium:{count:732},palladium:{count:668}}},{type:"sector",pos:{x:1,y:7},resources:{tin:{count:712},copper:{count:659},coal:{count:677},nickel:{count:578},zinc:{count:607},lead:{count:658},silver:{count:662},gold:{count:586},aluminium:{count:679},iron:{count:665},platinum:{count:663},uranium:{count:670},titanium:{count:690},palladium:{count:623}}},{type:"sector",pos:{x:2,y:7},resources:{tin:{count:652},copper:{count:716},coal:{count:629},nickel:{count:610},zinc:{count:663},lead:{count:629},silver:{count:608},gold:{count:650},aluminium:{count:582},iron:{count:678},platinum:{count:705},uranium:{count:706},titanium:{count:636},palladium:{count:599}}},{type:"sector",pos:{x:3,y:7},resources:{tin:{count:682},copper:{count:673},coal:{count:691},nickel:{count:644},zinc:{count:643},lead:{count:701},silver:{count:687},gold:{count:694},aluminium:{count:698},iron:{count:661},platinum:{count:616},uranium:{count:651},titanium:{count:627},palladium:{count:612}}},{type:"sector",pos:{x:4,y:7},resources:{tin:{count:647},copper:{count:659},coal:{count:553},nickel:{count:600},zinc:{count:679},lead:{count:609},silver:{count:654},gold:{count:602},aluminium:{count:669},iron:{count:645},platinum:{count:596},uranium:{count:614},titanium:{count:666},palladium:{count:677}}},{type:"sector",pos:{x:5,y:7},resources:{tin:{count:627},copper:{count:613},coal:{count:626},nickel:{count:597},zinc:{count:705},lead:{count:638},silver:{count:631},gold:{count:581},aluminium:{count:645},iron:{count:623},platinum:{count:654},uranium:{count:619},titanium:{count:585},palladium:{count:673}}},{type:"sector",pos:{x:6,y:7},resources:{tin:{count:687},copper:{count:602},coal:{count:593},nickel:{count:698},zinc:{count:654},lead:{count:708},silver:{count:638},gold:{count:632},aluminium:{count:626},iron:{count:659},platinum:{count:667},uranium:{count:695},titanium:{count:631},palladium:{count:667}}},{type:"sector",pos:{x:7,y:7},resources:{tin:{count:673},copper:{count:681},coal:{count:640},nickel:{count:642},zinc:{count:609},lead:{count:647},silver:{count:603},gold:{count:673},aluminium:{count:643},iron:{count:604},platinum:{count:636},uranium:{count:569},titanium:{count:610},palladium:{count:656}}},{type:"sector",pos:{x:8,y:7},resources:{tin:{count:689},copper:{count:702},coal:{count:639},nickel:{count:645},zinc:{count:669},lead:{count:657},silver:{count:615},gold:{count:625},aluminium:{count:638},iron:{count:600},platinum:{count:579},uranium:{count:630},titanium:{count:615},palladium:{count:643}}}],[{type:"sector",pos:{x:0,y:8},resources:{tin:{count:602},copper:{count:620},coal:{count:692},nickel:{count:640},zinc:{count:623},lead:{count:670},silver:{count:589},gold:{count:646},aluminium:{count:632},iron:{count:660},platinum:{count:648},uranium:{count:601},titanium:{count:648},palladium:{count:656}}},{type:"sector",pos:{x:1,y:8},resources:{tin:{count:644},copper:{count:638},coal:{count:639},nickel:{count:647},zinc:{count:634},lead:{count:607},silver:{count:626},gold:{count:697},aluminium:{count:656},iron:{count:667},platinum:{count:623},uranium:{count:667},titanium:{count:599},palladium:{count:629}}},{type:"sector",pos:{x:2,y:8},resources:{tin:{count:625},copper:{count:635},coal:{count:624},nickel:{count:590},zinc:{count:673},lead:{count:682},silver:{count:627},gold:{count:607},aluminium:{count:666},iron:{count:655},platinum:{count:722},uranium:{count:698},titanium:{count:679},palladium:{count:618}}},{type:"sector",pos:{x:3,y:8},resources:{tin:{count:661},copper:{count:665},coal:{count:690},nickel:{count:638},zinc:{count:679},lead:{count:669},silver:{count:586},gold:{count:651},aluminium:{count:631},iron:{count:592},platinum:{count:667},uranium:{count:651},titanium:{count:705},palladium:{count:686}}},{type:"sector",pos:{x:4,y:8},resources:{tin:{count:605},copper:{count:630},coal:{count:582},nickel:{count:589},zinc:{count:643},lead:{count:660},silver:{count:589},gold:{count:649},aluminium:{count:650},iron:{count:704},platinum:{count:647},uranium:{count:591},titanium:{count:640},palladium:{count:670}}},{type:"sector",pos:{x:5,y:8},resources:{tin:{count:629},copper:{count:635},coal:{count:664},nickel:{count:648},zinc:{count:666},lead:{count:577},silver:{count:615},gold:{count:630},aluminium:{count:683},iron:{count:622},platinum:{count:607},uranium:{count:660},titanium:{count:692},palladium:{count:598}}},{type:"sector",pos:{x:6,y:8},resources:{tin:{count:626},copper:{count:664},coal:{count:657},nickel:{count:603},zinc:{count:675},lead:{count:646},silver:{count:613},gold:{count:609},aluminium:{count:652},iron:{count:584},platinum:{count:652},uranium:{count:621},titanium:{count:662},palladium:{count:647}}},{type:"sector",pos:{x:7,y:8},resources:{tin:{count:603},copper:{count:669},coal:{count:685},nickel:{count:652},zinc:{count:688},lead:{count:641},silver:{count:671},gold:{count:611},aluminium:{count:640},iron:{count:700},platinum:{count:673},uranium:{count:608},titanium:{count:667},palladium:{count:565}}},{type:"sector",pos:{x:8,y:8},resources:{tin:{count:683},copper:{count:625},coal:{count:628},nickel:{count:636},zinc:{count:646},lead:{count:678},silver:{count:642},gold:{count:609},aluminium:{count:653},iron:{count:634},platinum:{count:611},uranium:{count:653},titanium:{count:598},palladium:{count:588}}}]]},"Fusion Fields":{premium:!1,trading:!1,maps:[],map:[[{type:"sector",pos:{x:0,y:0},resources:{titanium:{count:671}}},{type:"sector",pos:{x:1,y:0},resources:{titanium:{count:635}}},{type:"sector",pos:{x:2,y:0},resources:{titanium:{count:616}}},{type:"sector",pos:{x:3,y:0},resources:{titanium:{count:666}}},{type:"exit",pos:{x:4,y:0},resources:{titanium:{count:631}}},{type:"sector",pos:{x:5,y:0},resources:{titanium:{count:669}}},{type:"sector",pos:{x:6,y:0},resources:{titanium:{count:665}}},{type:"sector",pos:{x:7,y:0},resources:{titanium:{count:617}}},{type:"sector",pos:{x:8,y:0},resources:{titanium:{count:663}}}],[{type:"sector",pos:{x:0,y:1},resources:{titanium:{count:657}}},{type:"sector",pos:{x:1,y:1},resources:{titanium:{count:670}}},{type:"sector",pos:{x:2,y:1},resources:{titanium:{count:593}}},{type:"sector",pos:{x:3,y:1},resources:{titanium:{count:614}}},{type:"sector",pos:{x:4,y:1},resources:{titanium:{count:615}}},{type:"sector",pos:{x:5,y:1},resources:{titanium:{count:605}}},{type:"sector",pos:{x:6,y:1},resources:{titanium:{count:569}}},{type:"sector",pos:{x:7,y:1},resources:{titanium:{count:650}}},{type:"sector",pos:{x:8,y:1},resources:{titanium:{count:631}}}],[{type:"sector",pos:{x:0,y:2},resources:{titanium:{count:657}}},{type:"sector",pos:{x:1,y:2},resources:{titanium:{count:623}}},{type:"sector",pos:{x:2,y:2},resources:{titanium:{count:647}}},{type:"sector",pos:{x:3,y:2},resources:{titanium:{count:613}}},{type:"sector",pos:{x:4,y:2},resources:{titanium:{count:691}}},{type:"sector",pos:{x:5,y:2},resources:{titanium:{count:615}}},{type:"sector",pos:{x:6,y:2},resources:{titanium:{count:656}}},{type:"sector",pos:{x:7,y:2},resources:{titanium:{count:657}}},{type:"sector",pos:{x:8,y:2},resources:{titanium:{count:639}}}],[{type:"sector",pos:{x:0,y:3},resources:{titanium:{count:559}}},{type:"sector",pos:{x:1,y:3},resources:{titanium:{count:644}}},{type:"sector",pos:{x:2,y:3},resources:{titanium:{count:691}}},{type:"sector",pos:{x:3,y:3},resources:{titanium:{count:614}}},{type:"sector",pos:{x:4,y:3},resources:{titanium:{count:618}}},{type:"sector",pos:{x:5,y:3},resources:{titanium:{count:628}}},{type:"sector",pos:{x:6,y:3},resources:{titanium:{count:683}}},{type:"sector",pos:{x:7,y:3},resources:{titanium:{count:620}}},{type:"sector",pos:{x:8,y:3},resources:{titanium:{count:639}}}],[{type:"sector",pos:{x:0,y:4},resources:{titanium:{count:670}}},{type:"sector",pos:{x:1,y:4},resources:{titanium:{count:653}}},{type:"sector",pos:{x:2,y:4},resources:{titanium:{count:643}}},{type:"sector",pos:{x:3,y:4},resources:{titanium:{count:620}}},{type:"sector",pos:{x:4,y:4},resources:{titanium:{count:641}}},{type:"sector",pos:{x:5,y:4},resources:{titanium:{count:654}}},{type:"sector",pos:{x:6,y:4},resources:{titanium:{count:626}}},{type:"sector",pos:{x:7,y:4},resources:{titanium:{count:664}}},{type:"sector",pos:{x:8,y:4},resources:{titanium:{count:704}}}],[{type:"sector",pos:{x:0,y:5},resources:{titanium:{count:626}}},{type:"sector",pos:{x:1,y:5},resources:{titanium:{count:658}}},{type:"sector",pos:{x:2,y:5},resources:{titanium:{count:690}}},{type:"sector",pos:{x:3,y:5},resources:{titanium:{count:637}}},{type:"sector",pos:{x:4,y:5},resources:{titanium:{count:652}}},{type:"sector",pos:{x:5,y:5},resources:{titanium:{count:613}}},{type:"sector",pos:{x:6,y:5},resources:{titanium:{count:606}}},{type:"sector",pos:{x:7,y:5},resources:{titanium:{count:638}}},{type:"sector",pos:{x:8,y:5},resources:{titanium:{count:682}}}],[{type:"sector",pos:{x:0,y:6},resources:{titanium:{count:586}}},{type:"sector",pos:{x:1,y:6},resources:{titanium:{count:670}}},{type:"sector",pos:{x:2,y:6},resources:{titanium:{count:636}}},{type:"sector",pos:{x:3,y:6},resources:{titanium:{count:641}}},{type:"sector",pos:{x:4,y:6},resources:{titanium:{count:623}}},{type:"sector",pos:{x:5,y:6},resources:{titanium:{count:591}}},{type:"sector",pos:{x:6,y:6},resources:{titanium:{count:685}}},{type:"sector",pos:{x:7,y:6},resources:{titanium:{count:659}}},{type:"sector",pos:{x:8,y:6},resources:{titanium:{count:641}}}],[{type:"sector",pos:{x:0,y:7},resources:{titanium:{count:636}}},{type:"sector",pos:{x:1,y:7},resources:{titanium:{count:554}}},{type:"sector",pos:{x:2,y:7},resources:{titanium:{count:680}}},{type:"sector",pos:{x:3,y:7},resources:{titanium:{count:640}}},{type:"sector",pos:{x:4,y:7},resources:{titanium:{count:602}}},{type:"sector",pos:{x:5,y:7},resources:{titanium:{count:595}}},{type:"sector",pos:{x:6,y:7},resources:{titanium:{count:626}}},{type:"sector",pos:{x:7,y:7},resources:{titanium:{count:574}}},{type:"sector",pos:{x:8,y:7},resources:{titanium:{count:637}}}],[{type:"sector",pos:{x:0,y:8},resources:{titanium:{count:654}}},{type:"sector",pos:{x:1,y:8},resources:{titanium:{count:632}}},{type:"sector",pos:{x:2,y:8},resources:{titanium:{count:657}}},{type:"sector",pos:{x:3,y:8},resources:{titanium:{count:642}}},{type:"sector",pos:{x:4,y:8},resources:{titanium:{count:626}}},{type:"sector",pos:{x:5,y:8},resources:{titanium:{count:644}}},{type:"sector",pos:{x:6,y:8},resources:{titanium:{count:628}}},{type:"sector",pos:{x:7,y:8},resources:{titanium:{count:662}}},{type:"sector",pos:{x:8,y:8},resources:{titanium:{count:664}}}]]}};let x=new class{constructor(){this.stories=[],this.categories=[],this.hobbies=[],this.entities=[]}Story(o){let t=new s(o);return this.stories.push(t),t}Category(o){let t=new r(o);return this.categories.push(t),t}Hobby(o){let t=new p(o);return this.categories.push(t),t}Action(o,t){return new i(o,t)}Item(o){return new y(o)}},d=x.Story("Circuit MUD");d.editBody(["Welcome to Circuit MUD","Please login with command: login <username> <password> | or create using: create <username> <password>",'Type "help" for commands']);let g=x.Story("Help Menu");g.editBody(["Command Categories are as follows: ","Pathways","Communication","Hobbies"]);let h=x.Category("Pathways"),v=x.Category("Communication"),k=x.Category("Hobbies"),z=x.Hobby("Mining"),f=x.Action("mine","mines things around you");f.addLife((...o)=>{let t=a.users.find(t=>t.username==o[0][0]),c=(t.tools.pickaxe.level,function(o){let t;return m[A(o).currentWorld].map.forEach(c=>{c.forEach(c=>{c.pos.x==A(o).pos.x&&c.pos.y==A(o).pos.y&&(t=c)})}),t}(t.username)),e=[];Object.keys(c.resources).forEach(o=>{e.push(o)}),e.forEach(e=>{if(t.ores.find(o=>o.name==e).hardness<=t.tools.pickaxe.level&&c.resources.hasOwnProperty(e)&&c.resources[e].count>0){let u=Math.floor(2*Math.random());c.resources[e].count-u>0&&(t.ores.find(o=>o.name==e).count+=u,c.resources[e].count-=u,u>0&&M(o[0][1],`You have obtained ${e}`))}})}),z.addAction(f);let b=x.Hobby("Crafting"),w=x.Hobby("Fighting");h.addParts(["exit - Exit's the connection","logout - Logs out of the server"]),v.addParts(["say - speaks to other players","whisper - whispers to another player privately"]),k.addParts(["Type help <hobby> for commands on hobby"]),k.addHobbies([z,b,w]);let $=[];function M(o,t){try{o.write(t+"\n")}catch(o){}}function j(o,t){if(t)switch(t.option){case"world":$.forEach(c=>{if(c.world==t.world)try{c.client.write(o+"\n")}catch(o){}C(o+"\n")})}else $.forEach(t=>{t=t.client;try{t.write(o+"\n")}catch(o){}}),C(o+"\n")}function C(o){c.appendFile("./logs.txt",o+"\n",()=>{console.log(`Logged data => ${o}`)})}function S(){var o=new Date,t=Date.UTC(o.getUTCFullYear(),o.getUTCMonth(),o.getUTCDate(),o.getUTCHours(),o.getUTCMinutes(),o.getUTCSeconds());return new Date(t).toISOString()}function E(){c.writeFile("./database.json",JSON.stringify(a,null,4),()=>{}),c.writeFile("./worlds.json",JSON.stringify(m,null,4),()=>{})}function A(o){return a.users.find(t=>t.username==o)}t.createServer(o=>{let t,u="",n=!1;M(o,d.create()),o.on("end",()=>{if(t){for(let o=0;o<$.length;o++){$[o].username==t&&$.splice(o,1)}j(`[${t}] has left the server. ${$.length} users remaining`)}}),o.on("error",o=>{console.log(o)}),o.on("data",s=>{if(/[\n\r]$/.test(s)){let s,r=[];if(u.split(" ").forEach((o,t)=>{0==t?s=o:r.push(o.split(/[\n\r\b]$/).join(""))}),1==n&&function(o){return!!l.find(t=>t==o)}(t))switch(s){case"save":E(),j("Game has been saved. ")}if(0==n)switch(s){case"login":if(a.users.find(o=>o.username==r[0]))for(let c=0;c<a.users.length;c++)if(r[1]==e.AES.decrypt(a.users[c].password,"").toString(e.enc.Utf8)){n=!0,t=r[0];let c=x.Story("Logged in");c.editBody(["Username: "+r[0]]),M(o,c.create()),$.push({username:r[0],client:o,world:A(r[0]).currentWorld}),j(`User [${t}] has connected to the server! \n${$.length} users are online | ${S()}`),A(t).ores.sort((o,t)=>o.hardness>t.hardness?1:-1).forEach(o=>{console.log(o.name+"|"+o.hardness)})}break;case"create":if(a.users.find(o=>o.username==r[0]))M(o,"That user exists");else{let u={username:r[0],password:e.AES.encrypt(r[1],"").toString(),ores:[{name:"coal",count:0,rarity:1/34,hardness:1},{name:"iron",count:0,rarity:1/72,hardness:3},{name:"gold",count:0,rarity:1/5465,hardness:2},{name:"titanium",count:0,rarity:1/347,hardness:4},{name:"uranium",count:0,rarity:1/529,hardness:4},{name:"copper",count:0,rarity:1/259,hardness:1},{name:"aluminium",count:0,rarity:1/77,hardness:3},{name:"tin",count:0,rarity:1/741,hardness:1},{name:"silver",count:0,rarity:1/17,hardness:2},{name:"lead",count:0,rarity:1/84,hardness:2},{name:"zinc",count:0,rarity:1/101,hardness:2},{name:"platinum",count:0,rarity:1/962,hardness:4},{name:"palladium",count:0,rarity:1/2329,hardness:5},{name:"nickel",count:0,rarity:1/590,hardness:2}],lastMined:Date.now(),tools:{pickaxe:{level:1},axe:{level:1},hoe:{level:1},spade:{level:1}},weapons:{shotgun:0,sniper:0,dagger:0,rifle:0,spear:0,bow:0,pistol:0,grenadeLauncher:0,grenade:0,crossbow:0,knife:0,handGun:0,assaultRifle:0,boomerang:0,uzi:0,javelin:0,flameThrower:0,"long Bow":0,dart:0,throwingKnife:0},liquids:{magma:0,plasma:0,water:0,acid:0,gas:0,oil:0,blood:0,bromine:0},currentWorld:"Cyber City",pos:{x:5,y:0}};a.users.push(u),c.writeFile("./database.json",JSON.stringify(a),()=>{});let s=x.Story("Created User");s.editBody(["Username: "+u.username,"Password: "+u.password]),M(o,s.create()),n=!0,t=r[0],$.push({username:r[0],client:o,world:"main"}),j(`[${t}] has connected to the server for the first time! Please welcome them! \n${$.length} users are online | ${S()}`)}case"exit":o.end()}else switch(C(`${t} executed: ${s}:${r.join(" ")}`),s){case"exit":o.end();break;case"help":M(o,r?g.create(x,r):g.create());break;case"joinWorld":for(let o of Object.keys(m))if(o==r.join(" ")){m[o].map.forEach(o=>{o.forEach(o=>{o.pos.x==A(t).pos.x&&o.pos.y==A(t).pos.y&&(j(`${A(t).username} has left ${A(t).currentWorld}`,{option:"world",world:A(t).currentWorld}),A(t).currentWorld=r.join(" "),$.find(o=>o.username==t).world=r.join(" "),j(`${A(t).username} has joined ${A(t).currentWorld}`,{option:"world",world:A(t).currentWorld}))})})}break;case"logout":n=!1,t=null,M(o,"Logged out successfully!");break;case"say":j(`{${A(t).currentWorld}} [${t}]: ${r.join(" ")} | ${S()}`,{option:"world",world:A(t).currentWorld}),C(`Message Sent: {${A(t).currentWorld}} [${t}]: ${r.join(" ")} | ${S()}`);break;case"announce":j(`Announcement > [${t}]: ${r.join(" ")} | ${S()}`),C(`Message Announced: [${t}]: ${r.join(" ")} | ${S()}`);break;case"mine":Date.now()-A(t).lastMined>=5e3?(f.execute(t,o),A(t).lastMined=Date.now()):M(o,"You can't mine right now, please wait "+Math.floor((5e3-(Date.now()-A(t).lastMined))/1e3)+" seconds");break;case"stats":let c=x.Story("Stats");c.editBody(function(o,t,c){let e=[],u=[];return Object.keys(o).forEach(o=>{e.push(o)}),e.forEach(e=>{c?u.push(`${o[e][c]} | ${t}: ${o[e][t]}`):u.push(`${e} | ${t}: ${o[e][t]}`)}),u}(A(t).ores,"count","name")),M(o,c.create());break;case"go":let e,u;switch(r[0]){case"north":u=-1;break;case"east":e=1;break;case"south":u=1;break;case"west":e=-1}let s=A(t).pos;s.x+e>=0&&s.x+e<10&&(s.y+=e),s.y+u>=0&&s.y+u<10&&(s.y+=u),E()}u=""}else"\b"==s?u=u.substr(0,u.length-1):u+=s})}).listen(4922),setInterval(()=>{c.writeFile("./database.json",JSON.stringify(a,null,4),()=>{}),c.writeFile("./worlds.json",JSON.stringify(m,null,4),()=>{}),j("Game has been saved!")},3e5),setInterval(()=>{for(let o of Object.keys(m)){let t=m[o];t.map.forEach(o=>{o.forEach(o=>{Object.values(o.resources).forEach(o=>{o.count+=Math.floor(10*Math.random())})})}),j(`${o} has been regenerated! Start finding ore!`,{option:"world",world:t})}E()},149400);
+"use strict";
+
+function e(e) {
+    return e && "object" == typeof e && "default" in e ? e.default : e;
+}
+
+var t = e(require("telnet")), r = e(require("fs")), s = e(require("bcrypt"));
+
+function n(e, t) {
+    let r = e;
+    if (t.includes("\n")) t.split("\n").forEach(e => {
+        let s = 0;
+        for (let t = 0; t < Math.ceil(e.length / 60); t++) s++;
+        for (let n = 0; n < Math.ceil(e.length / 60) + s; n++) {
+            let s = 0;
+            Math.floor((60 - t.substr(0, 60).length) % 2 == 0) || (s = 1), r += "|" + " ".repeat(Math.floor((60 - e.substr(0, 60).length) / 2 - s)) + e.substr(0, 60) + " ".repeat(Math.floor((60 - e.substr(0, 60).length) / 2 - s)) + "|\n", 
+            e = e.substr(60, e.length);
+        }
+    }); else {
+        console.log(t);
+        let e = 0;
+        for (let r = 0; r < Math.ceil(t.length / 60); r++) e++;
+        for (let s = 0; s < Math.ceil(t.length / 60) + e; s++) {
+            let e = 0;
+            Math.floor((60 - t.substr(0, 60).length) / 2) % 2 != 0 && (e = 1), r += "|" + " ".repeat(Math.floor((60 - t.substr(0, 60).length) / 2)) + t.substr(0, 60) + " ".repeat(Math.floor((60 - t.substr(0, 60).length) / 2 - e)) + "|\n", 
+            t = t.substr(60, t.length);
+        }
+    }
+    return r;
+}
+
+class o {
+    constructor() {
+        this.stories = [], this.categories = [], this.hobbies = [], this.entities = [];
+    }
+    Story(e) {
+        let t = new i(e);
+        return this.stories.push(t), t;
+    }
+    Category(e) {
+        let t = new l(e);
+        return this.categories.push(t), t;
+    }
+    Hobby(e) {
+        let t = new c(e);
+        return this.categories.push(t), t;
+    }
+    Action(e, t) {
+        return new u(e, t);
+    }
+    Item(e) {
+        return new h(e);
+    }
+}
+
+class a {
+    constructor(e) {
+        this.title = e, this.body = "", this.author = "", this.footer = "";
+    }
+}
+
+class i extends a {
+    constructor(e) {
+        super(e);
+    }
+    editBody(e) {
+        this.body = "", Array.isArray(e) && (this.body = e.join("\n"));
+    }
+    create(e, t) {
+        if (t && null != e.categories.find(e => e.title == t)) {
+            this.body = "";
+            let r = e.categories.find(e => e.title == t);
+            try {
+                for (let e of r.parts) null != e && (this.body += e.text + "\n");
+            } catch (e) {
+                for (let e of r.actions) null != e && (this.body += e.name + "-" + e.description + "\n");
+            }
+        }
+        let r = "";
+        return r += "-".repeat(61) + "\n", r += "|" + " ".repeat((60 - this.title.length) / 2) + this.title + " ".repeat((60 - this.title.length) / 2) + "|\n", 
+        r += "-".repeat(61) + "\n", r = n(r, this.body), r += "-".repeat(61) + "\n", r;
+    }
+}
+
+class l extends a {
+    constructor(e) {
+        super(e), this.parts = [];
+    }
+    addParts(e) {
+        if (Array.isArray(e)) for (let t = 0; t < e.length; t++) {
+            let r = {
+                text: e[t]
+            };
+            this.parts.push(r);
+        } else {
+            let t = {
+                text: e
+            };
+            this.parts.push(t);
+        }
+    }
+    removeParts(e) {
+        if (Array.isArray(e)) for (let t = 0; t < e.length; t++) for (let r = 0; r < this.parts.length; r++) this.parts[r].id == e[t] && this.parts.splice(r, 1); else for (let t = 0; t < this.parts.length; t++) this.parts[t].id == e && this.parts.splice(t, 1);
+    }
+    addHobbies(e) {
+        if (Array.isArray(e)) for (let t = 0; t < e.length; t++) this.parts.push(e.title); else this.parts.push(e.title);
+    }
+    create(e, t) {
+        if (t && null != e.categories.find(e => e.title == t)) {
+            this.body = "";
+            let r = e.categories.find(e => e.title == t);
+            try {
+                for (let e of r.parts) null != e && (this.body += e.text + "\n");
+            } catch (e) {
+                for (let e of r.actions) null != e && (this.body += e.name + "-" + e.description + "\n");
+            }
+        }
+        let r = "";
+        return r += "-".repeat(61) + "\n", r += "|" + " ".repeat((60 - this.title.length) / 2) + this.title + " ".repeat((60 - this.title.length) / 2) + "|\n", 
+        r += "-".repeat(61) + "\n", r = n(r, this.body), r += "-".repeat(61) + "\n", r;
+    }
+}
+
+class c extends a {
+    constructor(e) {
+        super(e), this.actions = [];
+    }
+    addAction(e) {
+        this.actions.push(e);
+    }
+    executeAction(e) {
+        this.actions.find(t => t.name == e).execute();
+    }
+}
+
+class u {
+    constructor(e, t) {
+        this.name = e, this.description = t;
+    }
+    addLife(e) {
+        this.code = e;
+    }
+    execute(...e) {
+        e ? this.code(e) : this.code;
+    }
+}
+
+class h {
+    constructor(e) {
+        this.name = e;
+    }
+}
+
+let d = new class {
+    file(e) {
+        return r.readFileSync(e);
+    }
+    json(e) {
+        return JSON.parse(r.readFileSync(e));
+    }
+}, f = new class {
+    encrypt(e) {
+        return s.hashSync(e, 15);
+    }
+    compare(e, t) {
+        return s.compareSync(e, t);
+    }
+}, p = d.json("./admins.json").admins, y = d.json("./database.json"), g = d.json("./worlds.json"), m = new o, b = m.Story("Circuit MUD");
+
+b.editBody([ "Welcome to Circuit MUD", "Please login with command: login <username> <password> | or create using: create <username> <password>", 'Type "help" for commands' ]);
+
+let w = m.Story("Help Menu");
+
+w.editBody([ "Command Categories are as follows: ", "Pathways", "Communication", "Hobbies" ]);
+
+let $ = m.Category("Pathways"), j = m.Category("Communication"), x = m.Category("Hobbies"), S = m.Hobby("Mining"), v = m.Action("mine", "mines things around you");
+
+v.addLife((...e) => {
+    let t = y.users.find(t => t.username == e[0][0]), r = (t.tools.pickaxe.level, function(e) {
+        let t;
+        return g[T(e).currentWorld].map.forEach(r => {
+            r.forEach(r => {
+                r.pos.x == T(e).pos.x && r.pos.y == T(e).pos.y && (t = r);
+            });
+        }), t;
+    }(t.username)), s = [];
+    Object.keys(r.resources).forEach(e => {
+        s.push(e);
+    }), s.forEach(s => {
+        if (t.ores.find(e => e.name == s).hardness <= t.tools.pickaxe.level && r.resources.hasOwnProperty(s) && r.resources[s].count > 0) {
+            let n = Math.floor(2 * Math.random());
+            r.resources[s].count - n > 0 && (t.ores.find(e => e.name == s).count += n, r.resources[s].count -= n, 
+            n > 0 && E(e[0][1], `You have obtained ${s}`));
+        }
+    });
+}), S.addAction(v);
+
+// Crafting
+let M = m.Hobby("Crafting"), k = m.Hobby("Fighting");
+
+// Fighting
+$.addParts([ "exit - Exit's the connection", "logout - Logs out of the server" ]), 
+j.addParts([ "say - speaks to other players", "whisper - whispers to another player privately" ]), 
+x.addParts([ "Type help <hobby> for commands on hobby" ]), x.addHobbies([ S, M, k ]);
+
+let C = [];
+
+function E(e, t) {
+    try {
+        e.write(t + "\n");
+    } catch (e) {}
+}
+
+function O(e, t) {
+    if (t) switch (t.option) {
+      case "world":
+        C.forEach(r => {
+            if (r.world == t.world) try {
+                r.client.write(e + "\n");
+            } catch (e) {}
+            U(e + "\n");
+        });
+    } else C.forEach(t => {
+        t = t.client;
+        try {
+            t.write(e + "\n");
+        } catch (e) {}
+    }), U(e + "\n");
+}
+
+function U(e) {
+    r.appendFile("./logs.txt", e + "\n", () => {
+        console.log(`Logged data => ${e}`);
+    });
+}
+
+function A() {
+    var e = new Date, t = Date.UTC(e.getUTCFullYear(), e.getUTCMonth(), e.getUTCDate(), e.getUTCHours(), e.getUTCMinutes(), e.getUTCSeconds());
+    return new Date(t).toISOString();
+}
+
+function W() {
+    r.writeFile("./database.json", JSON.stringify(y, null, 4), () => {}), r.writeFile("./worlds.json", JSON.stringify(g, null, 4), () => {});
+}
+
+// Autosave
+function T(e) {
+    return y.users.find(t => t.username == e);
+}
+
+t.createServer(e => {
+    let t, s = "", n = !1;
+    E(e, b.create()), e.on("end", () => {
+        if (t) {
+            for (let e = 0; e < C.length; e++) {
+                C[e].username == t && C.splice(e, 1);
+            }
+            O(`[${t}] has left the server. ${C.length} users remaining`);
+        }
+    }), e.on("error", e => {
+        console.log(e);
+    }), e.on("data", a => {
+        if (/[\n\r]$/.test(a)) {
+            let a, i = [];
+            if (s.split(" ").forEach((e, t) => {
+                0 == t ? a = e : i.push(e.split(/[\n\r\b]$/).join(""));
+            }), 1 == n && function(e) {
+                return !!p.find(t => t == e);
+            }(t)) switch (a) {
+              case "save":
+                W(), O("Game has been saved. ");
+            }
+            if (0 == n) switch (a) {
+              case "login":
+                if (y.users.find(e => e.username == i[0])) for (let r = 0; r < y.users.length; r++) if (f.compare(i[1], y.users[r].password)) {
+                    n = !0, t = i[0];
+                    let r = m.Story("Logged in");
+                    r.editBody([ "Username: " + i[0] ]), E(e, r.create()), C.find(e => e.username == t) || C.push({
+                        username: i[0],
+                        client: e,
+                        world: T(i[0]).currentWorld
+                    }), O(`User [${t}] has connected to the server! \n${C.length} users are online | ${A()}`);
+                }
+                break;
+
+              case "create":
+                if (y.users.find(e => e.username == i[0])) E(e, "That user exists"); else {
+                    let s = {
+                        username: i[0],
+                        password: f.encrypt(i[1]),
+                        ores: [ {
+                            name: "coal",
+                            count: 0,
+                            rarity: 1 / 34,
+                            hardness: 1
+                        }, {
+                            name: "iron",
+                            count: 0,
+                            rarity: 1 / 72,
+                            hardness: 3
+                        }, {
+                            name: "gold",
+                            count: 0,
+                            rarity: 1 / 5465,
+                            hardness: 2
+                        }, {
+                            name: "titanium",
+                            count: 0,
+                            rarity: 1 / 347,
+                            hardness: 4
+                        }, {
+                            name: "uranium",
+                            count: 0,
+                            rarity: 1 / 529,
+                            hardness: 4
+                        }, {
+                            name: "copper",
+                            count: 0,
+                            rarity: 1 / 259,
+                            hardness: 1
+                        }, {
+                            name: "aluminium",
+                            count: 0,
+                            rarity: 1 / 77,
+                            hardness: 3
+                        }, {
+                            name: "tin",
+                            count: 0,
+                            rarity: 1 / 741,
+                            hardness: 1
+                        }, {
+                            name: "silver",
+                            count: 0,
+                            rarity: 1 / 17,
+                            hardness: 2
+                        }, {
+                            name: "lead",
+                            count: 0,
+                            rarity: 1 / 84,
+                            hardness: 2
+                        }, {
+                            name: "zinc",
+                            count: 0,
+                            rarity: 1 / 101,
+                            hardness: 2
+                        }, {
+                            name: "platinum",
+                            count: 0,
+                            rarity: 1 / 962,
+                            hardness: 4
+                        }, {
+                            name: "palladium",
+                            count: 0,
+                            rarity: 1 / 2329,
+                            hardness: 5
+                        }, {
+                            name: "nickel",
+                            count: 0,
+                            rarity: 1 / 590,
+                            hardness: 2
+                        } ],
+                        lastMined: Date.now(),
+                        tools: {
+                            pickaxe: {
+                                level: 1
+                            },
+                            axe: {
+                                level: 1
+                            },
+                            hoe: {
+                                level: 1
+                            },
+                            spade: {
+                                level: 1
+                            }
+                        },
+                        weapons: {
+                            shotgun: 0,
+                            sniper: 0,
+                            dagger: 0,
+                            rifle: 0,
+                            spear: 0,
+                            bow: 0,
+                            pistol: 0,
+                            grenadeLauncher: 0,
+                            grenade: 0,
+                            crossbow: 0,
+                            knife: 0,
+                            handGun: 0,
+                            assaultRifle: 0,
+                            boomerang: 0,
+                            uzi: 0,
+                            javelin: 0,
+                            flameThrower: 0,
+                            "long Bow": 0,
+                            dart: 0,
+                            throwingKnife: 0
+                        },
+                        liquids: {
+                            magma: 0,
+                            plasma: 0,
+                            water: 0,
+                            acid: 0,
+                            gas: 0,
+                            oil: 0,
+                            blood: 0,
+                            bromine: 0
+                        },
+                        currentWorld: "Cyber City",
+                        pos: {
+                            x: 5,
+                            y: 0
+                        }
+                    };
+                    y.users.push(s), r.writeFile("./database.json", JSON.stringify(y, 4, null), () => {});
+                    let o = m.Story("Created User");
+                    o.editBody([ "Username: " + s.username, "Password: " + s.password ]), E(e, o.create()), 
+                    n = !0, t = i[0], C.find(e => e.username == t) || C.push({
+                        username: i[0],
+                        client: e,
+                        world: "main"
+                    }), O(`[${t}] has connected to the server for the first time! Please welcome them! \n${C.length} users are online | ${A()}`);
+                }
+                break;
+
+              case "exit":
+                e.end();
+            } else switch (U(`${t} executed: ${a}:${i.join(" ")}`), a) {
+              case "exit":
+                e.end();
+                break;
+
+              case "help":
+                E(e, i ? w.create(m, i) : w.create());
+                break;
+
+              case "joinWorld":
+                for (let e of Object.keys(g)) if (e == i.join(" ")) {
+                    g[e].map.forEach(e => {
+                        e.forEach(e => {
+                            e.pos.x == T(t).pos.x && e.pos.y == T(t).pos.y && (O(`${T(t).username} has left ${T(t).currentWorld}`, {
+                                option: "world",
+                                world: T(t).currentWorld
+                            }), T(t).currentWorld = i.join(" "), C.find(e => e.username == t).world = i.join(" "), 
+                            O(`${T(t).username} has joined ${T(t).currentWorld}`, {
+                                option: "world",
+                                world: T(t).currentWorld
+                            }));
+                        });
+                    });
+                }
+                break;
+
+              case "logout":
+                n = !1, t = null, E(e, "Logged out successfully!");
+                break;
+
+              case "say":
+                O(`{${T(t).currentWorld}} [${t}]: ${i.join(" ")} | ${A()}`, {
+                    option: "world",
+                    world: T(t).currentWorld
+                }), U(`Message Sent: {${T(t).currentWorld}} [${t}]: ${i.join(" ")} | ${A()}`);
+                break;
+
+              case "announce":
+                O(`Announcement > [${t}]: ${i.join(" ")} | ${A()}`), U(`Message Announced: [${t}]: ${i.join(" ")} | ${A()}`);
+                break;
+
+              case "mine":
+                Date.now() - T(t).lastMined >= 5e3 ? (v.execute(t, e), T(t).lastMined = Date.now()) : E(e, "You can't mine right now, please wait " + Math.floor((5e3 - (Date.now() - T(t).lastMined)) / 1e3) + " seconds");
+                break;
+
+              case "stats":
+                let r = m.Story("Stats");
+                r.editBody(function(e, t, r) {
+                    let s = [], n = [];
+                    return Object.keys(e).forEach(e => {
+                        s.push(e);
+                    }), s.forEach(s => {
+                        r ? n.push(`${e[s][r]} | ${t}: ${e[s][t]}`) : n.push(`${s} | ${t}: ${e[s][t]}`);
+                    }), n;
+                }(T(t).ores, "count", "name")), E(e, r.create());
+                break;
+
+              case "go":
+                let s, a;
+                switch (i[0]) {
+                  case "north":
+                    a = -1;
+                    break;
+
+                  case "east":
+                    s = 1;
+                    break;
+
+                  case "south":
+                    a = 1;
+                    break;
+
+                  case "west":
+                    s = -1;
+                }
+                let l = T(t).pos;
+                l.x + s >= 0 && l.x + s < 10 && (l.y += s), l.y + a >= 0 && l.y + a < 10 && (l.y += a), 
+                W();
+                break;
+
+              case "online":
+                if (i) {
+                    let r;
+                    switch (i[0]) {
+                      case "server":
+                        r = m.Story("Online users in Server"), r.editBody([ `Total Users: ${C.length}` ].concat(C.map(e => e.username))), 
+                        E(e, r.create());
+                        break;
+
+                      case "world":
+                        r = m.Story("Online users in World");
+                        let s = [];
+                        C.forEach(e => {
+                            e.world == T(t).currentWorld && s.push(e.username);
+                        }), r.editBody([ `Total Users: ${s.length}` ].concat(s)), E(e, r.create());
+                    }
+                } else {
+                    let t = o.Story("Online users in Server");
+                    t.editBody([ `Total Users: ${C.length}` ].concat(C)), E(e, t.create());
+                }
+            }
+            s = "";
+        } else "\b" == a ? s = s.substr(0, s.length - 1) : s += a;
+    });
+}).listen(4922), setInterval(() => {
+    r.writeFile("./database.json", JSON.stringify(y, null, 4), () => {}), r.writeFile("./worlds.json", JSON.stringify(g, null, 4), () => {}), 
+    O("Game has been saved!");
+}, 3e5), setInterval(() => {
+    for (let e of Object.keys(g)) {
+        let t = g[e];
+        t.map.forEach(e => {
+            e.forEach(e => {
+                Object.values(e.resources).forEach(e => {
+                    e.count += Math.floor(10 * Math.random());
+                });
+            });
+        }), O(`${e} has been regenerated! Start finding ore!`, {
+            option: "world",
+            world: t
+        });
+    }
+    W();
+}, 149400);

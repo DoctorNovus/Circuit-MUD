@@ -2,5 +2,6 @@
     "input": "main.js",
     "output": "build/game.js",
     "format": "cjs",
-    "clean": true
+    "clean": true,
+    "compress": false
 }]

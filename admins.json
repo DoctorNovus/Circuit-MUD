@@ -1,1 +1,3 @@
-{ "admins": ["admin1", "admin2"] }
+{
+    "admins": []
+}

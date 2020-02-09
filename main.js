@@ -1,11 +1,37 @@
-import { Engine } from "./circuit-string";
+import { Engine } from "./CircuitString";
 import telnet from "telnet";
-import { admins } from "./admins.json";
-import database from "./database.json";
-import worlds from "./worlds.json";
 import fs from "fs";
-import CryptoJS from "crypto-js";
-import { key as cryptokey } from "./cryptokey.json";
+import bcrypt from "bcrypt";
+
+class Load {
+    file(path) {
+        return fs.readFileSync(path);
+    };
+
+    json(path) {
+        return (JSON.parse(fs.readFileSync(path)));
+    };
+}
+
+class Password {
+    encrypt(pass) {
+        let saltRounds = 15;
+
+        return bcrypt.hashSync(pass, saltRounds);
+    }
+
+    compare(pass, dbPass) {
+        return bcrypt.compareSync(pass, dbPass);
+    }
+}
+
+let load = new Load();
+let passw = new Password();
+
+let admins = load.json("./admins.json").admins;
+let database = load.json("./database.json");
+let worlds = load.json("./worlds.json");
+
 
 let Circuit = new Engine();
 
@@ -33,7 +59,6 @@ mine.addLife((...args) => {
         keys.push(key);
     });
 
-    let oresInWorld = [];
     keys.forEach(key => {
         if ((usere.ores.find(ore => ore.name == key).hardness <= usere.tools.pickaxe.level) && (secto.resources.hasOwnProperty(key))) {
             if (secto.resources[key].count > 0) {
@@ -72,7 +97,6 @@ telnet.createServer((client) => {
     let message = "";
     let loggedIn = false;
     let username;
-    let currentWorld = "main";
 
     send(client, main.create());
 
@@ -118,19 +142,18 @@ telnet.createServer((client) => {
             if (loggedIn == false) {
                 switch (command) {
                     case "login":
-                        if (database.users.find(user => user.username == args[0])) {
+                        if (database.users.find((user) => user.username == args[0])) {
                             for (let i = 0; i < database.users.length; i++) {
-                                if (args[1] == CryptoJS.AES.decrypt(database.users[i].password, cryptokey).toString(CryptoJS.enc.Utf8)) {
+                                if (passw.compare(args[1], database.users[i].password)) {
                                     loggedIn = true;
                                     username = args[0];
                                     let loggedInStory = Circuit.Story("Logged in");
                                     loggedInStory.editBody(["Username: " + args[0]]);
                                     send(client, loggedInStory.create());
-                                    clients.push({ "username": args[0], "client": client, "world": getUser(args[0]).currentWorld });
+                                    if (!clients.find(cliente => cliente.username == username)) {
+                                        clients.push({ "username": args[0], "client": client, "world": getUser(args[0]).currentWorld });
+                                    }
                                     sendAll(`User [${username}] has connected to the server! \n${clients.length} users are online | ${getDate()}`);
-                                    getUser(username).ores.sort((a, b) => (a.hardness > b.hardness) ? 1 : -1).forEach(ore => {
-                                        console.log(ore.name + "|" + ore.hardness);
-                                    })
                                 }
                             }
                         }
@@ -142,7 +165,7 @@ telnet.createServer((client) => {
                         } else {
                             let user = {
                                 "username": args[0],
-                                "password": CryptoJS.AES.encrypt(args[1], cryptokey).toString(),
+                                "password": passw.encrypt(args[1]),
                                 "ores": [{
                                         "name": "coal",
                                         "count": 0,
@@ -271,7 +294,7 @@ telnet.createServer((client) => {
                             };
 
                             database.users.push(user);
-                            fs.writeFile("./database.json", JSON.stringify(database), () => {
+                            fs.writeFile("./database.json", JSON.stringify(database, 4, null), () => {
 
                             });
                             let createdUser = Circuit.Story("Created User");
@@ -280,9 +303,12 @@ telnet.createServer((client) => {
                             send(client, createdUser.create());
                             loggedIn = true;
                             username = args[0];
-                            clients.push({ "username": args[0], "client": client, "world": "main" });
+                            if (!clients.find(client => client.username == username)) {
+                                clients.push({ "username": args[0], "client": client, "world": "main" });
+                            }
                             sendAll(`[${username}] has connected to the server for the first time! Please welcome them! \n${clients.length} users are online | ${getDate()}`);
-                        }
+                        };
+                        break;
 
                     case "exit":
                         client.end();
@@ -384,6 +410,36 @@ telnet.createServer((client) => {
 
                         saveGame();
 
+                        break;
+
+                    case "online":
+                        if (args) {
+                            let bod;
+                            switch (args[0]) {
+                                case "server":
+                                    bod = Circuit.Story("Online users in Server");
+                                    bod.editBody([`Total Users: ${clients.length}`].concat(clients.map(clien => clien.username)));
+                                    send(client, bod.create());
+                                    break;
+
+                                case "world":
+                                    bod = Circuit.Story("Online users in World");
+                                    let arr = [];
+
+                                    clients.forEach(clien => {
+                                        if (clien.world == getUser(username).currentWorld) {
+                                            arr.push(clien.username);
+                                        }
+                                    })
+                                    bod.editBody([`Total Users: ${arr.length}`].concat(arr));
+                                    send(client, bod.create());
+                                    break;
+                            }
+                        } else {
+                            let bod = Engine.Story("Online users in Server");
+                            bod.editBody([`Total Users: ${clients.length}`].concat(clients));
+                            send(client, bod.create());
+                        }
                         break;
                 }
             }
