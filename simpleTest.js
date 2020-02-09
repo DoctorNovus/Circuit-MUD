@@ -26,20 +26,29 @@ let mine = Circuit.Action("mine", "mines things around you");
 mine.addLife((...args) => {
     let usere = database.users.find(user => user.username == args[0][0]);
     let picLevel = usere.tools.pickaxe.level;
-    let str = `Gained the following ore: `
-    for (let value of Object.values(usere.ores)) {
-        if (value.hardness <= picLevel) {
-            if (probability(value.rarity)) {
-                value.count++;
-                for (let i = 0; i < Object.keys(usere.ores).length; i++) {
-                    if (usere.ores[Object.keys(usere.ores)[i]] == value) {
-                        str += Object.keys(usere.ores)[i] + ", ";
+    let str = `Gained the following ore: `;
+    let secto = findSector(usere.username);
+    let keys = [];
+    Object.keys(secto.resources).forEach(key => {
+        keys.push(key);
+    });
+
+    let oresInWorld = [];
+    keys.forEach(key => {
+        if ((usere.ores.find(ore => ore.name == key).hardness <= usere.tools.pickaxe.level) && (secto.resources.hasOwnProperty(key))) {
+            if (secto.resources[key].count > 0) {
+                let countingBlocks = Math.floor(Math.random() * 2);
+                if (secto.resources[key].count - countingBlocks > 0) {
+                    usere.ores.find(ore => ore.name == key).count += countingBlocks;
+                    secto.resources[key].count -= countingBlocks;
+
+                    if (countingBlocks > 0) {
+                        send(args[0][1], `You have obtained ${key}`);
                     }
                 }
             }
         }
-    }
-    send(args[0][1], str);
+    });
 });
 
 Mining.addAction(mine);
@@ -86,9 +95,6 @@ telnet.createServer((client) => {
     });
 
     client.on("data", (data) => {
-        // make unicode characters work properly
-        // client.do.transmit_binary();
-
         if (/[\n\r]$/.test(data)) {
             let command;
             let args = [];
@@ -114,8 +120,6 @@ telnet.createServer((client) => {
                     case "login":
                         if (database.users.find(user => user.username == args[0])) {
                             for (let i = 0; i < database.users.length; i++) {
-                                console.log(args[1]);
-                                console.log(CryptoJS.AES.decrypt(database.users[i].password, cryptokey).toString(CryptoJS.enc.Utf8));
                                 if (args[1] == CryptoJS.AES.decrypt(database.users[i].password, cryptokey).toString(CryptoJS.enc.Utf8)) {
                                     loggedIn = true;
                                     username = args[0];
@@ -124,6 +128,9 @@ telnet.createServer((client) => {
                                     send(client, loggedInStory.create());
                                     clients.push({ "username": args[0], "client": client, "world": getUser(args[0]).currentWorld });
                                     sendAll(`User [${username}] has connected to the server! \n${clients.length} users are online | ${getDate()}`);
+                                    getUser(username).ores.sort((a, b) => (a.hardness > b.hardness) ? 1 : -1).forEach(ore => {
+                                        console.log(ore.name + "|" + ore.hardness);
+                                    })
                                 }
                             }
                         }
@@ -136,79 +143,79 @@ telnet.createServer((client) => {
                             let user = {
                                 "username": args[0],
                                 "password": CryptoJS.AES.encrypt(args[1], cryptokey).toString(),
-                                "ores": {
-                                    "coal": {
+                                "ores": [{
+                                        "name": "coal",
                                         "count": 0,
                                         "rarity": 1 / 34,
                                         "hardness": 1
                                     },
-                                    "iron": {
+                                    {
+                                        "name": "iron",
                                         "count": 0,
                                         "rarity": 1 / 72,
                                         "hardness": 3
-                                    },
-                                    "gold": {
+                                    }, {
+                                        "name": "gold",
                                         "count": 0,
                                         "rarity": 1 / 5465,
                                         "hardness": 2
-                                    },
-                                    "titanium": {
+                                    }, {
+                                        "name": "titanium",
                                         "count": 0,
                                         "rarity": 1 / 347,
                                         "hardness": 4
-                                    },
-                                    "uranium": {
+                                    }, {
+                                        "name": "uranium",
                                         "count": 0,
                                         "rarity": 1 / 529,
                                         "hardness": 4
-                                    },
-                                    "copper": {
+                                    }, {
+                                        "name": "copper",
                                         "count": 0,
                                         "rarity": 1 / 259,
                                         "hardness": 1
-                                    },
-                                    "aluminium": {
+                                    }, {
+                                        "name": "aluminium",
                                         "count": 0,
                                         "rarity": 1 / 77,
                                         "hardness": 3
-                                    },
-                                    "tin": {
+                                    }, {
+                                        "name": "tin",
                                         "count": 0,
                                         "rarity": 1 / 741,
                                         "hardness": 1
-                                    },
-                                    "silver": {
+                                    }, {
+                                        "name": "silver",
                                         "count": 0,
                                         "rarity": 1 / 17,
                                         "hardness": 2
-                                    },
-                                    "lead": {
+                                    }, {
+                                        "name": "lead",
                                         "count": 0,
                                         "rarity": 1 / 84,
                                         "hardness": 2
-                                    },
-                                    "zinc": {
+                                    }, {
+                                        "name": "zinc",
                                         "count": 0,
                                         "rarity": 1 / 101,
                                         "hardness": 2
-                                    },
-
-                                    "platinum": {
+                                    }, {
+                                        "name": "platinum",
                                         "count": 0,
                                         "rarity": 1 / 962,
                                         "hardness": 4
-                                    },
-                                    "palladium": {
+                                    }, {
+                                        "name": "palladium",
                                         "count": 0,
                                         "rarity": 1 / 2329,
                                         "hardness": 5
-                                    },
-                                    "nickel": {
+                                    }, {
+                                        "name": "nickel",
                                         "count": 0,
                                         "rarity": 1 / 590,
                                         "hardness": 2
-                                    },
-                                },
+                                    }
+                                ],
                                 "lastMined": Date.now(),
                                 "tools": {
                                     "pickaxe": {
@@ -343,6 +350,41 @@ telnet.createServer((client) => {
                         stats.editBody([`Ore: ${getUser(username).ore}`]);
                         send(client, stats.create());
                         break;
+
+                    case "go":
+                        let direction = args[0];
+                        let velX;
+                        let velY;
+                        switch (direction) {
+                            case "north":
+                                velY = -1;
+                                break;
+
+                            case "east":
+                                velX = 1;
+                                break;
+
+                            case "south":
+                                velY = 1;
+                                break;
+
+                            case "west":
+                                velX = -1;
+                                break;
+                        }
+                        let pos = getUser(username).pos;
+
+                        if ((pos.x + velX >= 0) && (pos.x + velX < 10)) {
+                            pos.y += velX;
+                        }
+
+                        if ((pos.y + velY >= 0) && (pos.y + velY < 10)) {
+                            pos.y += velY;
+                        }
+
+                        saveGame();
+
+                        break;
                 }
             }
 
@@ -411,20 +453,30 @@ function getDate() {
 }
 
 function saveGame() {
-    fs.writeFile("./database.json", JSON.stringify(database), () => {
+    fs.writeFile("./database.json", JSON.stringify(database, null, 4), () => {
 
-    })
+    });
 
-    database = require("./database.json");
-}
-
-// Autosave
-setInterval(() => {
-    fs.writeFile("./database.json", JSON.stringify(database), () => {
+    fs.writeFile("./worlds.json", JSON.stringify(worlds, null, 4), () => {
 
     });
 
     database = require("./database.json");
+    worlds = require("./worlds.json");
+}
+
+// Autosave
+setInterval(() => {
+    fs.writeFile("./database.json", JSON.stringify(database, null, 4), () => {
+
+    });
+
+    fs.writeFile("./worlds.json", JSON.stringify(worlds, null, 4), () => {
+
+    });
+
+    database = require("./database.json");
+    worlds = require("./worlds.json");
     sendAll("Game has been saved!");
 }, 1000 * 60 * 5);
 
@@ -440,4 +492,38 @@ function isAdmin(username) {
 
 function probability(n) {
     return Math.random() <= n;
+}
+
+setInterval(() => {
+    for (let key of Object.keys(worlds)) {
+        let world = worlds[key];
+        world.map.forEach(part => {
+            part.forEach(sector => {
+                Object.values(sector.resources).forEach(ore => {
+                    ore.count += Math.floor(Math.random() * 10);
+                })
+            });
+        })
+
+        sendAll(`${key} has been regenerated! Start finding ore!`, { "option": "world", "world": world });
+    }
+
+    saveGame();
+
+}, 1000 * 60 * 2.49);
+
+function findSector(username) {
+    let currentWorld = worlds[getUser(username).currentWorld];
+
+    let sect;
+
+    currentWorld.map.forEach(part => {
+        part.forEach(sector => {
+            if ((sector.pos.x == getUser(username).pos.x) && (sector.pos.y == getUser(username).pos.y)) {
+                sect = sector;
+            }
+        });
+    });
+
+    return sect;
 }

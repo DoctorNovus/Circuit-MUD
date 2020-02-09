@@ -1,13 +1,24 @@
 let fs = require("fs");
 
-fs.readFile("./worlds.json", null, (err, data) => {
-    data = JSON.parse(data);
-    data["High-Tech Haven"].map = generateMap(9, 9);
-    fs.writeFile("./worlds.json", JSON.stringify(data, null, 4), (err) => {
+readAndGen(process.argv[2]);
 
+function readAndGen(world) {
+    fs.readFile("./worlds.json", null, (err, data) => {
+        data = JSON.parse(data);
+        data[world].map = generateMap(9, 9);
+        fs.writeFile("./worlds.json", JSON.stringify(data, null, 4), (err) => {
+
+        });
     });
-});
+}
 
+let reso = {};
+
+process.argv.splice(3, process.argv.length).forEach(ore => {
+    reso[ore] = {
+        "count": 0
+    };
+})
 
 function generateMap(rows, columns) {
     let map = [];
@@ -26,7 +37,7 @@ function generateMap(rows, columns) {
                     "x": j,
                     "y": i
                 },
-                "resources": 0
+                "resources": reso
             });
         }
         map.push(row);
