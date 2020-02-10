@@ -120,7 +120,7 @@ telnet.createServer((client) => {
     });
 
     client.on("data", (data) => {
-        if (/[\r]$/.test(data)) {
+        if (/[\r]$/.test(data) || /[\n]$/.test(data) || /[\r\n]$/.test(data)) {
             let command;
             let args = [];
             message.split(" ").forEach((part, index) => {
