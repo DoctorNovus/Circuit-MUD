@@ -43,7 +43,7 @@ jspm_packages/
 Crypto/
 
 # Files
-logs.txt
+/logs.txt
 
 
 # TypeScript v1 declaration files

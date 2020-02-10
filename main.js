@@ -15,7 +15,7 @@ class Load {
 
 class Password {
     encrypt(pass) {
-        let saltRounds = 15;
+        let saltRounds = 7;
 
         return bcrypt.hashSync(pass, saltRounds);
     }
@@ -120,14 +120,20 @@ telnet.createServer((client) => {
     });
 
     client.on("data", (data) => {
-        if (/[\n\r]$/.test(data)) {
+        if (/[\r]$/.test(data)) {
             let command;
             let args = [];
             message.split(" ").forEach((part, index) => {
                 if (index == 0) {
                     command = part;
                 } else {
-                    args.push(part.split(/[\n\r\b]$/).join(""));
+                    if (/[\n\r]$/.test(data)) {
+                        args.push(part.split(/[\n\r]$/).join(""));
+                    } else if (/[\r]$/.test(data)) {
+                        args.push(part.split(/[\r]$/).join(""));
+                    } else if (/[\r]$/.test(data)) {
+                        args.push(part.split(/[\n]$/).join(""));
+                    }
                 };
             });
 
@@ -361,7 +367,7 @@ telnet.createServer((client) => {
 
 function send(client, data) {
     try {
-        client.write(data + "\n");
+        client.write(data + "\r\n");
     } catch (err) {
 
     }
@@ -372,7 +378,7 @@ function sendAll(data, options) {
         clients.forEach((client) => {
             client = client.client;
             try {
-                client.write(data + "\n");
+                client.write(data + "\r\n");
             } catch (err) {
 
             }

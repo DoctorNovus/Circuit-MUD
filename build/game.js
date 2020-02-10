@@ -160,7 +160,7 @@ let d = new class {
     }
 }, f = new class {
     encrypt(e) {
-        return s.hashSync(e, 15);
+        return s.hashSync(e, 7);
     }
     compare(e, t) {
         return s.compareSync(e, t);
@@ -206,7 +206,7 @@ let E = [];
 
 function O(e, t) {
     try {
-        e.write(t + "\n");
+        e.write(t + "\r\n");
     } catch (e) {}
 }
 
@@ -222,7 +222,7 @@ function U(e, t) {
     } else E.forEach(t => {
         t = t.client;
         try {
-            t.write(e + "\n");
+            t.write(e + "\r\n");
         } catch (e) {}
     }), A(e + "\n");
 }
