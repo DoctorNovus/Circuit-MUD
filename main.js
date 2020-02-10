@@ -120,22 +120,16 @@ telnet.createServer((client) => {
     });
 
     client.on("data", (data) => {
-        if (/[\r]$/.test(data) || /[\n]$/.test(data) || /[\r\n]$/.test(data) || /[\n\r]$/.test(data)) {
+        data = Buffer.from(data, "utf-8").toString();
+        if (data == "\r\n" || data == "\n" || data == "\r") {
+            message.trim();
             let command;
             let args = [];
             message.split(" ").forEach((part, index) => {
                 if (index == 0) {
                     command = part;
                 } else {
-                    if (/[\n\r]$/.test(data)) {
-                        args.push(part.split(/[\n\r]$/).join(""));
-                    } else if (/[\r\n]$/.test(data)) {
-                        args.push(part.split(/[\r\n]$/).join(""));
-                    } else if (/[\r]$/.test(data)) {
-                        args.push(part.split(/[\r]$/).join(""));
-                    } else if (/[\n]$/.test(data)) {
-                        args.push(part.split(/[\n]$/).join(""));
-                    }
+                    args.push(part.replace(/(\r\n|\n|\r)/, " "));
                 };
             });
 
@@ -152,6 +146,7 @@ telnet.createServer((client) => {
                 switch (command) {
                     case "login":
                         if (database.users.find((user) => user.username == args[0])) {
+                            let counte = 0;
                             for (let i = 0; i < database.users.length; i++) {
                                 if (passw.compare(args[1], database.users[i].password)) {
                                     loggedIn = true;
@@ -163,8 +158,16 @@ telnet.createServer((client) => {
                                         clients.push({ "username": args[0], "client": client, "world": getUser(args[0]).currentWorld });
                                     }
                                     sendAll(`User [${username}] has connected to the server! \n${clients.length} users are online | ${getDate()}`);
+                                } else {
+                                    counte++;
                                 }
                             }
+
+                            if (counte > 0) {
+                                send(client, "You have used the wrong credentials. Please try again. ");
+                            }
+                        } else {
+                            send(client, "That user does not exist. Please create an account. ");
                         }
                         break;
 
