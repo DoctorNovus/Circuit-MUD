@@ -66,6 +66,6 @@ export class TelnetClient {
             this.events["error"](error);
         });
 
-        if (callback) { this.socket.connect(port, host, callback); } else { this.socket.connect(port, host); }
+        if (callback) { return this.socket.connect(port, host, callback); } else { return this.socket.connect(port, host); }
     }
 }

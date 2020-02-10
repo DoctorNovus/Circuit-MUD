@@ -1,4 +1,5 @@
 // Modules
+import fs from "fs";
 
 // Classes
 import { TelnetServer } from "../../telnet";
@@ -168,7 +169,7 @@ server.on("data", (socket, data) => {
                     };
 
                     database.users.push(user);
-                    fs.writeFile("./database.json", JSON.stringify(database, 4, null), () => {
+                    fs.writeFile(base_config + "/database.json", JSON.stringify(database, 4, null), () => {
 
                     });
                     let createdUser = Circuit.Story("Created User");
@@ -184,7 +185,7 @@ server.on("data", (socket, data) => {
                 };
 
             case "exit":
-                client.end();
+                socket.end();
                 break;
         };
     } else {
@@ -193,7 +194,7 @@ server.on("data", (socket, data) => {
 
         switch (command) {
             case "exit":
-                client.end();
+                socket.end();
                 break;
 
             case "help":
@@ -320,7 +321,7 @@ server.on("data", (socket, data) => {
 });
 
 server.on("error", (socket, error) => {
-    if (err) console.log(err);
+    if (error) console.log(error);
 })
 
 server.on("end", (socket) => {
@@ -349,7 +350,7 @@ function getUsername(socket) {
 
 function send(socket, data) {
     try {
-        client.write(data + "\r\n");
+        socket.write(data + "\r\n");
     } catch (err) {
 
     }
@@ -386,7 +387,7 @@ function sendAll(data, options) {
 }
 
 function logNetwork(data) {
-    fs.appendFile("./logs.txt", data + "\n", () => {
+    fs.appendFile(base_config + "/logs.txt", data + "\n", () => {
         console.log(`Logged data => ${data}`);
     });
 }
@@ -400,22 +401,22 @@ function getDate() {
 }
 
 function saveGame() {
-    fs.writeFile("./database.json", JSON.stringify(database, null, 4), () => {
+    fs.writeFile(base_config + "/database.json", JSON.stringify(database, null, 4), () => {
 
     });
 
-    fs.writeFile("./worlds.json", JSON.stringify(worlds, null, 4), () => {
+    fs.writeFile(base_config + "/worlds.json", JSON.stringify(worlds, null, 4), () => {
 
     });
 }
 
 // Autosave
 setInterval(() => {
-    fs.writeFile("./database.json", JSON.stringify(database, null, 4), () => {
+    fs.writeFile(base_config + "/database.json", JSON.stringify(database, null, 4), () => {
 
     });
 
-    fs.writeFile("./worlds.json", JSON.stringify(worlds, null, 4), () => {
+    fs.writeFile(base_config + "/worlds.json", JSON.stringify(worlds, null, 4), () => {
 
     });
 

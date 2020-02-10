@@ -4,7 +4,7 @@ function e(e) {
     return e && "object" == typeof e && "default" in e ? e.default : e;
 }
 
-var t = require("net"), r = e(require("fs")), s = e(require("bcrypt"));
+var t = e(require("fs")), r = require("net"), s = e(require("bcrypt"));
 
 function n(e, t) {
     let r = e;
@@ -159,11 +159,11 @@ let d = new class {
     on(e, t) {
         this.events[e] = t;
     }
-    listen(e, r) {
+    listen(e, t) {
         if (!this.events.connect) throw new Error("Missing connect event binding!");
         if (!this.events.data) throw new Error("Missing data event binding!");
         if (!this.events.error) throw new Error("Missing error event binding!");
-        this.server = new t.Server(e => {
+        this.server = new r.Server(e => {
             e.on("connect", () => {
                 this.events.connect(e);
             }), e.on("data", t => {
@@ -171,14 +171,14 @@ let d = new class {
             }), e.on("error", t => {
                 this.events.error(e, t);
             });
-        }), r ? this.server.listen(e, r) : this.server.listen(e);
+        }), t ? this.server.listen(e, t) : this.server.listen(e);
     }
 }, f = new class {
     file(e) {
-        return r.readFileSync(e);
+        return t.readFileSync(e);
     }
     json(e) {
-        return JSON.parse(r.readFileSync(e));
+        return JSON.parse(t.readFileSync(e));
     }
 }, p = new class {
     encrypt(e) {
@@ -232,7 +232,7 @@ function U(e) {
 
 function A(e, t) {
     try {
-        client.write(t + "\r\n");
+        e.write(t + "\r\n");
     } catch (e) {}
 }
 
@@ -254,7 +254,7 @@ function W(e, t) {
 }
 
 function T(e) {
-    fs.appendFile("./logs.txt", e + "\n", () => {
+    t.appendFile("./config/logs.txt", e + "\n", () => {
         console.log(`Logged data => ${e}`);
     });
 }
@@ -265,7 +265,7 @@ function P() {
 }
 
 function B() {
-    fs.writeFile("./database.json", JSON.stringify(y, null, 4), () => {}), fs.writeFile("./worlds.json", JSON.stringify(b, null, 4), () => {});
+    t.writeFile("./config/database.json", JSON.stringify(y, null, 4), () => {}), t.writeFile("./config/worlds.json", JSON.stringify(b, null, 4), () => {});
 }
 
 // Autosave
@@ -275,26 +275,26 @@ function D(e) {
 
 d.on("connect", e => {
     e.write($.create());
-}), d.on("data", (e, t) => {
-    let r, s = (t = Buffer.from(t, "utf-8").toString()).split(" "), n = s[0], i = s.splice(1, s.length), a = !1;
+}), d.on("data", (e, r) => {
+    let s, n = (r = Buffer.from(r, "utf-8").toString()).split(" "), i = n[0], a = n.splice(1, n.length), l = !1;
     // Login & Create System
-    if (1 == a && function(e) {
+    if (1 == l && function(e) {
         return !!g.find(t => t == e);
-    }(r)) switch (n) {
+    }(s)) switch (i) {
       case "save":
         B(), W("Game has been saved. ");
     }
-    if (0 == a) switch (n) {
+    if (0 == l) switch (i) {
       case "login":
-        if (y.users.find(e => e.username == i[0])) {
+        if (y.users.find(e => e.username == a[0])) {
             let t = 0;
-            for (let s = 0; s < y.users.length; s++) if (p.compare(i[1], y.users[s].password)) {
-                a = !0, r = i[0];
+            for (let r = 0; r < y.users.length; r++) if (p.compare(a[1], y.users[r].password)) {
+                l = !0, s = a[0];
                 let t = m.Story("Logged in");
-                t.editBody([ "Username: " + i[0] ]), A(e, t.create()), O.find(e => e.username == r) || O.push({
-                    username: i[0],
+                t.editBody([ "Username: " + a[0] ]), A(e, t.create()), O.find(e => e.username == s) || O.push({
+                    username: a[0],
                     client: e,
-                    world: D(i[0]).currentWorld
+                    world: D(a[0]).currentWorld
                 }), W(`User [${U(e)}] has connected to the server! \n${O.length} users are online | ${P()}`);
             } else t++;
             t > 0 && A(e, "You have used the wrong credentials. Please try again. ");
@@ -302,10 +302,10 @@ d.on("connect", e => {
         break;
 
       case "create":
-        if (y.users.find(e => e.username == i[0])) A(e, "That user exists"); else {
-            let t = {
-                username: i[0],
-                password: p.encrypt(i[1]),
+        if (y.users.find(e => e.username == a[0])) A(e, "That user exists"); else {
+            let r = {
+                username: a[0],
+                password: p.encrypt(a[1]),
                 ores: {
                     coal: 0,
                     iron: 0,
@@ -335,38 +335,38 @@ d.on("connect", e => {
                     y: 0
                 }
             };
-            y.users.push(t), fs.writeFile("./database.json", JSON.stringify(y, 4, null), () => {});
-            let s = m.Story("Created User");
-            s.editBody([ "Username: " + t.username, "Password: " + t.password ]), A(e, s.create()), 
-            a = !0, r = i[0], O.find(e => e.username == r) || O.push({
-                username: i[0],
+            y.users.push(r), t.writeFile("./config/database.json", JSON.stringify(y, 4, null), () => {});
+            let n = m.Story("Created User");
+            n.editBody([ "Username: " + r.username, "Password: " + r.password ]), A(e, n.create()), 
+            l = !0, s = a[0], O.find(e => e.username == s) || O.push({
+                username: a[0],
                 client: e,
                 world: "main"
             }), W(`[${U(e)}] has connected to the server for the first time! Please welcome them! \n${O.length} users are online | ${P()}`);
         }
 
       case "exit":
-        client.end();
-    } else switch (T(`${U(e)} executed: ${n}:${i.join(" ")}`), n) {
+        e.end();
+    } else switch (T(`${U(e)} executed: ${i}:${a.join(" ")}`), i) {
       case "exit":
-        client.end();
+        e.end();
         break;
 
       case "help":
-        A(e, i ? v.create(m, i) : v.create());
+        A(e, a ? v.create(m, a) : v.create());
         break;
 
       case "joinWorld":
-        for (let e of Object.keys(b)) if (e == i.join(" ")) {
+        for (let e of Object.keys(b)) if (e == a.join(" ")) {
             b[e].map.forEach(e => {
                 e.forEach(e => {
-                    e.pos.x == D(r).pos.x && e.pos.y == D(r).pos.y && (W(`${D(r).username} has left ${D(r).currentWorld}`, {
+                    e.pos.x == D(s).pos.x && e.pos.y == D(s).pos.y && (W(`${D(s).username} has left ${D(s).currentWorld}`, {
                         option: "world",
-                        world: D(r).currentWorld
-                    }), D(r).currentWorld = i.join(" "), O.find(e => e.username == r).world = i.join(" "), 
-                    W(`${D(r).username} has joined ${D(r).currentWorld}`, {
+                        world: D(s).currentWorld
+                    }), D(s).currentWorld = a.join(" "), O.find(e => e.username == s).world = a.join(" "), 
+                    W(`${D(s).username} has joined ${D(s).currentWorld}`, {
                         option: "world",
-                        world: D(r).currentWorld
+                        world: D(s).currentWorld
                     }));
                 });
             });
@@ -374,22 +374,22 @@ d.on("connect", e => {
         break;
 
       case "logout":
-        a = !1, r = null, A(e, "Logged out successfully!");
+        l = !1, s = null, A(e, "Logged out successfully!");
         break;
 
       case "say":
-        W(`{${D(r).currentWorld}} [${U(e)}]: ${i.join(" ")} | ${P()}`, {
+        W(`{${D(s).currentWorld}} [${U(e)}]: ${a.join(" ")} | ${P()}`, {
             option: "world",
-            world: D(r).currentWorld
-        }), T(`Message Sent: {${D(r).currentWorld}} [${U(e)}]: ${i.join(" ")} | ${P()}`);
+            world: D(s).currentWorld
+        }), T(`Message Sent: {${D(s).currentWorld}} [${U(e)}]: ${a.join(" ")} | ${P()}`);
         break;
 
       case "announce":
-        W(`Announcement > [${U(e)}]: ${i.join(" ")} | ${P()}`), T(`Message Announced: [${U(e)}]: ${i.join(" ")} | ${P()}`);
+        W(`Announcement > [${U(e)}]: ${a.join(" ")} | ${P()}`), T(`Message Announced: [${U(e)}]: ${a.join(" ")} | ${P()}`);
         break;
 
       case "mine":
-        Date.now() - D(r).lastMined >= 5e3 ? (k.execute(r, client), D(r).lastMined = Date.now()) : A(e, "You can't mine right now, please wait " + Math.floor((5e3 - (Date.now() - D(r).lastMined)) / 1e3) + " seconds");
+        Date.now() - D(s).lastMined >= 5e3 ? (k.execute(s, client), D(s).lastMined = Date.now()) : A(e, "You can't mine right now, please wait " + Math.floor((5e3 - (Date.now() - D(s).lastMined)) / 1e3) + " seconds");
         break;
 
       case "stats":
@@ -401,18 +401,18 @@ d.on("connect", e => {
             }), s.forEach(s => {
                 t ? r ? n.push(`${e[s][r]} | ${t}: ${e[s][t]}`) : n.push(`${s} | ${t}: ${e[s][t]}`) : r ? n.push(`${e[s][r]}: ${e[s]}`) : n.push(`${s}: ${e[s]}`);
             }), n;
-        }(D(r).ores)), A(e, t.create());
+        }(D(s).ores)), A(e, t.create());
         break;
 
       case "go":
-        let s, n;
-        switch (i[0]) {
+        let r, n;
+        switch (a[0]) {
           case "north":
             n = -1;
             break;
 
           case "east":
-            s = 1;
+            r = 1;
             break;
 
           case "south":
@@ -420,17 +420,17 @@ d.on("connect", e => {
             break;
 
           case "west":
-            s = -1;
+            r = -1;
         }
-        let l = D(r).pos;
-        l.x + s >= 0 && l.x + s < 10 && (l.y += s), l.y + n >= 0 && l.y + n < 10 && (l.y += n), 
+        let i = D(s).pos;
+        i.x + r >= 0 && i.x + r < 10 && (i.y += r), i.y + n >= 0 && i.y + n < 10 && (i.y += n), 
         B();
         break;
 
       case "online":
-        if (i) {
+        if (a) {
             let t;
-            switch (i[0]) {
+            switch (a[0]) {
               case "server":
                 t = m.Story("Online users in Server"), t.editBody([ `Total Users: ${O.length}` ].concat(O.map(e => e.username))), 
                 A(e, t.create());
@@ -438,10 +438,10 @@ d.on("connect", e => {
 
               case "world":
                 t = m.Story("Online users in World");
-                let s = [];
+                let r = [];
                 O.forEach(e => {
-                    e.world == D(r).currentWorld && s.push(e.username);
-                }), t.editBody([ `Total Users: ${s.length}` ].concat(s)), A(e, t.create());
+                    e.world == D(s).currentWorld && r.push(e.username);
+                }), t.editBody([ `Total Users: ${r.length}` ].concat(r)), A(e, t.create());
             }
         } else {
             let t = o.Story("Online users in Server");
@@ -449,7 +449,7 @@ d.on("connect", e => {
         }
     }
 }), d.on("error", (e, t) => {
-    err && console.log(err);
+    t && console.log(t);
 }), d.on("end", e => {
     let t = U(e);
     if (t) {
@@ -459,7 +459,7 @@ d.on("connect", e => {
         W(`[${U(e)}] has left the server. ${O.length} users remaining`);
     }
 }), setInterval(() => {
-    fs.writeFile("./database.json", JSON.stringify(y, null, 4), () => {}), fs.writeFile("./worlds.json", JSON.stringify(b, null, 4), () => {}), 
+    t.writeFile("./config/database.json", JSON.stringify(y, null, 4), () => {}), t.writeFile("./config/worlds.json", JSON.stringify(b, null, 4), () => {}), 
     W("Game has been saved!");
 }, 3e5), setInterval(() => {
     for (let e of Object.keys(b)) {
