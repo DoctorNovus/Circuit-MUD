@@ -1,0 +1,1 @@
+[{ "input": "server/src/main.js", "output": "server/build/server.js", "format": "cjs", "compress": false }, { "input": "client/src/main.js", "output": "client/build/client.js", "format": "cjs", "compress": false }]
