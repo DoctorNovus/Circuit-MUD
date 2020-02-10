@@ -120,7 +120,7 @@ telnet.createServer((client) => {
     });
 
     client.on("data", (data) => {
-        if (/[\r]$/.test(data) || /[\n]$/.test(data) || /[\r\n]$/.test(data)) {
+        if (/[\r]$/.test(data) || /[\n]$/.test(data) || /[\r\n]$/.test(data) || /[\n\r]$/.test(data)) {
             let command;
             let args = [];
             message.split(" ").forEach((part, index) => {
@@ -129,6 +129,8 @@ telnet.createServer((client) => {
                 } else {
                     if (/[\n\r]$/.test(data)) {
                         args.push(part.split(/[\n\r]$/).join(""));
+                    } else if (/[\r\n]$/.test(data)) {
+                        args.push(part.split(/[\r\n]$/).join(""));
                     } else if (/[\r]$/.test(data)) {
                         args.push(part.split(/[\r]$/).join(""));
                     } else if (/[\n]$/.test(data)) {

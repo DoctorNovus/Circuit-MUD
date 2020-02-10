@@ -259,10 +259,10 @@ t.createServer(e => {
     }), e.on("error", e => {
         console.log(e);
     }), e.on("data", a => {
-        if (/[\r]$/.test(a) || /[\n]$/.test(a) || /[\r\n]$/.test(a)) {
+        if (/[\r]$/.test(a) || /[\n]$/.test(a) || /[\r\n]$/.test(a) || /[\n\r]$/.test(a)) {
             let i, l = [];
             if (s.split(" ").forEach((e, t) => {
-                0 == t ? i = e : /[\n\r]$/.test(a) ? l.push(e.split(/[\n\r]$/).join("")) : /[\r]$/.test(a) ? l.push(e.split(/[\r]$/).join("")) : /[\n]$/.test(a) && l.push(e.split(/[\n]$/).join(""));
+                0 == t ? i = e : /[\n\r]$/.test(a) ? l.push(e.split(/[\n\r]$/).join("")) : /[\r\n]$/.test(a) ? l.push(e.split(/[\r\n]$/).join("")) : /[\r]$/.test(a) ? l.push(e.split(/[\r]$/).join("")) : /[\n]$/.test(a) && l.push(e.split(/[\n]$/).join(""));
             }), 1 == n && function(e) {
                 return !!f.find(t => t == e);
             }(t)) switch (i) {
