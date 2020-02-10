@@ -1,39 +1,39 @@
 "use strict";
 
-var t = require("net");
+var e = require("net");
 
-let e = new class {
+let t = new class {
     constructor() {
         this.events = {};
     }
-    on(t, e) {
-        this.events[t] = e;
+    on(e, t) {
+        this.events[e] = t;
     }
-    send(t) {
-        this.socket.write(t + "\r\n");
+    send(e) {
+        this.socket.write(e + "\r\n");
     }
-    connect(e, n, s) {
+    connect(t, s, n) {
         if (!this.events.data) throw new Error("Missing data event binding!");
         if (!this.events.close) throw new Error("Missing close event binding!");
         if (!this.events.error) throw new Error("Missing error event binding!");
-        return this.socket = new t.Socket, this.socket.on("data", t => {
-            this.events.data(t);
+        return this.socket = new e.Socket, this.socket.on("data", e => {
+            this.events.data(e);
         }), this.socket.on("close", () => {
             this.events.close();
-        }), this.socket.on("error", t => {
-            this.events.error(t);
-        }), s ? this.socket.connect(n, e, s) : this.socket.connect(n, e);
+        }), this.socket.on("error", e => {
+            this.events.error(e);
+        }), n ? this.socket.connect(s, t, n) : this.socket.connect(s, t);
     }
-};
+}, s = process.argv.splice(2, process.argv.length);
 
-e.on("data", t => {
-    t = Buffer.from(t, "utf-8").toString(), console.log(t);
-}), e.on("close", () => {}), e.on("error", t => {
-    if (t) throw t;
+t.on("data", e => {
+    e = Buffer.from(e, "utf-8").toString(), console.log(e);
+}), t.on("close", () => {}), t.on("error", e => {
+    if (e) throw e;
 });
 
-let n = e.connect("localhost", 23);
+let n = t.connect(s[0], s[1]);
 
-process.openStdin().addListener("data", (function(t) {
-    n.write(t.toString().trim() + "\r\n");
+process.openStdin().addListener("data", (function(e) {
+    n.write(e.toString().trim() + "\r\n");
 }));

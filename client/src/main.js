@@ -1,6 +1,7 @@
 import { TelnetClient } from "../../telnet";
 
 let client = new TelnetClient();
+let args = process.argv.splice(2, process.argv.length);
 
 client.on("data", (data) => {
     data = Buffer.from(data, "utf-8").toString();
@@ -13,7 +14,7 @@ client.on("error", (err) => {
     if (err) throw err;
 });
 
-let protocol = client.connect("localhost", 23);
+let protocol = client.connect(args[0], args[1]);
 
 var stdin = process.openStdin();
 
