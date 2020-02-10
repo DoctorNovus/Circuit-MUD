@@ -31,6 +31,8 @@ let passw = new Password();
 let admins = load.json("./admins.json").admins;
 let database = load.json("./database.json");
 let worlds = load.json("./worlds.json");
+let config = load.json("./config.json");
+let ores = config.ores;
 
 
 let Circuit = new Engine();
@@ -51,7 +53,6 @@ let Mining = Circuit.Hobby("Mining");
 let mine = Circuit.Action("mine", "mines things around you");
 mine.addLife((...args) => {
     let usere = database.users.find(user => user.username == args[0][0]);
-    let picLevel = usere.tools.pickaxe.level;
     let str = `Gained the following ore: `;
     let secto = findSector(usere.username);
     let keys = [];
@@ -60,11 +61,11 @@ mine.addLife((...args) => {
     });
 
     keys.forEach(key => {
-        if ((usere.ores.find(ore => ore.name == key).hardness <= usere.tools.pickaxe.level) && (secto.resources.hasOwnProperty(key))) {
+        if ((ores[key].hardness <= usere.tools.pickaxe) && (secto.resources.hasOwnProperty(key))) {
             if (secto.resources[key].count > 0) {
                 let countingBlocks = Math.floor(Math.random() * 2);
                 if (secto.resources[key].count - countingBlocks > 0) {
-                    usere.ores.find(ore => ore.name == key).count += countingBlocks;
+                    usere.ores[key] += countingBlocks;
                     secto.resources[key].count -= countingBlocks;
 
                     if (countingBlocks > 0) {
@@ -86,7 +87,7 @@ let Fighting = Circuit.Hobby("Fighting");
 
 
 Pathways.addParts(["exit - Exit's the connection", "logout - Logs out of the server"]);
-Communication.addParts(["say - speaks to other players", "whisper - whispers to another player privately"]);
+Communication.addParts(["say - speaks to other players", "whisper - whispers to another player privately", "announce - speak to the whole server"]);
 Hobbies.addParts(["Type help <hobby> for commands on hobby"]);
 Hobbies.addHobbies([Mining, Crafting, Fighting]);
 
@@ -166,125 +167,28 @@ telnet.createServer((client) => {
                             let user = {
                                 "username": args[0],
                                 "password": passw.encrypt(args[1]),
-                                "ores": [{
-                                        "name": "coal",
-                                        "count": 0,
-                                        "rarity": 1 / 34,
-                                        "hardness": 1
-                                    },
-                                    {
-                                        "name": "iron",
-                                        "count": 0,
-                                        "rarity": 1 / 72,
-                                        "hardness": 3
-                                    }, {
-                                        "name": "gold",
-                                        "count": 0,
-                                        "rarity": 1 / 5465,
-                                        "hardness": 2
-                                    }, {
-                                        "name": "titanium",
-                                        "count": 0,
-                                        "rarity": 1 / 347,
-                                        "hardness": 4
-                                    }, {
-                                        "name": "uranium",
-                                        "count": 0,
-                                        "rarity": 1 / 529,
-                                        "hardness": 4
-                                    }, {
-                                        "name": "copper",
-                                        "count": 0,
-                                        "rarity": 1 / 259,
-                                        "hardness": 1
-                                    }, {
-                                        "name": "aluminium",
-                                        "count": 0,
-                                        "rarity": 1 / 77,
-                                        "hardness": 3
-                                    }, {
-                                        "name": "tin",
-                                        "count": 0,
-                                        "rarity": 1 / 741,
-                                        "hardness": 1
-                                    }, {
-                                        "name": "silver",
-                                        "count": 0,
-                                        "rarity": 1 / 17,
-                                        "hardness": 2
-                                    }, {
-                                        "name": "lead",
-                                        "count": 0,
-                                        "rarity": 1 / 84,
-                                        "hardness": 2
-                                    }, {
-                                        "name": "zinc",
-                                        "count": 0,
-                                        "rarity": 1 / 101,
-                                        "hardness": 2
-                                    }, {
-                                        "name": "platinum",
-                                        "count": 0,
-                                        "rarity": 1 / 962,
-                                        "hardness": 4
-                                    }, {
-                                        "name": "palladium",
-                                        "count": 0,
-                                        "rarity": 1 / 2329,
-                                        "hardness": 5
-                                    }, {
-                                        "name": "nickel",
-                                        "count": 0,
-                                        "rarity": 1 / 590,
-                                        "hardness": 2
-                                    }
-                                ],
+                                "ores": {
+                                    "coal": 0,
+                                    "iron": 0,
+                                    "gold": 0,
+                                    "titanium": 0,
+                                    "uranium": 0,
+                                    "copper": 0,
+                                    "aluminum": 0,
+                                    "tin": 0,
+                                    "silver": 0,
+                                    "lead": 0,
+                                    "zinc": 0,
+                                    "platinum": 0,
+                                    "palladium": 0,
+                                    "nickel": 0
+                                },
                                 "lastMined": Date.now(),
                                 "tools": {
-                                    "pickaxe": {
-                                        "level": 1,
-                                    },
-                                    "axe": {
-                                        "level": 1
-                                    },
-                                    "hoe": {
-                                        "level": 1
-                                    },
-                                    "spade": {
-                                        "level": 1
-                                    }
-                                },
-                                "weapons": {
-                                    "shotgun": 0,
-                                    "sniper": 0,
-                                    "dagger": 0,
-                                    "rifle": 0,
-                                    "spear": 0,
-                                    "bow": 0,
-                                    "pistol": 0,
-                                    "grenadeLauncher": 0,
-                                    "grenade": 0,
-                                    "crossbow": 0,
-                                    "knife": 0,
-                                    "handGun": 0,
-                                    "assaultRifle": 0,
-                                    "boomerang": 0,
-                                    "uzi": 0,
-                                    "javelin": 0,
-                                    "flameThrower": 0,
-                                    "long Bow": 0,
-                                    "dart": 0,
-                                    "throwingKnife": 0
-                                },
-                                "liquids": {
-                                    "magma": 0,
-                                    "plasma": 0,
-                                    "water": 0,
-                                    "acid": 0,
-                                    "gas": 0,
-                                    "oil": 0,
-                                    "blood": 0,
-                                    "bromine": 0
+                                    "pickaxe": 1,
+                                    "axe": 1,
+                                    "hoe": 1,
+                                    "spade": 1
                                 },
                                 "currentWorld": "Cyber City",
                                 "pos": {
@@ -308,7 +212,6 @@ telnet.createServer((client) => {
                             }
                             sendAll(`[${username}] has connected to the server for the first time! Please welcome them! \n${clients.length} users are online | ${getDate()}`);
                         };
-                        break;
 
                     case "exit":
                         client.end();
@@ -373,7 +276,7 @@ telnet.createServer((client) => {
 
                     case "stats":
                         let stats = Circuit.Story("Stats");
-                        stats.editBody(getKeyValuePair(getUser(username).ores, "count", "name"));
+                        stats.editBody(getKeyValuePair(getUser(username).ores));
                         send(client, stats.create());
                         break;
 
@@ -588,10 +491,18 @@ function getKeyValuePair(obje, val, keyVal) {
     });
 
     keys.forEach(key => {
-        if (keyVal) {
-            arr.push(`${obje[key][keyVal]} | ${val}: ${obje[key][val]}`)
+        if (val) {
+            if (keyVal) {
+                arr.push(`${obje[key][keyVal]} | ${val}: ${obje[key][val]}`);
+            } else {
+                arr.push(`${key} | ${val}: ${obje[key][val]}`);
+            }
         } else {
-            arr.push(`${key} | ${val}: ${obje[key][val]}`)
+            if (keyVal) {
+                arr.push(`${obje[key][keyVal]}: ${obje[key]}`);
+            } else {
+                arr.push(`${key}: ${obje[key]}`);
+            }
         }
     })
 

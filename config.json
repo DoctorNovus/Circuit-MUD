@@ -1,0 +1,60 @@
+{
+    "ores": {
+        "coal": {
+            "rarity": 0.029411764705882353,
+            "hardness": 1
+        },
+        "iron": {
+            "rarity": 0.013888888888888888,
+            "hardness": 3
+        },
+        "gold": {
+            "rarity": 0.00018298261665141812,
+            "hardness": 2
+        },
+        "titanium": {
+            "rarity": 0.002881844380403458,
+            "hardness": 4
+        },
+        "uranium": {
+            "rarity": 0.001890359168241966,
+            "hardness": 4
+        },
+        "copper": {
+            "rarity": 0.003861003861003861,
+            "hardness": 1
+        },
+        "aluminum": {
+            "rarity": 0.012987012987012988,
+            "hardness": 3
+        },
+        "tin": {
+            "rarity": 0.001349527665317139,
+            "hardness": 1
+        },
+        "silver": {
+            "rarity": 0.058823529411764705,
+            "hardness": 2
+        },
+        "lead": {
+            "rarity": 0.011904761904761904,
+            "hardness": 2
+        },
+        "zinc": {
+            "rarity": 0.009900990099009901,
+            "hardness": 2
+        },
+        "platinum": {
+            "rarity": 0.0010395010395010396,
+            "hardness": 4
+        },
+        "palladium": {
+            "rarity": 0.00042936882782310007,
+            "hardness": 5
+        },
+        "nickel": {
+            "rarity": 0.001694915254237288,
+            "hardness": 2
+        }
+    }
+}

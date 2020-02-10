@@ -46,10 +46,10 @@ class o {
         return this.categories.push(t), t;
     }
     Action(e, t) {
-        return new u(e, t);
+        return new h(e, t);
     }
     Item(e) {
-        return new h(e);
+        return new u(e);
     }
 }
 
@@ -133,7 +133,7 @@ class c extends a {
     }
 }
 
-class u {
+class h {
     constructor(e, t) {
         this.name = e, this.description = t;
     }
@@ -145,7 +145,7 @@ class u {
     }
 }
 
-class h {
+class u {
     constructor(e) {
         this.name = e;
     }
@@ -165,97 +165,96 @@ let d = new class {
     compare(e, t) {
         return s.compareSync(e, t);
     }
-}, p = d.json("./admins.json").admins, y = d.json("./database.json"), g = d.json("./worlds.json"), m = new o, b = m.Story("Circuit MUD");
+}, p = d.json("./admins.json").admins, y = d.json("./database.json"), g = d.json("./worlds.json"), b = d.json("./config.json").ores, m = new o, w = m.Story("Circuit MUD");
 
-b.editBody([ "Welcome to Circuit MUD", "Please login with command: login <username> <password> | or create using: create <username> <password>", 'Type "help" for commands' ]);
+w.editBody([ "Welcome to Circuit MUD", "Please login with command: login <username> <password> | or create using: create <username> <password>", 'Type "help" for commands' ]);
 
-let w = m.Story("Help Menu");
+let $ = m.Story("Help Menu");
 
-w.editBody([ "Command Categories are as follows: ", "Pathways", "Communication", "Hobbies" ]);
+$.editBody([ "Command Categories are as follows: ", "Pathways", "Communication", "Hobbies" ]);
 
-let $ = m.Category("Pathways"), j = m.Category("Communication"), x = m.Category("Hobbies"), S = m.Hobby("Mining"), v = m.Action("mine", "mines things around you");
+let j = m.Category("Pathways"), x = m.Category("Communication"), S = m.Category("Hobbies"), M = m.Hobby("Mining"), k = m.Action("mine", "mines things around you");
 
-v.addLife((...e) => {
-    let t = y.users.find(t => t.username == e[0][0]), r = (t.tools.pickaxe.level, function(e) {
+k.addLife((...e) => {
+    let t = y.users.find(t => t.username == e[0][0]), r = function(e) {
         let t;
-        return g[T(e).currentWorld].map.forEach(r => {
+        return g[P(e).currentWorld].map.forEach(r => {
             r.forEach(r => {
-                r.pos.x == T(e).pos.x && r.pos.y == T(e).pos.y && (t = r);
+                r.pos.x == P(e).pos.x && r.pos.y == P(e).pos.y && (t = r);
             });
         }), t;
-    }(t.username)), s = [];
+    }(t.username), s = [];
     Object.keys(r.resources).forEach(e => {
         s.push(e);
     }), s.forEach(s => {
-        if (t.ores.find(e => e.name == s).hardness <= t.tools.pickaxe.level && r.resources.hasOwnProperty(s) && r.resources[s].count > 0) {
+        if (b[s].hardness <= t.tools.pickaxe && r.resources.hasOwnProperty(s) && r.resources[s].count > 0) {
             let n = Math.floor(2 * Math.random());
-            r.resources[s].count - n > 0 && (t.ores.find(e => e.name == s).count += n, r.resources[s].count -= n, 
-            n > 0 && E(e[0][1], `You have obtained ${s}`));
+            r.resources[s].count - n > 0 && (t.ores[s] += n, r.resources[s].count -= n, n > 0 && O(e[0][1], `You have obtained ${s}`));
         }
     });
-}), S.addAction(v);
+}), M.addAction(k);
 
 // Crafting
-let M = m.Hobby("Crafting"), k = m.Hobby("Fighting");
+let v = m.Hobby("Crafting"), C = m.Hobby("Fighting");
 
 // Fighting
-$.addParts([ "exit - Exit's the connection", "logout - Logs out of the server" ]), 
-j.addParts([ "say - speaks to other players", "whisper - whispers to another player privately" ]), 
-x.addParts([ "Type help <hobby> for commands on hobby" ]), x.addHobbies([ S, M, k ]);
+j.addParts([ "exit - Exit's the connection", "logout - Logs out of the server" ]), 
+x.addParts([ "say - speaks to other players", "whisper - whispers to another player privately", "announce - speak to the whole server" ]), 
+S.addParts([ "Type help <hobby> for commands on hobby" ]), S.addHobbies([ M, v, C ]);
 
-let C = [];
+let E = [];
 
-function E(e, t) {
+function O(e, t) {
     try {
         e.write(t + "\n");
     } catch (e) {}
 }
 
-function O(e, t) {
+function U(e, t) {
     if (t) switch (t.option) {
       case "world":
-        C.forEach(r => {
+        E.forEach(r => {
             if (r.world == t.world) try {
                 r.client.write(e + "\n");
             } catch (e) {}
-            U(e + "\n");
+            A(e + "\n");
         });
-    } else C.forEach(t => {
+    } else E.forEach(t => {
         t = t.client;
         try {
             t.write(e + "\n");
         } catch (e) {}
-    }), U(e + "\n");
+    }), A(e + "\n");
 }
 
-function U(e) {
+function A(e) {
     r.appendFile("./logs.txt", e + "\n", () => {
         console.log(`Logged data => ${e}`);
     });
 }
 
-function A() {
+function W() {
     var e = new Date, t = Date.UTC(e.getUTCFullYear(), e.getUTCMonth(), e.getUTCDate(), e.getUTCHours(), e.getUTCMinutes(), e.getUTCSeconds());
     return new Date(t).toISOString();
 }
 
-function W() {
+function T() {
     r.writeFile("./database.json", JSON.stringify(y, null, 4), () => {}), r.writeFile("./worlds.json", JSON.stringify(g, null, 4), () => {});
 }
 
 // Autosave
-function T(e) {
+function P(e) {
     return y.users.find(t => t.username == e);
 }
 
 t.createServer(e => {
     let t, s = "", n = !1;
-    E(e, b.create()), e.on("end", () => {
+    O(e, w.create()), e.on("end", () => {
         if (t) {
-            for (let e = 0; e < C.length; e++) {
-                C[e].username == t && C.splice(e, 1);
+            for (let e = 0; e < E.length; e++) {
+                E[e].username == t && E.splice(e, 1);
             }
-            O(`[${t}] has left the server. ${C.length} users remaining`);
+            U(`[${t}] has left the server. ${E.length} users remaining`);
         }
     }), e.on("error", e => {
         console.log(e);
@@ -268,143 +267,48 @@ t.createServer(e => {
                 return !!p.find(t => t == e);
             }(t)) switch (a) {
               case "save":
-                W(), O("Game has been saved. ");
+                T(), U("Game has been saved. ");
             }
             if (0 == n) switch (a) {
               case "login":
                 if (y.users.find(e => e.username == i[0])) for (let r = 0; r < y.users.length; r++) if (f.compare(i[1], y.users[r].password)) {
                     n = !0, t = i[0];
                     let r = m.Story("Logged in");
-                    r.editBody([ "Username: " + i[0] ]), E(e, r.create()), C.find(e => e.username == t) || C.push({
+                    r.editBody([ "Username: " + i[0] ]), O(e, r.create()), E.find(e => e.username == t) || E.push({
                         username: i[0],
                         client: e,
-                        world: T(i[0]).currentWorld
-                    }), O(`User [${t}] has connected to the server! \n${C.length} users are online | ${A()}`);
+                        world: P(i[0]).currentWorld
+                    }), U(`User [${t}] has connected to the server! \n${E.length} users are online | ${W()}`);
                 }
                 break;
 
               case "create":
-                if (y.users.find(e => e.username == i[0])) E(e, "That user exists"); else {
+                if (y.users.find(e => e.username == i[0])) O(e, "That user exists"); else {
                     let s = {
                         username: i[0],
                         password: f.encrypt(i[1]),
-                        ores: [ {
-                            name: "coal",
-                            count: 0,
-                            rarity: 1 / 34,
-                            hardness: 1
-                        }, {
-                            name: "iron",
-                            count: 0,
-                            rarity: 1 / 72,
-                            hardness: 3
-                        }, {
-                            name: "gold",
-                            count: 0,
-                            rarity: 1 / 5465,
-                            hardness: 2
-                        }, {
-                            name: "titanium",
-                            count: 0,
-                            rarity: 1 / 347,
-                            hardness: 4
-                        }, {
-                            name: "uranium",
-                            count: 0,
-                            rarity: 1 / 529,
-                            hardness: 4
-                        }, {
-                            name: "copper",
-                            count: 0,
-                            rarity: 1 / 259,
-                            hardness: 1
-                        }, {
-                            name: "aluminium",
-                            count: 0,
-                            rarity: 1 / 77,
-                            hardness: 3
-                        }, {
-                            name: "tin",
-                            count: 0,
-                            rarity: 1 / 741,
-                            hardness: 1
-                        }, {
-                            name: "silver",
-                            count: 0,
-                            rarity: 1 / 17,
-                            hardness: 2
-                        }, {
-                            name: "lead",
-                            count: 0,
-                            rarity: 1 / 84,
-                            hardness: 2
-                        }, {
-                            name: "zinc",
-                            count: 0,
-                            rarity: 1 / 101,
-                            hardness: 2
-                        }, {
-                            name: "platinum",
-                            count: 0,
-                            rarity: 1 / 962,
-                            hardness: 4
-                        }, {
-                            name: "palladium",
-                            count: 0,
-                            rarity: 1 / 2329,
-                            hardness: 5
-                        }, {
-                            name: "nickel",
-                            count: 0,
-                            rarity: 1 / 590,
-                            hardness: 2
-                        } ],
+                        ores: {
+                            coal: 0,
+                            iron: 0,
+                            gold: 0,
+                            titanium: 0,
+                            uranium: 0,
+                            copper: 0,
+                            aluminum: 0,
+                            tin: 0,
+                            silver: 0,
+                            lead: 0,
+                            zinc: 0,
+                            platinum: 0,
+                            palladium: 0,
+                            nickel: 0
+                        },
                         lastMined: Date.now(),
                         tools: {
-                            pickaxe: {
-                                level: 1
-                            },
-                            axe: {
-                                level: 1
-                            },
-                            hoe: {
-                                level: 1
-                            },
-                            spade: {
-                                level: 1
-                            }
-                        },
-                        weapons: {
-                            shotgun: 0,
-                            sniper: 0,
-                            dagger: 0,
-                            rifle: 0,
-                            spear: 0,
-                            bow: 0,
-                            pistol: 0,
-                            grenadeLauncher: 0,
-                            grenade: 0,
-                            crossbow: 0,
-                            knife: 0,
-                            handGun: 0,
-                            assaultRifle: 0,
-                            boomerang: 0,
-                            uzi: 0,
-                            javelin: 0,
-                            flameThrower: 0,
-                            "long Bow": 0,
-                            dart: 0,
-                            throwingKnife: 0
-                        },
-                        liquids: {
-                            magma: 0,
-                            plasma: 0,
-                            water: 0,
-                            acid: 0,
-                            gas: 0,
-                            oil: 0,
-                            blood: 0,
-                            bromine: 0
+                            pickaxe: 1,
+                            axe: 1,
+                            hoe: 1,
+                            spade: 1
                         },
                         currentWorld: "Cyber City",
                         pos: {
@@ -414,37 +318,36 @@ t.createServer(e => {
                     };
                     y.users.push(s), r.writeFile("./database.json", JSON.stringify(y, 4, null), () => {});
                     let o = m.Story("Created User");
-                    o.editBody([ "Username: " + s.username, "Password: " + s.password ]), E(e, o.create()), 
-                    n = !0, t = i[0], C.find(e => e.username == t) || C.push({
+                    o.editBody([ "Username: " + s.username, "Password: " + s.password ]), O(e, o.create()), 
+                    n = !0, t = i[0], E.find(e => e.username == t) || E.push({
                         username: i[0],
                         client: e,
                         world: "main"
-                    }), O(`[${t}] has connected to the server for the first time! Please welcome them! \n${C.length} users are online | ${A()}`);
+                    }), U(`[${t}] has connected to the server for the first time! Please welcome them! \n${E.length} users are online | ${W()}`);
                 }
-                break;
 
               case "exit":
                 e.end();
-            } else switch (U(`${t} executed: ${a}:${i.join(" ")}`), a) {
+            } else switch (A(`${t} executed: ${a}:${i.join(" ")}`), a) {
               case "exit":
                 e.end();
                 break;
 
               case "help":
-                E(e, i ? w.create(m, i) : w.create());
+                O(e, i ? $.create(m, i) : $.create());
                 break;
 
               case "joinWorld":
                 for (let e of Object.keys(g)) if (e == i.join(" ")) {
                     g[e].map.forEach(e => {
                         e.forEach(e => {
-                            e.pos.x == T(t).pos.x && e.pos.y == T(t).pos.y && (O(`${T(t).username} has left ${T(t).currentWorld}`, {
+                            e.pos.x == P(t).pos.x && e.pos.y == P(t).pos.y && (U(`${P(t).username} has left ${P(t).currentWorld}`, {
                                 option: "world",
-                                world: T(t).currentWorld
-                            }), T(t).currentWorld = i.join(" "), C.find(e => e.username == t).world = i.join(" "), 
-                            O(`${T(t).username} has joined ${T(t).currentWorld}`, {
+                                world: P(t).currentWorld
+                            }), P(t).currentWorld = i.join(" "), E.find(e => e.username == t).world = i.join(" "), 
+                            U(`${P(t).username} has joined ${P(t).currentWorld}`, {
                                 option: "world",
-                                world: T(t).currentWorld
+                                world: P(t).currentWorld
                             }));
                         });
                     });
@@ -452,22 +355,22 @@ t.createServer(e => {
                 break;
 
               case "logout":
-                n = !1, t = null, E(e, "Logged out successfully!");
+                n = !1, t = null, O(e, "Logged out successfully!");
                 break;
 
               case "say":
-                O(`{${T(t).currentWorld}} [${t}]: ${i.join(" ")} | ${A()}`, {
+                U(`{${P(t).currentWorld}} [${t}]: ${i.join(" ")} | ${W()}`, {
                     option: "world",
-                    world: T(t).currentWorld
-                }), U(`Message Sent: {${T(t).currentWorld}} [${t}]: ${i.join(" ")} | ${A()}`);
+                    world: P(t).currentWorld
+                }), A(`Message Sent: {${P(t).currentWorld}} [${t}]: ${i.join(" ")} | ${W()}`);
                 break;
 
               case "announce":
-                O(`Announcement > [${t}]: ${i.join(" ")} | ${A()}`), U(`Message Announced: [${t}]: ${i.join(" ")} | ${A()}`);
+                U(`Announcement > [${t}]: ${i.join(" ")} | ${W()}`), A(`Message Announced: [${t}]: ${i.join(" ")} | ${W()}`);
                 break;
 
               case "mine":
-                Date.now() - T(t).lastMined >= 5e3 ? (v.execute(t, e), T(t).lastMined = Date.now()) : E(e, "You can't mine right now, please wait " + Math.floor((5e3 - (Date.now() - T(t).lastMined)) / 1e3) + " seconds");
+                Date.now() - P(t).lastMined >= 5e3 ? (k.execute(t, e), P(t).lastMined = Date.now()) : O(e, "You can't mine right now, please wait " + Math.floor((5e3 - (Date.now() - P(t).lastMined)) / 1e3) + " seconds");
                 break;
 
               case "stats":
@@ -477,9 +380,9 @@ t.createServer(e => {
                     return Object.keys(e).forEach(e => {
                         s.push(e);
                     }), s.forEach(s => {
-                        r ? n.push(`${e[s][r]} | ${t}: ${e[s][t]}`) : n.push(`${s} | ${t}: ${e[s][t]}`);
+                        t ? r ? n.push(`${e[s][r]} | ${t}: ${e[s][t]}`) : n.push(`${s} | ${t}: ${e[s][t]}`) : r ? n.push(`${e[s][r]}: ${e[s]}`) : n.push(`${s}: ${e[s]}`);
                     }), n;
-                }(T(t).ores, "count", "name")), E(e, r.create());
+                }(P(t).ores)), O(e, r.create());
                 break;
 
               case "go":
@@ -500,9 +403,9 @@ t.createServer(e => {
                   case "west":
                     s = -1;
                 }
-                let l = T(t).pos;
+                let l = P(t).pos;
                 l.x + s >= 0 && l.x + s < 10 && (l.y += s), l.y + a >= 0 && l.y + a < 10 && (l.y += a), 
-                W();
+                T();
                 break;
 
               case "online":
@@ -510,20 +413,20 @@ t.createServer(e => {
                     let r;
                     switch (i[0]) {
                       case "server":
-                        r = m.Story("Online users in Server"), r.editBody([ `Total Users: ${C.length}` ].concat(C.map(e => e.username))), 
-                        E(e, r.create());
+                        r = m.Story("Online users in Server"), r.editBody([ `Total Users: ${E.length}` ].concat(E.map(e => e.username))), 
+                        O(e, r.create());
                         break;
 
                       case "world":
                         r = m.Story("Online users in World");
                         let s = [];
-                        C.forEach(e => {
-                            e.world == T(t).currentWorld && s.push(e.username);
-                        }), r.editBody([ `Total Users: ${s.length}` ].concat(s)), E(e, r.create());
+                        E.forEach(e => {
+                            e.world == P(t).currentWorld && s.push(e.username);
+                        }), r.editBody([ `Total Users: ${s.length}` ].concat(s)), O(e, r.create());
                     }
                 } else {
                     let t = o.Story("Online users in Server");
-                    t.editBody([ `Total Users: ${C.length}` ].concat(C)), E(e, t.create());
+                    t.editBody([ `Total Users: ${E.length}` ].concat(E)), O(e, t.create());
                 }
             }
             s = "";
@@ -531,7 +434,7 @@ t.createServer(e => {
     });
 }).listen(4922), setInterval(() => {
     r.writeFile("./database.json", JSON.stringify(y, null, 4), () => {}), r.writeFile("./worlds.json", JSON.stringify(g, null, 4), () => {}), 
-    O("Game has been saved!");
+    U("Game has been saved!");
 }, 3e5), setInterval(() => {
     for (let e of Object.keys(g)) {
         let t = g[e];
@@ -541,10 +444,10 @@ t.createServer(e => {
                     e.count += Math.floor(10 * Math.random());
                 });
             });
-        }), O(`${e} has been regenerated! Start finding ore!`, {
+        }), U(`${e} has been regenerated! Start finding ore!`, {
             option: "world",
             world: t
         });
     }
-    W();
+    T();
 }, 149400);
