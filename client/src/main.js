@@ -16,6 +16,8 @@ client.on("error", (err) => {
 
 let protocol = client.connect(args[0], args[1]);
 
+protocol.write("joinGame");
+
 var stdin = process.openStdin();
 
 stdin.addListener("data", function(d) {

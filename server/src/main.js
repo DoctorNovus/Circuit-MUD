@@ -79,7 +79,7 @@ Hobbies.addHobbies([Mining, Crafting, Fighting]);
 let clients = [];
 
 server.on("connect", (socket) => {
-    socket.write(main.create());
+
 });
 
 server.on("data", (socket, data) => {
@@ -87,6 +87,10 @@ server.on("data", (socket, data) => {
     let message = data.split(" ");
     let command = message[0];
     let args = message.splice(1, message.length);
+
+    if (command == "joinGame") {
+        socket.write(main.create() + "\r\n");
+    };
 
     // Users Attributes
     let loggedIn = false;
@@ -114,7 +118,7 @@ server.on("data", (socket, data) => {
                             let loggedInStory = Circuit.Story("Logged in");
                             loggedInStory.editBody(["Username: " + args[0]]);
                             send(socket, loggedInStory.create());
-                            if (!clients.find(cliente => cliente.username == username)) {
+                            if (!clients.find(cliente => cliente.username == getUsername(socket))) {
                                 clients.push({ "username": args[0], "client": socket, "world": getUser(args[0]).currentWorld });
                             }
                             sendAll(`User [${getUsername(socket)}] has connected to the server! \n${clients.length} users are online | ${getDate()}`);
@@ -177,7 +181,6 @@ server.on("data", (socket, data) => {
 
                     send(socket, createdUser.create());
                     loggedIn = true;
-                    username = args[0];
                     if (!clients.find(client => client.username == username)) {
                         clients.push({ "username": args[0], "client": socket, "world": "main" });
                     }

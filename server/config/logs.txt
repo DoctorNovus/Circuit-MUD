@@ -2934,3 +2934,9 @@ Hiro executed: help:
 [Hiro] has connected to the server for the first time! Please welcome them! 
 1 users are online | 2020-02-10T23:02:03.000Z
 
+User [Hiro] has connected to the server! 
+1 users are online | 2020-02-10T23:14:17.000Z
+
+User [Hiro] has connected to the server! 
+1 users are online | 2020-02-10T23:15:39.000Z
+

@@ -273,28 +273,29 @@ function D(e) {
     return y.users.find(t => t.username == e);
 }
 
-d.on("connect", e => {
-    e.write($.create());
-}), d.on("data", (e, r) => {
-    let s, n = (r = Buffer.from(r, "utf-8").toString()).split(" "), i = n[0], a = n.splice(1, n.length), l = !1;
+d.on("connect", e => {}), d.on("data", (e, r) => {
+    let s = (r = Buffer.from(r, "utf-8").toString()).split(" "), n = s[0], i = s.splice(1, s.length);
+    "joinGame" == n && e.write($.create() + "\r\n");
+    // Users Attributes
+        let a, l = !1;
     // Login & Create System
     if (1 == l && function(e) {
         return !!g.find(t => t == e);
-    }(s)) switch (i) {
+    }(a)) switch (n) {
       case "save":
         B(), W("Game has been saved. ");
     }
-    if (0 == l) switch (i) {
+    if (0 == l) switch (n) {
       case "login":
-        if (y.users.find(e => e.username == a[0])) {
+        if (y.users.find(e => e.username == i[0])) {
             let t = 0;
-            for (let r = 0; r < y.users.length; r++) if (p.compare(a[1], y.users[r].password)) {
-                l = !0, s = a[0];
+            for (let r = 0; r < y.users.length; r++) if (p.compare(i[1], y.users[r].password)) {
+                l = !0, a = i[0];
                 let t = m.Story("Logged in");
-                t.editBody([ "Username: " + a[0] ]), A(e, t.create()), O.find(e => e.username == s) || O.push({
-                    username: a[0],
+                t.editBody([ "Username: " + i[0] ]), A(e, t.create()), O.find(t => t.username == U(e)) || O.push({
+                    username: i[0],
                     client: e,
-                    world: D(a[0]).currentWorld
+                    world: D(i[0]).currentWorld
                 }), W(`User [${U(e)}] has connected to the server! \n${O.length} users are online | ${P()}`);
             } else t++;
             t > 0 && A(e, "You have used the wrong credentials. Please try again. ");
@@ -302,10 +303,10 @@ d.on("connect", e => {
         break;
 
       case "create":
-        if (y.users.find(e => e.username == a[0])) A(e, "That user exists"); else {
+        if (y.users.find(e => e.username == i[0])) A(e, "That user exists"); else {
             let r = {
-                username: a[0],
-                password: p.encrypt(a[1]),
+                username: i[0],
+                password: p.encrypt(i[1]),
                 ores: {
                     coal: 0,
                     iron: 0,
@@ -336,10 +337,10 @@ d.on("connect", e => {
                 }
             };
             y.users.push(r), t.writeFile("./config/database.json", JSON.stringify(y, 4, null), () => {});
-            let n = m.Story("Created User");
-            n.editBody([ "Username: " + r.username, "Password: " + r.password ]), A(e, n.create()), 
-            l = !0, s = a[0], O.find(e => e.username == s) || O.push({
-                username: a[0],
+            let s = m.Story("Created User");
+            s.editBody([ "Username: " + r.username, "Password: " + r.password ]), A(e, s.create()), 
+            l = !0, O.find(e => e.username == a) || O.push({
+                username: i[0],
                 client: e,
                 world: "main"
             }), W(`[${U(e)}] has connected to the server for the first time! Please welcome them! \n${O.length} users are online | ${P()}`);
@@ -347,26 +348,26 @@ d.on("connect", e => {
 
       case "exit":
         e.end();
-    } else switch (T(`${U(e)} executed: ${i}:${a.join(" ")}`), i) {
+    } else switch (T(`${U(e)} executed: ${n}:${i.join(" ")}`), n) {
       case "exit":
         e.end();
         break;
 
       case "help":
-        A(e, a ? v.create(m, a) : v.create());
+        A(e, i ? v.create(m, i) : v.create());
         break;
 
       case "joinWorld":
-        for (let e of Object.keys(b)) if (e == a.join(" ")) {
+        for (let e of Object.keys(b)) if (e == i.join(" ")) {
             b[e].map.forEach(e => {
                 e.forEach(e => {
-                    e.pos.x == D(s).pos.x && e.pos.y == D(s).pos.y && (W(`${D(s).username} has left ${D(s).currentWorld}`, {
+                    e.pos.x == D(a).pos.x && e.pos.y == D(a).pos.y && (W(`${D(a).username} has left ${D(a).currentWorld}`, {
                         option: "world",
-                        world: D(s).currentWorld
-                    }), D(s).currentWorld = a.join(" "), O.find(e => e.username == s).world = a.join(" "), 
-                    W(`${D(s).username} has joined ${D(s).currentWorld}`, {
+                        world: D(a).currentWorld
+                    }), D(a).currentWorld = i.join(" "), O.find(e => e.username == a).world = i.join(" "), 
+                    W(`${D(a).username} has joined ${D(a).currentWorld}`, {
                         option: "world",
-                        world: D(s).currentWorld
+                        world: D(a).currentWorld
                     }));
                 });
             });
@@ -374,22 +375,22 @@ d.on("connect", e => {
         break;
 
       case "logout":
-        l = !1, s = null, A(e, "Logged out successfully!");
+        l = !1, a = null, A(e, "Logged out successfully!");
         break;
 
       case "say":
-        W(`{${D(s).currentWorld}} [${U(e)}]: ${a.join(" ")} | ${P()}`, {
+        W(`{${D(a).currentWorld}} [${U(e)}]: ${i.join(" ")} | ${P()}`, {
             option: "world",
-            world: D(s).currentWorld
-        }), T(`Message Sent: {${D(s).currentWorld}} [${U(e)}]: ${a.join(" ")} | ${P()}`);
+            world: D(a).currentWorld
+        }), T(`Message Sent: {${D(a).currentWorld}} [${U(e)}]: ${i.join(" ")} | ${P()}`);
         break;
 
       case "announce":
-        W(`Announcement > [${U(e)}]: ${a.join(" ")} | ${P()}`), T(`Message Announced: [${U(e)}]: ${a.join(" ")} | ${P()}`);
+        W(`Announcement > [${U(e)}]: ${i.join(" ")} | ${P()}`), T(`Message Announced: [${U(e)}]: ${i.join(" ")} | ${P()}`);
         break;
 
       case "mine":
-        Date.now() - D(s).lastMined >= 5e3 ? (k.execute(s, client), D(s).lastMined = Date.now()) : A(e, "You can't mine right now, please wait " + Math.floor((5e3 - (Date.now() - D(s).lastMined)) / 1e3) + " seconds");
+        Date.now() - D(a).lastMined >= 5e3 ? (k.execute(a, client), D(a).lastMined = Date.now()) : A(e, "You can't mine right now, please wait " + Math.floor((5e3 - (Date.now() - D(a).lastMined)) / 1e3) + " seconds");
         break;
 
       case "stats":
@@ -401,14 +402,14 @@ d.on("connect", e => {
             }), s.forEach(s => {
                 t ? r ? n.push(`${e[s][r]} | ${t}: ${e[s][t]}`) : n.push(`${s} | ${t}: ${e[s][t]}`) : r ? n.push(`${e[s][r]}: ${e[s]}`) : n.push(`${s}: ${e[s]}`);
             }), n;
-        }(D(s).ores)), A(e, t.create());
+        }(D(a).ores)), A(e, t.create());
         break;
 
       case "go":
-        let r, n;
-        switch (a[0]) {
+        let r, s;
+        switch (i[0]) {
           case "north":
-            n = -1;
+            s = -1;
             break;
 
           case "east":
@@ -416,21 +417,21 @@ d.on("connect", e => {
             break;
 
           case "south":
-            n = 1;
+            s = 1;
             break;
 
           case "west":
             r = -1;
         }
-        let i = D(s).pos;
-        i.x + r >= 0 && i.x + r < 10 && (i.y += r), i.y + n >= 0 && i.y + n < 10 && (i.y += n), 
+        let n = D(a).pos;
+        n.x + r >= 0 && n.x + r < 10 && (n.y += r), n.y + s >= 0 && n.y + s < 10 && (n.y += s), 
         B();
         break;
 
       case "online":
-        if (a) {
+        if (i) {
             let t;
-            switch (a[0]) {
+            switch (i[0]) {
               case "server":
                 t = m.Story("Online users in Server"), t.editBody([ `Total Users: ${O.length}` ].concat(O.map(e => e.username))), 
                 A(e, t.create());
@@ -440,7 +441,7 @@ d.on("connect", e => {
                 t = m.Story("Online users in World");
                 let r = [];
                 O.forEach(e => {
-                    e.world == D(s).currentWorld && r.push(e.username);
+                    e.world == D(a).currentWorld && r.push(e.username);
                 }), t.editBody([ `Total Users: ${r.length}` ].concat(r)), A(e, t.create());
             }
         } else {
