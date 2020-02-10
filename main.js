@@ -131,7 +131,7 @@ telnet.createServer((client) => {
                         args.push(part.split(/[\n\r]$/).join(""));
                     } else if (/[\r]$/.test(data)) {
                         args.push(part.split(/[\r]$/).join(""));
-                    } else if (/[\r]$/.test(data)) {
+                    } else if (/[\n]$/.test(data)) {
                         args.push(part.split(/[\n]$/).join(""));
                     }
                 };
