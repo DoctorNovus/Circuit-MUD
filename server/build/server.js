@@ -200,9 +200,9 @@ let j = m.Category("Pathways"), M = m.Category("Communication"), x = m.Category(
 k.addLife((...e) => {
     let t = y.users.find(t => t.username == e[0][0]), r = function(e) {
         let t;
-        return b[D(e).currentWorld].map.forEach(r => {
-            r.forEach(r => {
-                r.pos.x == D(e).pos.x && r.pos.y == D(e).pos.y && (t = r);
+        return b[D(U(socket)).currentWorld].map.forEach(e => {
+            e.forEach(e => {
+                e.pos.x == D(U(socket)).pos.x && e.pos.y == D(U(socket)).pos.y && (t = e);
             });
         }), t;
     }(t.username), s = [];
@@ -270,7 +270,9 @@ function B() {
 
 // Autosave
 function D(e) {
-    return y.users.find(t => t.username == e);
+    return null != y.users.find(t => t.username == e) ? y.users.find(t => t.username == e) : {
+        online: !1
+    };
 }
 
 d.on("connect", e => {}), d.on("data", (e, r) => {
@@ -285,12 +287,12 @@ d.on("connect", e => {}), d.on("data", (e, r) => {
       case "save":
         B(), W("Game has been saved. ");
     }
-    if (0 == l) switch (n) {
+    if (0 == D(U(e)).online) switch (n) {
       case "login":
         if (y.users.find(e => e.username == i[0])) {
             let t = 0;
             for (let r = 0; r < y.users.length; r++) if (p.compare(i[1], y.users[r].password)) {
-                l = !0, a = i[0];
+                D(U(e)).online = !0;
                 let t = m.Story("Logged in");
                 t.editBody([ "Username: " + i[0] ]), A(e, t.create()), O.find(t => t.username == U(e)) || O.push({
                     username: i[0],
@@ -334,7 +336,8 @@ d.on("connect", e => {}), d.on("data", (e, r) => {
                 pos: {
                     x: 5,
                     y: 0
-                }
+                },
+                online: !0
             };
             y.users.push(r), t.writeFile("./config/database.json", JSON.stringify(y, 4, null), () => {});
             let s = m.Story("Created User");
@@ -358,16 +361,16 @@ d.on("connect", e => {}), d.on("data", (e, r) => {
         break;
 
       case "joinWorld":
-        for (let e of Object.keys(b)) if (e == i.join(" ")) {
-            b[e].map.forEach(e => {
-                e.forEach(e => {
-                    e.pos.x == D(a).pos.x && e.pos.y == D(a).pos.y && (W(`${D(a).username} has left ${D(a).currentWorld}`, {
+        for (let t of Object.keys(b)) if (t == i.join(" ")) {
+            b[t].map.forEach(t => {
+                t.forEach(t => {
+                    t.pos.x == D(U(e)).pos.x && t.pos.y == D(U(e)).pos.y && (W(`${D(U(e)).username} has left ${D(U(e)).currentWorld}`, {
                         option: "world",
-                        world: D(a).currentWorld
-                    }), D(a).currentWorld = i.join(" "), O.find(e => e.username == a).world = i.join(" "), 
-                    W(`${D(a).username} has joined ${D(a).currentWorld}`, {
+                        world: D(U(e)).currentWorld
+                    }), D(U(e)).currentWorld = i.join(" "), O.find(e => e.username == a).world = i.join(" "), 
+                    W(`${D(U(e)).username} has joined ${D(U(e)).currentWorld}`, {
                         option: "world",
-                        world: D(a).currentWorld
+                        world: D(U(e)).currentWorld
                     }));
                 });
             });
@@ -379,10 +382,10 @@ d.on("connect", e => {}), d.on("data", (e, r) => {
         break;
 
       case "say":
-        W(`{${D(a).currentWorld}} [${U(e)}]: ${i.join(" ")} | ${P()}`, {
+        W(`{${D(U(e)).currentWorld}} [${U(e)}]: ${i.join(" ")} ${P()}`, {
             option: "world",
-            world: D(a).currentWorld
-        }), T(`Message Sent: {${D(a).currentWorld}} [${U(e)}]: ${i.join(" ")} | ${P()}`);
+            world: D(U(e)).currentWorld
+        }), T(`Message Sent: {${D(U(e)).currentWorld}} [${U(e)}]: ${i.join(" ")} | ${P()}`);
         break;
 
       case "announce":
@@ -390,7 +393,7 @@ d.on("connect", e => {}), d.on("data", (e, r) => {
         break;
 
       case "mine":
-        Date.now() - D(a).lastMined >= 5e3 ? (k.execute(a, client), D(a).lastMined = Date.now()) : A(e, "You can't mine right now, please wait " + Math.floor((5e3 - (Date.now() - D(a).lastMined)) / 1e3) + " seconds");
+        Date.now() - D(U(e)).lastMined >= 5e3 ? (k.execute(a, client), D(U(e)).lastMined = Date.now()) : A(e, "You can't mine right now, please wait " + Math.floor((5e3 - (Date.now() - D(U(e)).lastMined)) / 1e3) + " seconds");
         break;
 
       case "stats":
@@ -402,7 +405,7 @@ d.on("connect", e => {}), d.on("data", (e, r) => {
             }), s.forEach(s => {
                 t ? r ? n.push(`${e[s][r]} | ${t}: ${e[s][t]}`) : n.push(`${s} | ${t}: ${e[s][t]}`) : r ? n.push(`${e[s][r]}: ${e[s]}`) : n.push(`${s}: ${e[s]}`);
             }), n;
-        }(D(a).ores)), A(e, t.create());
+        }(D(U(e)).ores)), A(e, t.create());
         break;
 
       case "go":
@@ -423,7 +426,7 @@ d.on("connect", e => {}), d.on("data", (e, r) => {
           case "west":
             r = -1;
         }
-        let n = D(a).pos;
+        let n = D(U(e)).pos;
         n.x + r >= 0 && n.x + r < 10 && (n.y += r), n.y + s >= 0 && n.y + s < 10 && (n.y += s), 
         B();
         break;
@@ -440,8 +443,8 @@ d.on("connect", e => {}), d.on("data", (e, r) => {
               case "world":
                 t = m.Story("Online users in World");
                 let r = [];
-                O.forEach(e => {
-                    e.world == D(a).currentWorld && r.push(e.username);
+                O.forEach(t => {
+                    t.world == D(U(e)).currentWorld && r.push(t.username);
                 }), t.editBody([ `Total Users: ${r.length}` ].concat(r)), A(e, t.create());
             }
         } else {
@@ -457,7 +460,7 @@ d.on("connect", e => {}), d.on("data", (e, r) => {
         for (let e = 0; e < O.length; e++) {
             O[e].username == t && O.splice(e, 1);
         }
-        W(`[${U(e)}] has left the server. ${O.length} users remaining`);
+        D(U(e)).online = !1, W(`[${U(e)}] has left the server. ${O.length} users remaining`);
     }
 }), setInterval(() => {
     t.writeFile("./config/database.json", JSON.stringify(y, null, 4), () => {}), t.writeFile("./config/worlds.json", JSON.stringify(b, null, 4), () => {}), 

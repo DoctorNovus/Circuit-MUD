@@ -2960,3 +2960,96 @@ Fusion Fields has been regenerated! Start finding ore!
 
 High-Tech Haven has been regenerated! Start finding ore!
 
+User [Hiro] has connected to the server! 
+1 users are online | 2020-02-10T23:27:52.000Z
+
+Message Sent: {undefined} [Hiro]: Hi
+ | 2020-02-10T23:27:56.000Z
+{undefined} [Hiro]: Hi
+ | 2020-02-10T23:27:56.000Z
+
+Hiro executed: say:Hi
+
+Cyber City has been regenerated! Start finding ore!
+
+Techno Topia has been regenerated! Start finding ore!
+
+Wire World has been regenerated! Start finding ore!
+
+Nano Nation has been regenerated! Start finding ore!
+
+Crypto Kindom has been regenerated! Start finding ore!
+
+Electric Empire has been regenerated! Start finding ore!
+
+Production Planet has been regenerated! Start finding ore!
+
+Static Skyway has been regenerated! Start finding ore!
+
+Fusion Fields has been regenerated! Start finding ore!
+
+High-Tech Haven has been regenerated! Start finding ore!
+
+User [Hiro] has connected to the server! 
+1 users are online | 2020-02-10T23:32:00.000Z
+
+Hiro executed: say:Hi
+
+{Cyber City} [Hiro]: Hi
+ | 2020-02-10T23:32:02.000Z
+
+Message Sent: {Cyber City} [Hiro]: Hi
+ | 2020-02-10T23:32:02.000Z
+Hiro executed: announce:Hello
+
+Message Announced: [Hiro]: Hello
+ | 2020-02-10T23:32:12.000Z
+Announcement > [Hiro]: Hello
+ | 2020-02-10T23:32:12.000Z
+
+Hiro executed: exit
+:
+Hiro executed: save
+:
+Hiro executed: save
+:
+User [Hiro] has connected to the server! 
+2 users are online | 2020-02-10T23:32:46.000Z
+
+Hiro executed: exit
+:
+Hiro executed: exit
+:
+Hiro executed: save
+:
+User [Hiro] has connected to the server! 
+1 users are online | 2020-02-10T23:33:08.000Z
+
+Hiro executed: say:Hi
+
+Message Sent: {Cyber City} [Hiro]: Hi
+ | 2020-02-10T23:33:10.000Z
+{Cyber City} [Hiro]: Hi
+ | 2020-02-10T23:33:10.000Z
+
+Hiro executed: save
+:
+Hiro executed: save
+:
+User [Hiro] has connected to the server! 
+1 users are online | 2020-02-10T23:34:08.000Z
+
+Hiro executed: say:Hi
+
+{Cyber City} [Hiro]: Hi
+ 2020-02-10T23:34:11.000Z
+
+Message Sent: {Cyber City} [Hiro]: Hi
+ | 2020-02-10T23:34:11.000Z
+Announcement > [Hiro]: hi
+ | 2020-02-10T23:34:19.000Z
+
+Hiro executed: announce:hi
+
+Message Announced: [Hiro]: hi
+ | 2020-02-10T23:34:19.000Z

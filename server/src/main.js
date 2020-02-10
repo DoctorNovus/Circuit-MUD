@@ -106,15 +106,14 @@ server.on("data", (socket, data) => {
         }
     };
 
-    if (loggedIn == false) {
+    if (getUser(getUsername(socket)).online == false) {
         switch (command) {
             case "login":
                 if (database.users.find((user) => user.username == args[0])) {
                     let counte = 0;
                     for (let i = 0; i < database.users.length; i++) {
                         if (passw.compare(args[1], database.users[i].password)) {
-                            loggedIn = true;
-                            username = args[0];
+                            getUser(getUsername(socket)).online = true;
                             let loggedInStory = Circuit.Story("Logged in");
                             loggedInStory.editBody(["Username: " + args[0]]);
                             send(socket, loggedInStory.create());
@@ -169,7 +168,8 @@ server.on("data", (socket, data) => {
                         "pos": {
                             "x": 5,
                             "y": 0
-                        }
+                        },
+                        "online": true
                     };
 
                     database.users.push(user);
@@ -211,11 +211,11 @@ server.on("data", (socket, data) => {
                         let world = worlds[key];
                         world.map.forEach(part => {
                             part.forEach(sector => {
-                                if ((sector.pos.x == getUser(username).pos.x) && (sector.pos.y == getUser(username).pos.y)) {
-                                    sendAll(`${getUser(username).username} has left ${getUser(username).currentWorld}`, { "option": "world", "world": getUser(username).currentWorld });
-                                    getUser(username).currentWorld = args.join(" ");
+                                if ((sector.pos.x == getUser(getUsername(socket)).pos.x) && (sector.pos.y == getUser(getUsername(socket)).pos.y)) {
+                                    sendAll(`${getUser(getUsername(socket)).username} has left ${getUser(getUsername(socket)).currentWorld}`, { "option": "world", "world": getUser(getUsername(socket)).currentWorld });
+                                    getUser(getUsername(socket)).currentWorld = args.join(" ");
                                     clients.find(client => client.username == username).world = args.join(" ");
-                                    sendAll(`${getUser(username).username} has joined ${getUser(username).currentWorld}`, { "option": "world", "world": getUser(username).currentWorld });
+                                    sendAll(`${getUser(getUsername(socket)).username} has joined ${getUser(getUsername(socket)).currentWorld}`, { "option": "world", "world": getUser(getUsername(socket)).currentWorld });
                                 }
                             });
                         });
@@ -230,27 +230,27 @@ server.on("data", (socket, data) => {
                 break;
 
             case "say":
-                sendAll(`{${getUser(username).currentWorld}} [${getUsername(socket)}]: ${args.join(" ")} | ${getDate()}`, { "option": "world", "world": getUser(username).currentWorld });
-                logNetwork(`Message Sent: {${getUser(username).currentWorld}} [${getUsername(socket)}]: ${args.join(" ")} | ${getDate()}`);
+                sendAll(`{${getUser(getUsername(socket)).currentWorld}} [${getUsername(socket)}]: ${args.join(" ")} ${getDate()}`, { "option": "world", "world": getUser(getUsername(socket)).currentWorld });
+                logNetwork(`Message Sent: {${getUser(getUsername(socket)).currentWorld}} [${getUsername(socket)}]: ${args.join(" ")} ${getDate()}`);
                 break;
 
             case "announce":
-                sendAll(`Announcement > [${getUsername(socket)}]: ${args.join(" ")} | ${getDate()}`);
-                logNetwork(`Message Announced: [${getUsername(socket)}]: ${args.join(" ")} | ${getDate()}`);
+                sendAll(`Announcement > [${getUsername(socket)}]: ${args.join(" ")} ${getDate()}`);
+                logNetwork(`Message Announced: [${getUsername(socket)}]: ${args.join(" ")} ${getDate()}`);
                 break;
 
             case "mine":
-                if (Date.now() - getUser(username).lastMined >= 5000) {
+                if (Date.now() - getUser(getUsername(socket)).lastMined >= 5000) {
                     mine.execute(username, client);
-                    getUser(username).lastMined = Date.now();
+                    getUser(getUsername(socket)).lastMined = Date.now();
                 } else {
-                    send(socket, "You can't mine right now, please wait " + Math.floor((5000 - (Date.now() - getUser(username).lastMined)) / 1000) + " seconds");
+                    send(socket, "You can't mine right now, please wait " + Math.floor((5000 - (Date.now() - getUser(getUsername(socket)).lastMined)) / 1000) + " seconds");
                 }
                 break;
 
             case "stats":
                 let stats = Circuit.Story("Stats");
-                stats.editBody(getKeyValuePair(getUser(username).ores));
+                stats.editBody(getKeyValuePair(getUser(getUsername(socket)).ores));
                 send(socket, stats.create());
                 break;
 
@@ -275,7 +275,7 @@ server.on("data", (socket, data) => {
                         velX = -1;
                         break;
                 }
-                let pos = getUser(username).pos;
+                let pos = getUser(getUsername(socket)).pos;
 
                 if ((pos.x + velX >= 0) && (pos.x + velX < 10)) {
                     pos.y += velX;
@@ -304,7 +304,7 @@ server.on("data", (socket, data) => {
                             let arr = [];
 
                             clients.forEach(clien => {
-                                if (clien.world == getUser(username).currentWorld) {
+                                if (clien.world == getUser(getUsername(socket)).currentWorld) {
                                     arr.push(clien.username);
                                 }
                             })
@@ -338,6 +338,8 @@ server.on("end", (socket) => {
                 clients.splice(i, 1);
             }
         }
+
+        getUser(getUsername(socket)).online = false;
 
         sendAll(`[${getUsername(socket)}] has left the server. ${clients.length} users remaining`);
     }
@@ -427,7 +429,13 @@ setInterval(() => {
 }, 1000 * 60 * 5);
 
 function getUser(username) {
-    return database.users.find(user => user.username == username);
+    if (database.users.find(user => user.username == username) != undefined) {
+        return database.users.find(user => user.username == username);
+    }
+
+    return {
+        "online": false
+    }
 }
 
 function isAdmin(username) {
@@ -459,13 +467,13 @@ setInterval(() => {
 }, 1000 * 60 * 2.49);
 
 function findSector(username) {
-    let currentWorld = worlds[getUser(username).currentWorld];
+    let currentWorld = worlds[getUser(getUsername(socket)).currentWorld];
 
     let sect;
 
     currentWorld.map.forEach(part => {
         part.forEach(sector => {
-            if ((sector.pos.x == getUser(username).pos.x) && (sector.pos.y == getUser(username).pos.y)) {
+            if ((sector.pos.x == getUser(getUsername(socket)).pos.x) && (sector.pos.y == getUser(getUsername(socket)).pos.y)) {
                 sect = sector;
             }
         });
