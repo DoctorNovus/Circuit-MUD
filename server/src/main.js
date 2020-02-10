@@ -501,6 +501,6 @@ function getKeyValuePair(obje, val, keyVal) {
     return arr;
 }
 
-server.listen(23, () => {
-    console.log(`listening on port 23`);
+server.listen(process.argv[2], () => {
+    console.log(`listening on port ${process.argv[2]}`);
 });

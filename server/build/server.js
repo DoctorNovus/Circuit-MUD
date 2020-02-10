@@ -477,6 +477,6 @@ d.on("connect", e => {}), d.on("data", (e, r) => {
         });
     }
     B();
-}, 149400), d.listen(23, () => {
-    console.log("listening on port 23");
+}, 149400), d.listen(process.argv[2], () => {
+    console.log(`listening on port ${process.argv[2]}`);
 });
