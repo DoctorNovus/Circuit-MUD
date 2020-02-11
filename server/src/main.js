@@ -180,7 +180,6 @@ server.on("data", (socket, data) => {
                     createdUser.editBody(["Username: " + user.username, "Password: " + user.password]);
 
                     send(socket, createdUser.create());
-                    loggedIn = true;
                     if (!clients.find(client => client.username == username)) {
                         clients.push({ "username": args[0], "client": socket, "world": "main" });
                     }
@@ -226,8 +225,7 @@ server.on("data", (socket, data) => {
                 break;
 
             case "logout":
-                loggedIn = false;
-                username = null;
+                getUser(getUsername(socket)).online = false;
                 send(socket, "Logged out successfully!");
                 break;
 
