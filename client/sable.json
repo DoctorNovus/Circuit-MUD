@@ -1,1 +1,1 @@
-[{ "input": "src/main.js", "output": "build/client.js", "clean": true, "compress": false, "format": "cjs" }]
+[{ "input": "src/main.js", "output": "build/client.js", "clean": true, "compress": false, "format": "cjs" }, { "input": "src/main_run.js", "output": "build/client_run.js", "clean": true, "compress": false, "format": "cjs" }]

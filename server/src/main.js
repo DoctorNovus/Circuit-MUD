@@ -84,7 +84,7 @@ server.on("connect", (socket) => {
 
 server.on("data", (socket, data) => {
     data = Buffer.from(data, "utf-8").toString();
-    let message = data.split(" ");
+    let message = data.trim().split(" ");
     let command = message[0];
     let args = message.splice(1, message.length);
 
@@ -93,11 +93,10 @@ server.on("data", (socket, data) => {
     };
 
     // Users Attributes
-    let loggedIn = false;
     let username;
 
     // Login & Create System
-    if (loggedIn == true && isAdmin(username)) {
+    if (getUser(getUsername(socket)).online == true && isAdmin(getUsername(socket))) {
         switch (command) {
             case "save":
                 saveGame();
@@ -126,9 +125,10 @@ server.on("data", (socket, data) => {
                         }
                     }
 
-                    if (counte > 0) {
+                    if (getUser(getUsername(socket)).online == false) {
                         send(socket, "You have used the wrong credentials. Please try again. ");
-                    }
+                    };
+
                 } else {
                     send(socket, "That user does not exist. Please create an account. ");
                 }
@@ -191,10 +191,12 @@ server.on("data", (socket, data) => {
                 socket.end();
                 break;
         };
-    } else {
+    }
 
+    if (getUser(getUsername(socket)).online == true) {
         logNetwork(`${getUsername(socket)} executed: ${command}:${args.join(" ")}`);
 
+        console.log(`"${command}"`);
         switch (command) {
             case "exit":
                 socket.end();
@@ -241,7 +243,7 @@ server.on("data", (socket, data) => {
 
             case "mine":
                 if (Date.now() - getUser(getUsername(socket)).lastMined >= 5000) {
-                    mine.execute(username, client);
+                    mine.execute(getUsername(socket), socket);
                     getUser(getUsername(socket)).lastMined = Date.now();
                 } else {
                     send(socket, "You can't mine right now, please wait " + Math.floor((5000 - (Date.now() - getUser(getUsername(socket)).lastMined)) / 1000) + " seconds");
@@ -467,13 +469,13 @@ setInterval(() => {
 }, 1000 * 60 * 2.49);
 
 function findSector(username) {
-    let currentWorld = worlds[getUser(getUsername(socket)).currentWorld];
+    let currentWorld = worlds[getUser(username).currentWorld];
 
     let sect;
 
     currentWorld.map.forEach(part => {
         part.forEach(sector => {
-            if ((sector.pos.x == getUser(getUsername(socket)).pos.x) && (sector.pos.y == getUser(getUsername(socket)).pos.y)) {
+            if ((sector.pos.x == getUser(username).pos.x) && (sector.pos.y == getUser(username).pos.y)) {
                 sect = sector;
             }
         });

@@ -1,0 +1,13 @@
+{
+    "name": "circuit-client",
+    "version": "2.0.0",
+    "description": "A client connector for Circuit MUD",
+    "main": "build/client.js",
+    "bin": "build/client_run.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Ottegi",
+    "license": "MIT",
+    "dependencies": {}
+}
